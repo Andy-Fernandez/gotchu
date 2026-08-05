@@ -1,37 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gotchu
 
-## Getting Started
+Gotchu is a mobile-first operating system for Bolivian barbershops. The first MVP unifies customer bookings, staff-created appointments, walk-ins, live queues, and QR-secured reservation deposits in one operational schedule.
 
-First, run the development server:
+The product is intentionally narrow: prove dependable daily use in one anchor shop, then a small group of nearby shops. It is not a generic salon marketplace.
+
+## Start here
+
+- [Documentation map](docs/README.md)
+- [Product brief](docs/product/brief.md)
+- [MVP scope](docs/product/mvp-scope.md)
+- [Core workflows](docs/product/core-workflows.md)
+- [Domain model](docs/domain/domain-model.md)
+- [Engineering guide](docs/engineering/architecture.md)
+- [Pilot and success measures](docs/business/pilot.md)
+
+Coding agents should read [AGENTS.md](AGENTS.md) first. It contains the minimum project context and routes tasks to the relevant documents.
+
+## Local development
+
+Requirements: Node.js compatible with Next.js 16 and pnpm 11.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Useful checks:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm lint
+pnpm build
+```
 
-## Learn More
+## Current state
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# gotchu
+The repository is a newly scaffolded Next.js application. Product documentation is established; implementation has not yet begun.
