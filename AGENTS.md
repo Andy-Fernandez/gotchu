@@ -21,6 +21,7 @@ Marketplace and maps are an explicit product direction, but not part of the firs
 Start with `docs/README.md`, then load the smallest relevant set:
 
 - Product behavior or prioritization: `docs/product/brief.md` and `docs/product/mvp-scope.md`
+- Visual design, tokens, responsive UI, shared components, or accessibility defaults: `docs/product/design-system.md`
 - Future marketplace, maps, ranking, or expansion readiness: `docs/product/marketplace.md`
 - Booking, deposit, queue, or service flow: `docs/product/core-workflows.md`
 - Operational policies, permissions, failure handling, or business-rule edge cases: `docs/product/business-rules.md`

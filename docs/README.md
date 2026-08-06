@@ -10,6 +10,7 @@ The original memo mixed product strategy, operations, implementation ideas, mark
 |---|---|
 | Any task | `AGENTS.md`, then this page |
 | Product UX or priority | `product/brief.md`, `product/mvp-scope.md` |
+| Visual design, tokens, responsive behavior, shared UI, or accessibility defaults | `product/design-system.md` |
 | Future marketplace, maps, or expansion readiness | `product/marketplace.md` |
 | Booking, queue, deposit, or staff flows | `product/core-workflows.md`, `domain/domain-model.md` |
 | Detailed policies, permissions, failures, audit, or operational rules | `product/business-rules.md` |
@@ -34,6 +35,7 @@ If tested behavior conflicts with a documented product invariant, flag the confl
 - Product positioning, target merchant and customer, single-shop MVP, future marketplace direction, jobs to be done, and success definition.
 - MVP inclusions and exclusions.
 - Booking, QR deposit, manual appointment, queue, and service-completion workflows.
+- Visual identity, shared tokens, responsive conventions, core UI components, and accessibility defaults.
 - Availability, concurrency, money, state, permissions, privacy, and AI guardrails.
 - Pilot phases, activation, metrics, and expansion gates.
 
