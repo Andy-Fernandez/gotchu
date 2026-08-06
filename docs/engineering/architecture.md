@@ -27,6 +27,18 @@ relational data + private receipt storage + background jobs
 
 Business rules belong in shared domain services, not duplicated across pages, route handlers, or AI prompts.
 
+## Next.js project structure
+
+```text
+app/         App Router pages, layouts, Server Actions, and external Route Handlers
+components/  reusable UI primitives, layouts, and product presentation patterns
+modules/     shop-scoped domain capabilities and typed application operations
+server/      provider-specific database, auth, storage, jobs, and observability adapters
+tests/       unit, integration, and end-to-end verification
+```
+
+Pages and layouts are Server Components by default. Add Client Component boundaries only around interaction or browser APIs. Server Components call application operations directly rather than Gotchu's own HTTP endpoints; UI mutations use thin Server Actions, while webhooks and true external HTTP consumers use Route Handlers.
+
 ## Required qualities
 
 - Atomic holds and queue allocations.

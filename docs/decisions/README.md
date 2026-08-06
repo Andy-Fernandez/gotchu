@@ -14,3 +14,4 @@ When a decision changes, preserve the old record and link it to the replacement.
 |---|---|---|
 | `001` | Superseded | Marketplace and maps inside the first MVP |
 | `002` | Accepted | Close the one-shop customer and business flow first; marketplace and maps later |
+| `003` | Accepted | Build the first MVP as a Next.js modular monolith |
