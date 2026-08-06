@@ -10,7 +10,9 @@ The original memo mixed product strategy, operations, implementation ideas, mark
 |---|---|
 | Any task | `AGENTS.md`, then this page |
 | Product UX or priority | `product/brief.md`, `product/mvp-scope.md` |
+| Future marketplace, maps, or expansion readiness | `product/marketplace.md` |
 | Booking, queue, deposit, or staff flows | `product/core-workflows.md`, `domain/domain-model.md` |
+| Detailed policies, permissions, failures, audit, or operational rules | `product/business-rules.md` |
 | Data, APIs, concurrency, security, testing | `engineering/architecture.md`, `domain/domain-model.md` |
 | Pilot operations, analytics, or go-to-market | `business/pilot.md` |
 | A durable technical or product choice | `decisions/README.md` |
@@ -29,7 +31,7 @@ If tested behavior conflicts with a documented product invariant, flag the confl
 
 ## What was retained
 
-- Product positioning, target merchant, jobs to be done, and success definition.
+- Product positioning, target merchant and customer, single-shop MVP, future marketplace direction, jobs to be done, and success definition.
 - MVP inclusions and exclusions.
 - Booking, QR deposit, manual appointment, queue, and service-completion workflows.
 - Availability, concurrency, money, state, permissions, privacy, and AI guardrails.
@@ -41,7 +43,7 @@ If tested behavior conflicts with a documented product invariant, flag the confl
 - Time-sensitive competitor, investment, and payment-market claims.
 - Speculative acquisition scenarios and long-range moat language.
 - Exhaustive endpoint and table proposals before infrastructure decisions are made.
-- Features explicitly outside the MVP.
+- Features still explicitly outside the revised MVP.
 
 Omitted material is not rejected forever. It should return only when evidence or a deliberate scope decision makes it relevant.
 

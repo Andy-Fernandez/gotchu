@@ -12,16 +12,18 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Mission
 
-Build a mobile-first operating system for Bolivian barbershops. The MVP must combine online bookings, staff-entered appointments, walk-ins, queue allocation, service execution, and QR deposit review in one trustworthy schedule.
+Build a mobile-first operating system for Bolivian barbershops that can later evolve into a local marketplace with map-based discovery. The initial MVP closes the complete customer and business flow for one barbershop: customers arrive through that shop's direct link or QR, and staff operate online bookings, manual appointments, walk-ins, queue allocation, service execution, and QR deposit review in one trustworthy schedule.
 
-Do not treat Gotchu as a generic salon marketplace or a broad business-management suite.
+Marketplace and maps are an explicit product direction, but not part of the first implementation scope. Preserve clean boundaries that allow multiple published shops and discovery later without building speculative marketplace infrastructure now. Do not turn the MVP into a broad business-management suite.
 
 ## Read only what the task needs
 
 Start with `docs/README.md`, then load the smallest relevant set:
 
 - Product behavior or prioritization: `docs/product/brief.md` and `docs/product/mvp-scope.md`
+- Future marketplace, maps, ranking, or expansion readiness: `docs/product/marketplace.md`
 - Booking, deposit, queue, or service flow: `docs/product/core-workflows.md`
+- Operational policies, permissions, failure handling, or business-rule edge cases: `docs/product/business-rules.md`
 - Entities, states, permissions, or invariants: `docs/domain/domain-model.md`
 - Architecture, security, APIs, or tests: `docs/engineering/architecture.md`
 - Pilot, metrics, activation, or pricing: `docs/business/pilot.md`
@@ -32,6 +34,9 @@ Do not load every document by default. The repository documentation is the worki
 ## Non-negotiable product rules
 
 - All demand sources share one schedule. Never create a separate path for online, WhatsApp, phone, or walk-in work.
+- The first customer entry point is a direct shop link or QR; do not add marketplace search, ranking, map views, or customer geolocation to the initial MVP.
+- Keep shop identity, catalog, public profile, availability, and booking operations scoped cleanly so a future marketplace can reuse them without creating a second booking system.
+- When maps are eventually implemented, location must remain optional for customers and shop pins must be merchant-verified.
 - Service selection determines duration, buffer, eligible barbers, price, and deposit.
 - Availability is calculated and revalidated by deterministic backend code.
 - Holds and queue allocations are atomic; overlapping protected intervals must be impossible.

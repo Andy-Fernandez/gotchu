@@ -4,7 +4,7 @@ This document defines concepts and invariants, not a final database schema.
 
 ## Core concepts
 
-- **Shop:** the single pilot location and tenant boundary.
+- **Shop:** the single pilot location and tenant boundary. It has stable identity so future marketplace discovery can reference it.
 - **Shop member:** an authenticated staff user with a role and shop membership.
 - **Barber:** a staff profile with working hours and eligible services.
 - **Service:** a shop offering that defines price, duration, buffer, fixed deposit, and eligible barbers.
@@ -12,6 +12,7 @@ This document defines concepts and invariants, not a final database schema.
 - **Booking:** scheduled work from a customer flow or a staff-captured channel.
 - **Queue entry:** walk-in demand with arrival, allocation, estimates, and execution state.
 - **Payment:** a deposit or remaining-balance record. A receipt and an approval are distinct facts.
+- **Receipt claim:** an immutable customer-submitted payment claim. Replacements create linked claims rather than overwriting rejected or unreadable evidence.
 - **Blocked period:** non-service capacity such as a break or manual block.
 - **Audit event:** immutable record of a sensitive action and its actor.
 - **Product event:** privacy-minimized behavior used to understand funnels and adoption.
@@ -43,6 +44,20 @@ type PaymentStatus =
   | "refund_pending"
   | "refunded";
 
+type ReceiptClaimStatus =
+  | "pending_review"
+  | "needs_replacement"
+  | "accepted"
+  | "rejected";
+
+type ReceiptReviewReason =
+  | "unreadable"
+  | "transaction_not_found"
+  | "wrong_destination"
+  | "amount_difference"
+  | "duplicate_reference"
+  | "other";
+
 type QueueStatus =
   | "waiting"
   | "called"
@@ -70,12 +85,21 @@ Transitions must be explicit, authorized, auditable where sensitive, and covered
 - Confirmed appointments are never silently displaced by queue allocation or delay handling.
 - Server-side validation is authoritative; client availability is advisory.
 
+## Future marketplace compatibility
+
+- Every operational entity remains explicitly shop-scoped even while only one shop exists.
+- Public shop data is separated from private operations and can later feed a marketplace profile.
+- Future discovery must reference the authoritative catalog, hours, policy, eligibility, and availability.
+- Future marketplace results will never reserve capacity; only the existing atomic hold operation can do that.
+- Do not add customer coordinates, ranking state, or provider-specific geographic fields during the single-shop MVP without an approved decision.
+
 ## Money invariants
 
 - Store amounts as integers in the currency's minor unit; never use binary floating point.
 - Snapshot price, required deposit, and remaining balance on the booking so later catalog changes do not rewrite history.
 - A deposit contributes to the final amount.
 - Receipt submission and payment approval are separate events with separate actors and times.
+- An unreadable receipt and a nonexistent transaction are different review outcomes. Replacement claims preserve every previous file and review result.
 - Financial exceptions require authorization, reason, and audit record.
 - Retrying a receipt or completion request must not duplicate money records.
 
@@ -83,6 +107,7 @@ Transitions must be explicit, authorized, auditable where sensitive, and covered
 
 - Customer guest booking is allowed; private status access uses an unguessable token or equivalent mechanism.
 - Store customer name and WhatsApp snapshots needed to operate the booking.
+- During the MVP, WhatsApp numbers are normalized and confirmed visually but are not OTP-verified. They are contact claims, not an authorization credential.
 - Store instants in a timezone-safe representation; render initial shop-local time in `America/La_Paz`.
 - Shop membership and resource ownership are checked on every staff operation.
 

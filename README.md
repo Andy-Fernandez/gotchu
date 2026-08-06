@@ -1,15 +1,17 @@
 # Gotchu
 
-Gotchu is a mobile-first operating system for Bolivian barbershops. The first MVP unifies customer bookings, staff-created appointments, walk-ins, live queues, and QR-secured reservation deposits in one operational schedule.
+Gotchu is a mobile-first operating system for Bolivian barbershops, designed to evolve into a local marketplace with map-based discovery.
 
-The product is intentionally narrow: prove dependable daily use in one anchor shop, then a small group of nearby shops. It is not a generic salon marketplace.
+The first release closes the complete flow for one barbershop. Customers enter through that shop's direct link or QR, book against trustworthy availability, and follow their reservation. The same shop's team operates bookings, staff-created appointments, walk-ins, queues, services, and QR deposits in one schedule. Marketplace discovery and maps come after this core works reliably.
 
 ## Start here
 
 - [Documentation map](docs/README.md)
 - [Product brief](docs/product/brief.md)
 - [MVP scope](docs/product/mvp-scope.md)
+- [Future marketplace and maps](docs/product/marketplace.md)
 - [Core workflows](docs/product/core-workflows.md)
+- [Operational business rules](docs/product/business-rules.md)
 - [Domain model](docs/domain/domain-model.md)
 - [Engineering guide](docs/engineering/architecture.md)
 - [Pilot and success measures](docs/business/pilot.md)

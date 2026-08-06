@@ -10,7 +10,7 @@ Before modifying Next.js behavior, follow the repository `AGENTS.md` instruction
 
 ```text
 Mobile-first PWA
-├── public customer booking
+├── direct public shop page + customer booking
 ├── staff live board
 └── owner operations
         ↓ typed application boundary
@@ -18,6 +18,7 @@ domain services
 ├── availability and atomic scheduling
 ├── booking / queue state transitions
 ├── deposit review and payment recording
+├── provider-independent payment verification
 ├── authorization and audit
 └── controlled AI tools (later)
         ↓
@@ -41,9 +42,10 @@ Business rules belong in shared domain services, not duplicated across pages, ro
 
 The exact transport is undecided, but preserve these capabilities:
 
-- **Public:** shop/catalog read, availability, hold, booking identity, receipt submission, private status, reschedule, cancellation.
+- **Public booking:** shop/catalog read, availability, hold, booking identity, receipt submission, private status, reschedule, cancellation.
 - **Staff:** live board, manual appointment, walk-in, assignment, start, complete, no-show, payment, add-on.
 - **Financial review:** pending deposits, approve, approve with difference, reject, refund tracking.
+- **Payment verification:** manual receipt review in the MVP; a provider-neutral boundary for future authenticated, idempotent confirmations from Libélula or another banking service, using the same payment state machine and human-review fallback.
 - **Owner:** service/staff/hours/policy configuration, operational metrics, adoption metrics, audit.
 - **Platform:** merchant activation and health for founder-led pilot support.
 
@@ -65,13 +67,19 @@ Writes require an explicit human confirmation describing the service, barber, ti
 - Define customer export, retention, and deletion behavior before the pilot collects meaningful volume.
 - Platform support access must be explicit and must never silently alter financial records.
 
+## Future marketplace readiness
+
+Keep shop identity and all public booking capabilities explicitly shop-scoped. Separate public profile fields from private operational data, and keep business rules outside route or page code so a future marketplace can call the same typed domain operations.
+
+Do not install a map SDK, choose a geocoder, collect customer location, build geographic search, or introduce ranking during the single-shop MVP. When the marketplace phase begins, evaluate Bolivia coverage, licensing, attribution, privacy, accessibility, cost, performance, and failure behavior through a separate ADR.
+
 ## Verification strategy
 
 Unit-test interval overlap, slot generation, buffers, queue fit, deposit arithmetic, policies, state transitions, schedule capture, and activation calculations.
 
 Integration-test concurrency and boundaries: two requests for one slot, expiry versus receipt submission, duplicated payment references, staff deposit exceptions, walk-in conflicts, delayed service effects, add-on fit, idempotent completion, authorization, and AI rejection by authoritative domain rules.
 
-End-to-end test the full stories: deposit-backed customer reservation, busy Saturday queue, manually captured WhatsApp appointment, cash walk-in completion, reschedule with deposit transfer, no-show, owner metrics, and shop activation.
+End-to-end test the full stories: direct-link deposit-backed customer reservation, busy Saturday queue, manually captured WhatsApp appointment, cash walk-in completion, reschedule with deposit transfer, no-show, owner metrics, and shop activation.
 
 Pilot-test poor connectivity, low-end phones, upload retry, absent approvers, one-person busy periods, forgotten completion, and attempts to keep a hidden paper queue.
 
@@ -86,3 +94,6 @@ Create ADRs before committing to:
 - Analytics and monitoring providers.
 - AI model/provider and tool framework.
 - Hosting and deployment topology.
+- Future automatic banking-confirmation provider and webhook/reconciliation model.
+- Future map rendering, geocoding, and place-search provider, when marketplace work begins.
+- Future geospatial storage and query strategy, when required.

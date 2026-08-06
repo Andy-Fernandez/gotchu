@@ -7,3 +7,10 @@ Name records sequentially: `001-short-title.md`, `002-short-title.md`, and so on
 Status values: `proposed`, `accepted`, `superseded`, or `rejected`.
 
 When a decision changes, preserve the old record and link it to the replacement.
+
+## Decision index
+
+| ADR | Status | Decision |
+|---|---|---|
+| `001` | Superseded | Marketplace and maps inside the first MVP |
+| `002` | Accepted | Close the one-shop customer and business flow first; marketplace and maps later |

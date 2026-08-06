@@ -1,6 +1,6 @@
 # Pilot and success measures
 
-This document contains operating hypotheses. Numeric targets are learning thresholds, not promises.
+This document contains operating hypotheses for the closed single-shop pilot. Marketplace discovery and maps are a later expansion phase. Numeric targets are learning thresholds, not promises.
 
 ## Rollout
 
@@ -9,7 +9,7 @@ one anchor shop → 5–10 nearby shops in one microzone
 → one city → another city → broader expansion
 ```
 
-Choose the first microzone by founder access, shop density, and willingness to pilot—not prestige.
+Choose the anchor shop by founder access, meaningful demand, operational friction, willingness to pilot, and ability to adopt the full workflow—not prestige.
 
 ## Phase 0: field discovery
 
@@ -24,11 +24,11 @@ Before implementation hardens assumptions:
 
 ## Anchor activation
 
-An account is not an activated shop. Activation includes services and eligibility, hours, existing commitments, QR, deposit policy, owner and staff champion, public link placement, Saturday queue training, one completed test booking, and one completed walk-in.
+An account is not an activated shop. Activation includes services and eligibility, hours, existing commitments, QR, deposit policy, owner and staff champion, direct public link placement, Saturday queue training, one completed customer booking, and one completed walk-in.
 
 Build in this order:
 
-1. Configuration, roles, availability, atomic holds, booking, receipt, and human approval.
+1. Shop configuration, public page, roles, availability, atomic holds, booking, receipt, and human approval.
 2. Manual appointments, queue, live board, execution, final payment, no-show, and capture metrics.
 3. Saturday hardening, audit, abuse controls, events, health view, and evidence collection.
 4. Narrow AI assistance only after the deterministic flow is stable and its value can be measured.
@@ -41,6 +41,7 @@ Critical adoption metric: schedule capture ratio. The anchor starting target is 
 
 Also track:
 
+- Direct-link page-to-availability and booking completion.
 - Zero preventable double bookings.
 - Weekly active staff and time per entry.
 - Hold-to-receipt and receipt-to-approval conversion.
@@ -54,11 +55,13 @@ Do not report page views, accounts, downloads, followers, total shops created, o
 
 ## Anchor exit gate
 
-Move to a nearby cohort only when most real work is captured, availability remains trustworthy, the Saturday queue is used, commitments stay protected, staff does not need constant founder correction, no critical scheduling defect remains, the owner can name concrete value, and a real paid offer is accepted or explicitly committed to.
+Move to a nearby cohort only when customers can complete the direct-link booking journey, most real work is captured, availability remains trustworthy, the Saturday queue is used, commitments stay protected, staff does not need constant founder correction, no critical scheduling defect remains, the owner can name concrete value, and a real paid offer is accepted or explicitly committed to.
 
 ## Density cohort
 
-Start with a hypothesis of 5–10 active nearby locations. Validate a repeatable activation checklist, retention, pricing, referrals, declining support cost, and a shared configurable core without shop-specific code.
+Start with a hypothesis of 5–10 active nearby locations. First validate repeatable activation, retention, pricing, referrals, declining support cost, and a shared configurable core without shop-specific code. This cohort creates the supply base for a later marketplace and map pilot.
+
+Begin marketplace implementation only when the closed flow is reliable and multiple nearby shops can provide useful supply. Then define separate discovery, geographic coverage, and marketplace conversion experiments.
 
 Test pricing with real offers: a simple location subscription, a Core/Pro subscription, or—only after legal and operational validation—a lower subscription plus transaction service. Do not settle pricing from surveys alone.
 

@@ -1,8 +1,19 @@
 # Core workflows
 
+Detailed edge cases, permissions, operational defaults, and failure behavior are defined in `business-rules.md`.
+
+## Customer entry
+
+1. The anchor barbershop shares its public link through WhatsApp, Instagram, Google Business, a physical QR, or direct recommendation.
+2. Customer opens that shop's public page without creating an account.
+3. Customer sees the shop's active services, prices, hours, policy, and trustworthy availability.
+4. Customer selects a service and enters the reservation flow below.
+
+Future marketplace and map discovery must enter at this same public shop page and reuse the same availability and booking operations. It must not create a parallel reservation flow.
+
 ## Customer reservation
 
-1. Customer opens a shop's public link without creating an account.
+1. Customer opens the shop's direct public link without creating an account.
 2. Customer selects a service. Show full price, duration, deposit due now, and remaining balance.
 3. Customer chooses any eligible barber or a specific barber.
 4. Backend returns only intervals that fit the service plus buffer.
@@ -10,7 +21,7 @@
 6. Customer provides name and WhatsApp number.
 7. Customer sees the shop QR, exact amount, policy summary, and countdown, then uploads a receipt claim.
 8. Receipt submission changes the reservation to `reserved_pending_review`; the interval remains occupied during reasonable review.
-9. An authorized human approves, approves with a documented difference, or rejects the deposit.
+9. An authorized human approves, approves with a documented difference, requests a replacement receipt, or rejects the submitted claim with a specific reason. A replacement creates a new linked claim and preserves the earlier review.
 10. Staff starts the service, records the remaining payment, and completes it.
 
 Refresh availability when the service, barber preference, or date changes; periodically while selection is open; and immediately after a failed hold.
@@ -54,7 +65,9 @@ Polling every 15–30 seconds is acceptable for the MVP, but every write must re
 
 An online booking requires a small, service-specific fixed deposit. It is part of the final price, not an extra fee. Walk-ins already present do not require one.
 
-A receipt image is evidence submitted for review, not verified payment. Review checks destination, amount, transaction existence, date/time, duplicate references, and readability. Human approval remains required until a reliable regulated integration exists.
+A receipt image is evidence submitted for review, not verified payment. Review checks destination, amount, transaction existence, date/time, duplicate references, and readability. Human approval remains required throughout the MVP.
+
+The payment-verification boundary must allow a later integration with Libélula or another compatible banking-confirmation service. A future provider must use the same payment state transitions and booking operations, with authenticated and idempotent webhook processing plus human-review fallback; it must not write directly to storage or create a parallel booking flow.
 
 Initial abuse protections include one active pending online reservation per WhatsApp number, one hold per session, rate limits, reference-duplication warnings, receipt hash as a secondary signal, and automatic expiry when no receipt is submitted.
 
@@ -67,5 +80,7 @@ Never overwrite history. Mark the original `rescheduled`, create a linked replac
 ## Completion
 
 Completion records source, barber, service items, actual times when available, final amount, payment method, and actor. Supported initial methods are shop QR, cash, complimentary, and other.
+
+The MVP does not collect the remaining balance online. Customer and staff settle it directly at the shop; staff records the final amount and summarized method in Gotchu so completion and financial history remain trustworthy.
 
 An add-on is allowed only when the extended protected interval still fits before the next commitment. Otherwise select another barber, shorten the work, book later, or decline.

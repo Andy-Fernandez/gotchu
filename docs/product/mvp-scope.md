@@ -1,6 +1,14 @@
 # MVP scope
 
-This boundary applies to the anchor-shop product. Expansion work begins only after the pilot gates in `../business/pilot.md` are met.
+This boundary applies to the initial closed flow for one anchor barbershop. Both customer and business experiences operate against that one shop. Customers arrive through a direct public link or QR; there is no cross-shop discovery in this phase.
+
+## Future-ready boundaries
+
+- Use stable shop identity and a shop-scoped public URL.
+- Keep catalog, hours, policies, availability, holds, and bookings explicitly scoped to a shop.
+- Avoid hard-coding the anchor shop throughout domain logic, even if only one shop is configured.
+- Keep public booking operations reusable by a future marketplace.
+- Do not implement marketplace search, ranking, map rendering, geolocation, geocoding, or multi-shop operations yet.
 
 ## Required
 
@@ -15,11 +23,12 @@ This boundary applies to the anchor-shop product. Expansion work begins only aft
 
 ### Customer booking
 
-- Public, mobile-first booking link with no required account.
+- Booking from the barbershop's direct public link or QR, with no required account.
 - Service-first availability and “any eligible barber” or a specific barber.
 - Server-revalidated, ten-minute hold assigned to an exact barber.
 - Customer name and WhatsApp number.
 - QR deposit instructions and receipt upload.
+- Replacement receipt upload when the previous claim is unreadable or rejected, preserving review history.
 - Clear held, pending-review, confirmed, cancelled, and rescheduled states.
 - Private booking-status access.
 - One reschedule within policy and a cancellation request.
@@ -32,6 +41,7 @@ This boundary applies to the anchor-shop product. Expansion work begins only aft
 - Conflict protection around confirmed appointments.
 - Start, complete, cancel, and mark no-show.
 - Record final amount and payment method.
+- Settle the remaining balance directly at the shop; Gotchu records the result but does not collect that balance online in this phase.
 
 ### Owner and pilot operations
 
@@ -52,7 +62,12 @@ AI must not invent slots, calculate overlaps independently, approve a receipt, c
 
 ## Outside the MVP
 
-- National marketplace, public reviews, or paid placement.
+- Marketplace search and cross-shop discovery.
+- Map views, geolocation, geocoding, geographic ranking, and place search.
+- Multi-shop customer comparison or marketplace result pages.
+- Nationwide launch before local operational adoption is proven.
+- Public reviews, paid placement, sponsored ranking, or auction-based visibility.
+- Turn-by-turn navigation, route optimization, or courier-style live tracking.
 - Native iOS or Android apps.
 - Multiple locations per merchant.
 - Expansion beyond barbershops.
@@ -66,4 +81,4 @@ These are exclusions, not a backlog. Adding one requires an explicit scope decis
 
 ## MVP acceptance
 
-The anchor product is ready for real use when the complete booking-to-completion and walk-in-to-completion journeys work; all demand affects one schedule; concurrent users cannot secure overlapping capacity; financial and sensitive actions are auditable; owner metrics expose adoption; and the PWA works on normal mobile browsers.
+The anchor product is ready for real use when customers can enter through that shop's direct link or QR and complete the booking-to-completion journey, while staff can complete the manual-appointment and walk-in-to-completion journeys; all demand affects one schedule; concurrent users cannot secure overlapping capacity; financial and sensitive actions are auditable; owner metrics expose adoption; and the PWA works on normal mobile browsers.
