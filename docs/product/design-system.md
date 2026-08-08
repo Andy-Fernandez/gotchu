@@ -4,6 +4,44 @@ Status: accepted on August 6, 2026.
 
 This document defines the initial visual and interaction language for Gotchu. It applies to the customer booking experience, staff operations, owner surfaces, and future marketplace work. It is deliberately small: establish a coherent foundation, build the core journey, and add tokens or component variants only when a real product need appears.
 
+## shadcn/ui implementation foundation
+
+> El sistema visual define la identidad. shadcn/ui nos da primitives accesibles y bien construidos para implementarla.
+
+Gotchu owns the visual language, semantic tokens, component APIs, and product-specific behavior. shadcn/ui supplies open-code primitives built on Radix; it is an implementation foundation, not the source of Gotchu's identity. Generated components are reviewed and specialized before product use rather than treated as finished product components.
+
+The initial implementation uses the Radix base, React Server Component-compatible output, Tailwind CSS variables, Lucide icons, and these aliases:
+
+```text
+@/components     reusable components
+@/components/ui  visual primitives
+@/lib/utils      shared UI utilities
+@/lib            shared libraries
+@/hooks          reusable hooks
+```
+
+Install only primitives required by an accepted product flow. The initial source set is `Button`, `Input`, `Textarea`, `Badge`, `Card`, `Separator`, and `Skeleton`; adding a registry component is not permission to adopt its default visual decisions.
+
+The MVP ships with a light theme only. Do not add a dark palette, theme switcher, or automatic system-theme behavior until a real product requirement defines and validates the complete dark semantic palette.
+
+### Semantic variable mapping
+
+| Gotchu intent | shadcn variable | Mapping |
+|---|---|---|
+| Page background | `--background` | `neutral/50` |
+| Primary foreground | `--foreground` | `neutral/950` |
+| Surface | `--card`, `--popover` | `neutral/0` |
+| Primary action | `--primary` | `neutral/950` |
+| Secondary action | `--secondary` | `neutral/0` |
+| Muted foreground | `--muted-foreground` | `neutral/600` |
+| Subtle accent surface | `--accent` | `purple/50` |
+| Accent content | `--accent-foreground` | `purple/500` |
+| Default boundary | `--border`, `--input` | `neutral/200` |
+| Keyboard focus | `--ring` | `purple/500` |
+| Destructive meaning | `--destructive` | Danger foreground |
+
+The shadcn `accent` variable represents an accent surface, so the purple brand foreground belongs in `accent-foreground`. Gotchu-specific roles such as accent hover, accent on dark, rating, and operational statuses remain semantic extensions alongside the shadcn contract.
+
 ## Brand direction
 
 Gotchu is primarily black and white. The interface should feel clear, dependable, operational, and premium without relying on decorative complexity.
@@ -160,6 +198,12 @@ Rounded geometry should communicate grouping and touchability. Do not apply a la
 | `shadow/sticky` | `0 -6px 20px -8px rgb(0 0 0 / 0.16)` | Bottom sticky action bar |
 
 Prefer surface color and borders over shadows for ordinary cards. A focus ring is not elevation and must never be implemented through the shadow scale.
+
+## Borders
+
+The default boundary is `1px solid color/border`. Inputs, cards, separators, and ordinary dividers use this rule unless a component requirement establishes a meaningful alternative. Keyboard focus uses its separate `2px solid color/focus` indicator with a 2 px offset; it is not a thicker border or an elevation effect.
+
+Do not add multiple decorative border strengths prematurely. Status and selection must use semantic content and accessible cues instead of relying only on border color or width.
 
 ## Responsive layout and breakpoints
 

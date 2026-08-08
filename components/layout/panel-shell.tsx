@@ -11,11 +11,11 @@ const panelRoutes = [
 export function PanelShell({ children }: { children: ReactNode }) {
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col lg:flex-row">
-      <aside className="border-b border-line bg-surface px-5 py-5 lg:w-64 lg:border-r lg:border-b-0 lg:px-6 lg:py-8">
+      <aside className="border-b border-border bg-card px-5 py-5 lg:w-64 lg:border-r lg:border-b-0 lg:px-6 lg:py-8">
         <Link href="/" className="text-lg font-semibold tracking-tight">
           Gotchu
         </Link>
-        <p className="mt-1 text-sm text-muted">Panel de la barbería</p>
+        <p className="mt-1 text-sm text-muted-foreground">Panel de la barbería</p>
 
         <nav
           className="mt-5 flex gap-2 overflow-x-auto pb-1 lg:mt-8 lg:flex-col"

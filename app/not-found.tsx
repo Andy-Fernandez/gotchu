@@ -3,13 +3,13 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center gap-5 px-5 py-12 text-center">
-      <p className="text-sm font-semibold tracking-[0.16em] text-muted uppercase">
+      <p className="text-sm font-semibold tracking-[0.16em] text-muted-foreground uppercase">
         404
       </p>
       <h1 className="text-3xl font-semibold tracking-tight">
         No encontramos esta página
       </h1>
-      <p className="leading-7 text-muted">
+      <p className="leading-7 text-muted-foreground">
         El enlace puede haber cambiado o todavía no formar parte del MVP.
       </p>
       <Link
