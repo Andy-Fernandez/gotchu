@@ -11,19 +11,29 @@ const routes = [
     title: "Operación del negocio",
     description: "Agenda compartida para barberos, manager y owner.",
   },
+  {
+    href: "/ejemplo-shadcn",
+    title: "Ejemplo de shadcn/ui",
+    description: "Una reserva de prueba para aprender a componer primitives.",
+  },
+  {
+    href: "/my-example",
+    title: "Mi ejemplo de shadcn/ui",
+    description: "Una reserva de prueba para aprender a componer primitives.",
+  }
 ];
 
 export default function Home() {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col justify-center gap-10 px-5 py-12 sm:px-8">
       <header className="max-w-2xl space-y-4">
-        <p className="text-sm font-semibold tracking-[0.16em] text-muted uppercase">
+        <p className="text-sm font-semibold tracking-[0.16em] text-muted-foreground uppercase">
           Gotchu · MVP
         </p>
         <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
           Una agenda confiable para todo el trabajo de la barbería.
         </h1>
-        <p className="text-base leading-7 text-muted sm:text-lg">
+        <p className="text-base leading-7 text-muted-foreground sm:text-lg">
           Este índice temporal expone las dos superficies del esqueleto. Los
           datos y operaciones reales se conectarán mediante los módulos de
           dominio, sin duplicar reglas en las páginas.
@@ -35,10 +45,10 @@ export default function Home() {
           <Link
             key={route.href}
             href={route.href}
-            className="group rounded-3xl border border-line bg-surface p-6 transition hover:-translate-y-0.5 hover:border-foreground/25 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-4"
+            className="group rounded-3xl border border-border bg-card p-6 transition hover:-translate-y-0.5 hover:border-foreground/25 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-4"
           >
             <h2 className="text-lg font-semibold">{route.title}</h2>
-            <p className="mt-2 leading-6 text-muted">{route.description}</p>
+            <p className="mt-2 leading-6 text-muted-foreground">{route.description}</p>
             <span className="mt-6 inline-flex min-h-11 items-center font-medium">
               Abrir estructura <span aria-hidden="true">→</span>
             </span>
