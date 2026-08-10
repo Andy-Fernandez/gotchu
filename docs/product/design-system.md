@@ -36,7 +36,8 @@ The MVP ships with a light theme only. Do not add a dark palette, theme switcher
 | Muted foreground | `--muted-foreground` | `neutral/600` |
 | Subtle accent surface | `--accent` | `purple/50` |
 | Accent content | `--accent-foreground` | `purple/500` |
-| Default boundary | `--border`, `--input` | `neutral/200` |
+| Default boundary | `--border` | `neutral/200` |
+| Interactive control boundary | `--input` | `neutral/450` |
 | Keyboard focus | `--ring` | `purple/500` |
 | Destructive meaning | `--destructive` | Danger foreground |
 
@@ -76,6 +77,7 @@ Components must consume semantic tokens. They must not bind directly to primitiv
 | `neutral/0` | `#FFFFFF` | White surface and inverse foreground |
 | `neutral/50` | `#F7F7F5` | App background |
 | `neutral/200` | `#E3E3DF` | Default border and divider |
+| `neutral/450` | `#8C8C86` | Interactive control boundary |
 | `neutral/600` | `#686864` | Muted foreground |
 | `neutral/950` | `#181817` | Primary foreground and action |
 | `purple/50` | `#F1EEFF` | Subtle accent background |
@@ -93,7 +95,8 @@ Components must consume semantic tokens. They must not bind directly to primitiv
 | `color/foreground` | `neutral/950` | Primary text and icons |
 | `color/foreground-muted` | `neutral/600` | Supporting text |
 | `color/foreground-inverse` | `neutral/0` | Content over black |
-| `color/border` | `neutral/200` | Default boundaries |
+| `color/border` | `neutral/200` | Cards, separators, and subtle dividers |
+| `color/input-boundary` | `neutral/450` | Input and textarea boundaries |
 | `color/action-primary` | `neutral/950` | Primary button background |
 | `color/action-primary-foreground` | `neutral/0` | Primary button content |
 | `color/action-secondary` | `neutral/0` | Secondary button background |
@@ -201,7 +204,7 @@ Prefer surface color and borders over shadows for ordinary cards. A focus ring i
 
 ## Borders
 
-The default boundary is `1px solid color/border`. Inputs, cards, separators, and ordinary dividers use this rule unless a component requirement establishes a meaningful alternative. Keyboard focus uses its separate `2px solid color/focus` indicator with a 2 px offset; it is not a thicker border or an elevation effect.
+Cards, separators, and ordinary dividers use a subtle `1px solid color/border` boundary. Inputs and textareas use `1px solid color/input-boundary` so the interactive control remains distinguishable from its adjacent surface at a minimum `3:1` contrast. Keyboard focus uses its separate `2px solid color/focus` indicator with a 2 px offset; it is not a thicker border or an elevation effect.
 
 Do not add multiple decorative border strengths prematurely. Status and selection must use semantic content and accessible cues instead of relying only on border color or width.
 
@@ -259,6 +262,7 @@ When `asChild` renders a non-native control, disabled and loading states must ex
 - Control height: 48 px minimum.
 - Horizontal padding: 16 px.
 - Radius: `radius/md`.
+- Boundary: `color/input-boundary`, at least `3:1` against adjacent surfaces.
 - Text: `text/body`.
 - Label: 14/20, weight 500 or 600.
 - Helper and error text: 12/16 minimum.

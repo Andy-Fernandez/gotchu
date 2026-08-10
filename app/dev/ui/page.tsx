@@ -247,15 +247,16 @@ export default function PrimitivesLabPage() {
                 </Field>
 
                 <Field
-                  label="Celular"
+                  label="WhatsApp"
                   description="Lo usaremos para confirmar la cita."
-                  error="Ingresa un número válido de 8 dígitos."
                   required
                 >
                   <Input
-                    name="customer-phone"
+                    type="tel"
                     inputMode="tel"
-                    defaultValue="71234"
+                    autoComplete="tel"
+                    name="customer-whatsapp"
+                    placeholder="Ej. 71234567"
                   />
                 </Field>
               </div>

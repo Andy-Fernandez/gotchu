@@ -11,6 +11,7 @@
   --neutral-0: #ffffff;
   --neutral-50: #f7f7f5;
   --neutral-200: #e3e3df;
+  --neutral-450: #8c8c86;
   --neutral-600: #686864;
   --neutral-950: #181817;
   --purple-50: #f1eeff;
@@ -36,7 +37,7 @@
   --accent-foreground: var(--purple-500);
   --destructive: #b42318;
   --border: var(--neutral-200);
-  --input: var(--neutral-200);
+  --input: var(--neutral-450);
   --ring: var(--purple-500);
 
   /* Gotchu semantic extensions */
