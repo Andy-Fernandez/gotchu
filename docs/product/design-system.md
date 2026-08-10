@@ -250,6 +250,8 @@ Sizes:
 
 Required states are default, hover, focus-visible, pressed, disabled, and loading. Loading must preserve the button's dimensions. Avoid placing more than one primary button in the same action group.
 
+When `asChild` renders a non-native control, disabled and loading states must expose `aria-disabled`, leave the sequential focus order, and prevent activation. ARIA alone does not implement disabled behavior.
+
 ### Field and Input
 
 `Input` is the control; `Field` composes its label, control, description, and error message. Product flows should normally use `Field` so accessible naming and error association are not reimplemented per screen.
@@ -263,6 +265,21 @@ Required states are default, hover, focus-visible, pressed, disabled, and loadin
 - Required states: default, hover, focus-visible, invalid, disabled, and read-only.
 
 Do not rely on placeholder text as the label. An invalid field needs a visible message and programmatic association with that message.
+
+Use `Field` as the normal product-level composition. It generates the control ID when needed, connects the label with `htmlFor`, and merges description and error IDs into `aria-describedby`. An error also marks the control with `aria-invalid`.
+
+```tsx
+<Field
+  label="Nombre del cliente"
+  description="Así aparecerá en la agenda."
+  error={errors.name}
+  required
+>
+  <Input name="name" />
+</Field>
+```
+
+`Input` and `Textarea` retain their native element props. Features own validation timing and messages; the primitives only provide consistent presentation and accessible association.
 
 ### Badge
 
