@@ -11,16 +11,6 @@ const routes = [
     title: "Operación del negocio",
     description: "Agenda compartida para barberos, manager y owner.",
   },
-  {
-    href: "/ejemplo-shadcn",
-    title: "Ejemplo de shadcn/ui",
-    description: "Una reserva de prueba para aprender a componer primitives.",
-  },
-  {
-    href: "/my-example",
-    title: "Mi ejemplo de shadcn/ui",
-    description: "Una reserva de prueba para aprender a componer primitives.",
-  }
 ];
 
 export default function Home() {
