@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
@@ -46,10 +48,22 @@ function Button({
   asChild = false,
   loading = false,
   disabled,
+  onClick,
+  tabIndex,
   ...props
 }: ButtonProps) {
   const Comp = asChild ? Slot.Root : "button"
-  const isDisabled = disabled || loading
+  const isDisabled = Boolean(disabled || loading)
+
+  const handleClick: React.MouseEventHandler<HTMLElement> = (event) => {
+    if (asChild && isDisabled) {
+      event.preventDefault()
+      event.stopPropagation()
+      return
+    }
+
+    onClick?.(event as React.MouseEvent<HTMLButtonElement>)
+  }
 
   return (
     <Comp
@@ -61,6 +75,8 @@ function Button({
       aria-busy={loading || undefined}
       aria-disabled={asChild && isDisabled ? true : undefined}
       disabled={asChild ? undefined : isDisabled}
+      onClick={handleClick}
+      tabIndex={asChild && isDisabled ? -1 : tabIndex}
       className={cn(buttonVariants({ variant, size, className }))}
     />
   )
