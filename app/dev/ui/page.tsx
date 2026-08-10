@@ -4,14 +4,25 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
+  Ellipsis,
   Plus,
   Scissors,
   Trash2,
 } from "lucide-react"
 
 import { Button, IconButton } from "@/components/ui/button"
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 
 export const metadata: Metadata = {
@@ -317,6 +328,143 @@ export default function PrimitivesLabPage() {
                 >
                   <Textarea defaultValue="Nota registrada por recepción." readOnly />
                 </Field>
+              </div>
+            </Section>
+          </div>
+        </PrimitiveGroup>
+
+        <PrimitiveGroup
+          id="surface-primitives"
+          eyebrow="Primitive 3.3"
+          title="Surface primitives"
+          description="Card agrupa contenido relacionado con una superficie neutral; Separator comunica un límite real entre secciones sin sustituir al espaciado."
+        >
+          <div className="space-y-6">
+            <Section
+              title="Card sizes"
+              description="Default usa el ritmo de 16 px de Gotchu. Small conserva la misma composición con un ritmo compacto de 12 px."
+            >
+              <div className="grid gap-4 md:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      <h4>Default Card</h4>
+                    </CardTitle>
+                    <CardDescription>
+                      Superficie, borde y radio definidos por tokens semánticos.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-body">
+                      El contenido mantiene un ritmo interno de 16 px.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card size="sm">
+                  <CardHeader>
+                    <CardTitle>
+                      <h4>Small Card</h4>
+                    </CardTitle>
+                    <CardDescription>
+                      La composición permanece igual con menor densidad.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-body-sm">
+                      El contenido compacto usa un ritmo interno de 12 px.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </Section>
+
+            <Section
+              title="Card composition"
+              description="Header, Title, Description, Action, Content y Footer se combinan sin introducir significado de producto en el primitive."
+            >
+              <div className="grid gap-4 md:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      <h4>Composición completa</h4>
+                    </CardTitle>
+                    <CardDescription>
+                      Cada región conserva la misma alineación horizontal.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-body">
+                      El contenido principal puede crecer sin cambiar el
+                      contrato de la superficie.
+                    </p>
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="secondary">Acción secundaria</Button>
+                  </CardFooter>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      <h4>Header con acción</h4>
+                    </CardTitle>
+                    <CardDescription>
+                      CardAction alinea controles sin decidir qué hacen.
+                    </CardDescription>
+                    <CardAction>
+                      <IconButton variant="ghost" label="Más opciones">
+                        <Ellipsis />
+                      </IconButton>
+                    </CardAction>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-body">
+                      La acción pertenece al componente que compone la Card.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      <h4>Contenido largo</h4>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-body">
+                      Una Card debe admitir contenido que ocupe varias líneas
+                      sin truncarlo ni imponer una altura fija. La superficie
+                      comunica que estos elementos pertenecen al mismo grupo,
+                      mientras la página conserva el control de su jerarquía.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent>
+                    <p className="text-body">Card con contenido mínimo.</p>
+                  </CardContent>
+                </Card>
+              </div>
+            </Section>
+
+            <Section
+              title="Separator orientations"
+              description="Horizontal es la orientación predeterminada. Vertical toma la altura disponible de su contenedor."
+            >
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="space-y-3">
+                  <p className="text-body-sm font-semibold">Primera sección</p>
+                  <Separator />
+                  <p className="text-body-sm font-semibold">Segunda sección</p>
+                </div>
+
+                <div className="flex h-6 items-center gap-3">
+                  <span className="text-body-sm font-semibold">Elemento</span>
+                  <Separator orientation="vertical" />
+                  <span className="text-body-sm font-semibold">Elemento</span>
+                </div>
               </div>
             </Section>
           </div>
