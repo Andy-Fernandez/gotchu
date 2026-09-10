@@ -20,7 +20,7 @@ Coding agents should read [AGENTS.md](AGENTS.md) first. It contains the minimum 
 
 ## Local development
 
-Requirements: Node.js compatible with Next.js 16 and pnpm 11.
+Requirements: Node.js 24 (including native TypeScript support for unit tests) and pnpm 11.
 
 ```bash
 pnpm install
@@ -33,9 +33,11 @@ Useful checks:
 
 ```bash
 pnpm lint
+pnpm test
+pnpm typecheck
 pnpm build
 ```
 
 ## Current state
 
-The repository is a newly scaffolded Next.js application. Product documentation is established; implementation has not yet begun.
+The Next.js scaffold and shared UI primitives are established. Day 1 adds the [public catalog module](modules/catalog/README.md): domain types, a fictional Bolivian demo shop with two barbers and three services, and a tested `getPublicShopProfile(shopSlug)` operation. Public page integration is planned for Day 2; availability, bookings, and infrastructure remain unimplemented.
