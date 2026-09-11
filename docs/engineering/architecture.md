@@ -49,6 +49,7 @@ Pages and layouts are Server Components by default. Add Client Component boundar
 - Daily backups and a tested restore process before expansion.
 - A clear online/offline state; do not cache private booking or receipt data in shared browser storage.
 - Immutable audit events for financial, permission, policy, and scheduling exceptions.
+- Booking writes must snapshot deposit mode/value/applied amount and enforce configurable 24-hour cancellation, 8-hour reschedule, 10-minute lateness, 10-minute combined-service buffer, and 2-hour public online lead-time policies.
 
 ## Application boundaries
 
@@ -57,7 +58,7 @@ The exact transport is undecided, but preserve these capabilities:
 - **Public booking:** shop/catalog read, availability, hold, booking identity, receipt submission, private status, reschedule, cancellation.
 - **Staff:** live board, manual appointment, walk-in, assignment, start, complete, no-show, payment, add-on.
 - **Financial review:** pending deposits, approve, approve with difference, reject, refund tracking.
-- **Payment verification:** manual receipt review in the MVP; a provider-neutral boundary for future authenticated, idempotent confirmations from Libélula or another banking service, using the same payment state machine and human-review fallback.
+- **Payment verification:** manual receipt review in the MVP; a provider-neutral boundary for future authenticated, idempotent confirmations from a banking service, using the same payment state machine and human-review fallback. No provider is selected yet.
 - **Owner:** service/staff/hours/policy configuration, operational metrics, adoption metrics, audit.
 - **Platform:** merchant activation and health for founder-led pilot support.
 
@@ -89,7 +90,7 @@ Do not install a map SDK, choose a geocoder, collect customer location, build ge
 
 Unit-test interval overlap, slot generation, buffers, queue fit, deposit arithmetic, policies, state transitions, schedule capture, and activation calculations.
 
-Integration-test concurrency and boundaries: two requests for one slot, expiry versus receipt submission, duplicated payment references, staff deposit exceptions, walk-in conflicts, delayed service effects, add-on fit, idempotent completion, authorization, and AI rejection by authoritative domain rules.
+Integration-test concurrency and boundaries: two requests for one slot, expiry versus receipt submission, duplicated payment references, staff deposit exceptions, walk-in FIFO/conflicts, delayed service effects, combined services, cancellation/reschedule thresholds, no-show reuse, add-on fit, idempotent completion, authorization, and AI rejection by authoritative domain rules.
 
 End-to-end test the full stories: direct-link deposit-backed customer reservation, busy Saturday queue, manually captured WhatsApp appointment, cash walk-in completion, reschedule with deposit transfer, no-show, owner metrics, and shop activation.
 

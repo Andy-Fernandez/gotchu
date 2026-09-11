@@ -17,7 +17,7 @@ This boundary applies to the initial closed flow for one anchor barbershop. Both
 - One merchant, one shop, one physical location.
 - Multiple barbers with service eligibility.
 - Shop hours, barber hours, breaks, and blocked periods.
-- Service catalog with price, duration, buffer, and fixed deposit.
+- Service catalog with price, duration, buffer, a configurable 20% shop-default deposit, and percentage/fixed BOB service overrides.
 - Central shop QR image.
 - Simple cancellation and no-show policy.
 
@@ -27,11 +27,13 @@ This boundary applies to the initial closed flow for one anchor barbershop. Both
 - Service-first availability and “any eligible barber” or a specific barber.
 - Server-revalidated, ten-minute hold assigned to an exact barber.
 - Customer name and WhatsApp number.
-- QR deposit instructions and receipt upload.
+- Fixed shop QR deposit instructions with exact amount, booking code, and receipt upload through the app or staff-assisted WhatsApp flow.
 - Replacement receipt upload when the previous claim is unreadable or rejected, preserving review history.
 - Clear held, pending-review, confirmed, cancelled, and rescheduled states.
 - Private booking-status access.
 - One reschedule within policy and a cancellation request.
+- Combined services in one continuous block assigned to one barber, with a single final buffer.
+- Public online booking with a two-hour minimum lead time; closer requests use manual WhatsApp handling or walk-in registration without an advance deposit.
 
 ### Staff operations
 
@@ -41,12 +43,14 @@ This boundary applies to the initial closed flow for one anchor barbershop. Both
 - Conflict protection around confirmed appointments.
 - Start, complete, cancel, and mark no-show.
 - Record final amount and payment method.
+- Register walk-ins FIFO in the shared agenda, with no advance deposit and payment at completion.
 - Settle the remaining balance directly at the shop; Gotchu records the result but does not collect that balance online in this phase.
 
 ### Owner and pilot operations
 
 - Approve, reject, or approve a deposit with a documented difference.
-- Configure core services, staff, hours, deposits, and policy.
+- Configure core services, staff, hours, deposits, and cancellation/rescheduling/no-show/lead-time policy.
+- Process manual customer refunds through WhatsApp within the 24-hour target when authorized.
 - See operational and adoption metrics.
 - Audit sensitive actions.
 - Track activation, schedule capture, merchant health, and pilot feedback.
@@ -73,7 +77,7 @@ AI must not invent slots, calculate overlaps independently, approve a receipt, c
 - Expansion beyond barbershops.
 - Loyalty, memberships, prepaid packages, or advanced marketing.
 - Payroll, accounting, inventory, complex commissions, or staff auto-scheduling.
-- Automated bank reconciliation or refunds.
+- Automated bank reconciliation or automatic payment/WhatsApp confirmation. Automatic refunds are outside the MVP; authorized manual refunds are part of the operational policy.
 - Dynamic pricing, demand forecasting, promotions, or a fully autonomous receptionist.
 - Complex customer risk scoring.
 

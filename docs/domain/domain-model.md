@@ -7,7 +7,8 @@ This document defines concepts and invariants, not a final database schema.
 - **Shop:** the single pilot location and tenant boundary. It has stable identity so future marketplace discovery can reference it.
 - **Shop member:** an authenticated staff user with a role and shop membership.
 - **Barber:** a staff profile with working hours and eligible services.
-- **Service:** a shop offering that defines price, duration, buffer, fixed deposit, and eligible barbers.
+- **Service:** a shop offering that defines price, duration, buffer, deposit mode/value override, and eligible barbers.
+- **Booking policy:** shop-scoped configuration for online lead time, cancellation and rescheduling thresholds, no-show tolerance, combined-service buffer, and deposit defaults.
 - **Booking hold:** a short-lived claim on an exact barber and interval.
 - **Booking:** scheduled work from a customer flow or a staff-captured channel.
 - **Queue entry:** walk-in demand with arrival, allocation, estimates, and execution state.
@@ -41,6 +42,8 @@ type PaymentStatus =
   | "partially_paid"
   | "paid"
   | "waived"
+  | "transferred"
+  | "retained"
   | "refund_pending"
   | "refunded";
 
@@ -84,6 +87,9 @@ Transitions must be explicit, authorized, auditable where sensitive, and covered
 - Expired holds do not consume capacity.
 - Confirmed appointments are never silently displaced by queue allocation or delay handling.
 - Server-side validation is authoritative; client availability is advisory.
+- All demand sources use this same agenda. Walk-ins are FIFO by registration time and never displace confirmed appointments.
+- Combined services use one barber and one continuous interval: summed duration plus one final buffer.
+- Public online reservations require the configured minimum lead time, initially two hours; closer requests use staff-assisted handling or walk-in registration.
 
 ## Future marketplace compatibility
 
@@ -96,11 +102,13 @@ Transitions must be explicit, authorized, auditable where sensitive, and covered
 ## Money invariants
 
 - Store amounts as integers in the currency's minor unit; never use binary floating point.
-- Snapshot price, required deposit, and remaining balance on the booking so later catalog changes do not rewrite history.
+- Snapshot price, duration, buffer, deposit mode, configured value, applied deposit amount, and remaining balance on the booking so later catalog changes do not rewrite history.
 - A deposit contributes to the final amount.
 - Receipt submission and payment approval are separate events with separate actors and times.
 - An unreadable receipt and a nonexistent transaction are different review outcomes. Replacement claims preserve every previous file and review result.
 - Financial exceptions require authorization, reason, and audit record.
+- A deposit defaults to 20% at shop level and may be overridden per service as a percentage or fixed BOB amount. A retained deposit is a penalty outcome; a transferred deposit belongs to the linked replacement booking.
+- Walk-ins do not create a deposit record requiring advance payment; their final payment is recorded at completion.
 - Retrying a receipt or completion request must not duplicate money records.
 
 ## Identity and time
@@ -116,9 +124,9 @@ Transitions must be explicit, authorized, auditable where sensitive, and covered
 | Role | Core authority |
 |---|---|
 | Customer | View public catalog/availability; manage own private booking |
-| Barber | Own schedule and queue; register walk-ins; execute services; record payment/no-show |
-| Manager | Shop-wide board; manual appointments; queue resolution; deposit review when granted |
-| Owner | Configuration, staff, policy, financial review, metrics, export, audit |
+| Barber | Own schedule and queue; register walk-ins; execute services; record payment/no-show; review deposits only with an explicit financial-review permission |
+| Manager | Shop-wide board; manual appointments; queue resolution; deposit review and refunds only when the corresponding explicit permissions are granted |
+| Owner | Configuration, staff, policy, financial review, refunds, metrics, export, audit |
 | Platform operator | Onboarding and platform health under explicit support permissions |
 
 Backend authorization is mandatory. UI visibility is not an authorization boundary.
@@ -130,7 +138,7 @@ Shop
 ├── members → roles / barber profile
 ├── services ↔ eligible barbers
 ├── hours / breaks / blocked periods
-├── bookings → items / hold / customer snapshot / payments
+├── bookings → items / hold / customer snapshot / payments / reschedule links
 ├── queue entries → service / assigned barber
 └── audit events / product events / health snapshots
 ```

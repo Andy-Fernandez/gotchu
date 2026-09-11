@@ -3,7 +3,7 @@
 **Alcance:** MVP cerrado para una barbería y una ubicación  
 **Estado:** base implementable para el piloto  
 **Fuente:** *Barbershop Local Operating System — Strategic Lean MVP Guide v0.4*  
-**Última actualización:** 2026-08-06
+**Última actualización:** 2026-09-11
 
 Este documento es la fuente de verdad para los casos operativos que suelen quedar ambiguos entre producto, diseño y backend. Complementa `core-workflows.md` y `domain-model.md`.
 
@@ -19,13 +19,19 @@ Este documento es la fuente de verdad para los casos operativos que suelen queda
 | Configuración | Default inicial | Estado |
 |---|---:|---|
 | Duración del hold | 10 minutos | Regla firme |
-| Anticipación mínima para reserva online | 30 minutos antes del inicio | Decisión de producto para el MVP |
+| Anticipación mínima para reserva online | 2 horas antes del inicio | Decisión de producto para el MVP |
 | Horizonte máximo de reserva online | 1 mes desde la fecha actual | Decisión de producto para el MVP |
 | Separación entre inicios de slots | 15 minutos | Decisión de producto para el MVP |
 | Objetivo de revisión del anticipo | 2 horas acumuladas dentro del horario abierto de la barbería | Decisión de producto para el MVP |
-| Anticipación mínima para reprogramar | 4 horas | Hipótesis del documento original |
-| Reprogramaciones con transferencia de anticipo | 1 | Hipótesis del documento original |
-| Plazo objetivo para devolución manual | 2 días hábiles | Default de piloto; validar operación y normativa |
+| Anticipación mínima para cancelar sin penalización | 24 horas | Decisión de producto para el MVP; configurable |
+| Anticipación mínima para reprogramar sin penalización | 8 horas | Decisión de producto para el MVP; configurable |
+| Reprogramaciones con transferencia de anticipo | 1 por reserva | Decisión de producto para el MVP |
+| Anticipo predeterminado | 20% del total | Decisión de producto para el MVP; configurable |
+| Modalidad del anticipo | Porcentaje o monto fijo en BOB, con override por servicio | Decisión de producto para el MVP |
+| Margen de tolerancia para no-show | 10 minutos | Decisión de producto para el MVP; configurable |
+| Buffer final de una reserva combinada | 10 minutos | Decisión de producto para el MVP; configurable |
+| Plazo máximo para devolución manual | 24 horas desde la solicitud | Decisión de producto para el MVP; validar operación y normativa |
+| Ventana de reemplazo del comprobante | 1 hora, con tope 30 minutos antes de la cita | Decisión de producto para el MVP |
 | Retención del archivo del comprobante | 180 días después del cierre financiero | Default de piloto; validar normativa contable y privacidad |
 | Tamaño máximo del comprobante | 10 MB | Default técnico de piloto |
 
@@ -57,16 +63,18 @@ Interval: occupied
 - Si la respuesta se pierde, el cliente consulta el estado privado antes de volver a enviar. Si el servidor ya lo recibió, muestra `pending_review` y no crea otro registro.
 - Si el hold vence antes de que el servidor acepte el archivo, el upload se rechaza, se actualiza la disponibilidad y se solicita elegir otro horario.
 - Si el cliente ya realizó el pago QR pero el comprobante no pudo registrarse antes del vencimiento, el sistema no promete la reserva. Debe mostrar un camino de ayuda para que personal autorizado verifique el pago y, si el espacio continúa disponible, cree una cita manual; en caso contrario se transfiere o devuelve el monto según resolución auditada.
+- El MVP usa un QR fijo de la barbería. Cada solicitud de anticipo debe comunicar monto exacto, nombre del cliente, horario y código de reserva para que el comprobante pueda vincularse sin depender únicamente de la imagen QR.
+- El comprobante puede recibirse por WhatsApp o cargarse desde la aplicación, pero en ambos casos el personal debe registrarlo y vincularlo en Gotchu antes de considerarlo dentro del flujo de revisión.
 
 ### 1.3 Revisión humana
 
 - Un comprobante es una declaración de pago, no prueba definitiva.
-- Solo owner o manager con permiso financiero explícito puede aprobar, aprobar con diferencia, solicitar otro comprobante o rechazar un comprobante.
+- Owner puede aprobar, aprobar con diferencia, solicitar otro comprobante o rechazar un comprobante. Manager puede hacerlo solo con permiso financiero explícito; un barber puede hacerlo únicamente si recibe un permiso explícito de revisión financiera. La autorización para devolver dinero es independiente y queda limitada a owner o manager con permiso explícito de devoluciones.
 - El revisor verifica destino, monto, existencia de la transacción, fecha/hora, referencia duplicada y legibilidad.
 - AI u OCR pueden extraer datos, pero no pueden aprobar dinero.
 - Un comprobante ilegible se marca como `needs_replacement`; no se afirma que el pago sea inexistente. Un comprobante cuya transacción no existe se marca `rejected` con motivo `transaction_not_found`. Destino incorrecto, referencia duplicada, monto diferente y otros rechazos conservan su motivo específico.
 - El cliente puede cargar otro comprobante desde su pantalla privada. El comprobante anterior y su revisión se conservan; el reemplazo crea una nueva declaración vinculada y vuelve a revisión, sin sobrescribir historia.
-- Mientras la reserva permita un comprobante de reemplazo, continúa `reserved_pending_review` y su intervalo permanece protegido. Ningún rechazo o solicitud de reemplazo libera capacidad hasta que una operación autorizada resuelva o cancele la reserva.
+- Mientras la reserva permita un comprobante de reemplazo, continúa `reserved_pending_review` y su intervalo permanece protegido. La ventana para reemplazarlo es de 1 hora desde la solicitud, con un tope absoluto de 30 minutos antes de la cita, lo que ocurra primero. Al vencer la ventana sin un reemplazo, una transición autoritativa puede cerrar la reserva y liberar el espacio; no se confirma automáticamente.
 - El objetivo inicial es revisar dentro de 2 horas acumuladas dentro del horario abierto configurado de la barbería.
 - El reloj del objetivo corre únicamente mientras la barbería está abierta. Si el comprobante llega fuera de horario, comienza en la siguiente apertura; si llega cerca del cierre, se pausa al cerrar y continúa en la siguiente apertura.
 - La pantalla del cliente debe mostrar una expectativa realista: “Revisaremos tu comprobante en un plazo de hasta 2 horas durante nuestro horario de atención”, junto con el próximo horario de apertura cuando corresponda.
@@ -85,6 +93,7 @@ Interval: occupied
 - Si el proveedor no responde, entrega datos incompletos o existe una diferencia, la reserva permanece `reserved_pending_review` y el pago `pending_review` hasta resolución humana. La indisponibilidad del proveedor nunca libera ni confirma automáticamente el intervalo.
 - Antes de integrar un proveedor se requiere un ADR que evalúe cobertura en Bolivia, contrato y regulación, seguridad de webhooks, costos, tiempos de confirmación, conciliación, reversos, disponibilidad y estrategia de fallback.
 - La confirmación automática de anticipos no implica devoluciones automáticas; estas permanecen fuera del MVP hasta una decisión independiente.
+- Una fase futura podrá usar un QR o enlace único por reserva y confirmación autenticada del proveedor, pero no forma parte del MVP ni se ha seleccionado proveedor.
 
 ## 2. Confirmación y comunicación con el cliente
 
@@ -104,8 +113,8 @@ Interval: occupied
 
 ### 3.1 Reprogramación
 
-- Default inicial: una sola reprogramación cuando faltan al menos 4 horas para el inicio.
-- El anticipo se transfiere completo a la reserva reemplazante.
+- Default inicial: una sola reprogramación gratuita cuando faltan al menos 8 horas para el inicio. El umbral se configura por barbería y es independiente del umbral de cancelación.
+- El anticipo se transfiere completo a la reserva reemplazante. Una nueva reserva se crea solo después de revalidar disponibilidad, duración, profesional exacto y buffer.
 - No se sobrescribe la reserva original:
 
 ```text
@@ -114,8 +123,8 @@ Replacement: confirmed
 Payment: transferred
 ```
 
-- El nuevo horario se valida como cualquier reserva y debe caber completo, incluyendo buffer.
-- Una segunda solicitud o una solicitud dentro de las 4 horas requiere decisión manual de manager u owner. La excepción registra motivo.
+- El nuevo horario debe caber completo, incluyendo buffer, y la reserva original conserva su historial y vínculo con la reemplazante.
+- Una segunda transferencia automática no está permitida. Una solicitud con menos de 8 horas se trata como cambio tardío: se retiene el anticipo y una nueva reserva requiere un anticipo nuevo. No se crea un sistema general de excepciones automáticas.
 
 ### 3.2 Cancelación por el cliente
 
@@ -123,30 +132,34 @@ Payment: transferred
 - Desde el enlace privado, el cliente puede cancelar inmediatamente después de confirmar una advertencia que explica la liberación del horario y el posible tratamiento del anticipo.
 - La cancelación y liberación del intervalo se ejecutan de forma atómica en el servidor. La interfaz solo comunica éxito después del commit autoritativo.
 - Cancelar la reserva no elimina ni resuelve automáticamente un comprobante o pago. Si existe un anticipo pendiente o aprobado, su revisión, transferencia, retención o devolución sigue la política financiera y conserva su historial.
-- Con 4 horas o más, el default de piloto ofrece transferencia a una nueva reserva dentro de la reprogramación permitida.
-- Una devolución solicitada por el cliente, incluso con anticipación, requiere resolución manual hasta validar una política comercial y legal definitiva.
-- Con menos de 4 horas, la barbería puede retener el anticipo. Cualquier devolución o transferencia excepcional requiere owner, motivo y auditoría.
+- Con 24 horas o más, el cliente no recibe penalización y puede elegir entre transferir el anticipo a otra cita o solicitar una devolución completa mediante un proceso manual por WhatsApp.
+- La devolución solicitada por el cliente no es automática: owner o manager con permiso explícito de devoluciones la registra, la ejecuta por el canal operativo disponible y la completa en un máximo de 24 horas desde la solicitud. Se conservan monto, método, referencia, actor y timestamps.
+- Con menos de 24 horas, se retiene el 100% del anticipo como penalización. La cancelación libera el intervalo después de confirmar la transición autoritativa, sin afectar otras reservas.
 
 ### 3.3 No-show
 
 - Solo se marca no-show después de la hora programada y del margen de tolerancia configurado por la barbería.
-- Default inicial propuesto para el margen: 10 minutos. Debe validarse antes del piloto.
-- El anticipo se retiene por defecto.
+- Default inicial para el margen: 10 minutos, configurable por barbería.
+- El anticipo se retiene por defecto como penalización.
 - Barber puede marcar no-show únicamente sobre una cita asignada a su agenda; manager y owner pueden hacerlo para cualquier cita de la barbería.
 - Revertir un no-show requiere manager u owner, motivo y auditoría.
+- Tras marcar no-show, el intervalo restante puede reutilizarse para un walk-in u otra asignación solo si el servicio completo más su buffer cabe antes de la siguiente cita protegida. Las citas confirmadas nunca se desplazan.
+- Si el cliente original llega después de marcar no-show, no desplaza la asignación nueva; espera otro hueco disponible.
+- Si llega dentro de la tolerancia, el barbero puede acortar el servicio para proteger la siguiente cita, pero el cliente paga el precio completo.
 
 ### 3.4 Cancelación por la barbería
 
 - El cliente elige entre transferencia completa a otra reserva o devolución completa del anticipo.
 - La barbería no puede retener el anticipo cuando ella cancela.
 - La cancelación registra actor y motivo, y libera la capacidad solo después de confirmar la transición.
+- Esta regla aplica aunque la cancelación ocurra el mismo día. El MVP no aplica penalizaciones a la barbería ni promete descuentos o compensaciones adicionales.
 
 ### 3.5 Devoluciones
 
 - No existen devoluciones automáticas en el MVP.
 - Owner autoriza la devolución; manager puede prepararla o marcarla completada solo si recibió permiso financiero específico.
 - El estado pasa por `refund_pending` y luego `refunded`. Nunca se elimina ni reescribe el pago original.
-- Default inicial: completar la devolución manual dentro de 2 días hábiles y registrar método, referencia, monto, actor y timestamp.
+- Default inicial: completar la devolución manual dentro de 24 horas desde la solicitud y registrar método, referencia, monto, actor y timestamp.
 - Las políticas de retención, devolución y pérdida del anticipo deben validarse legalmente antes de uso comercial amplio.
 
 ## 4. Autenticación y permisos del personal
@@ -176,10 +189,10 @@ Payment: transferred
 | Registrar saldo final pagado | Sí, en servicio propio | Sí | Sí |
 | Editar un pago ya registrado | No | Solo con permiso financiero y motivo | Sí, con motivo |
 | Marcar no-show | Agenda propia | Toda la barbería | Toda la barbería |
-| Aprobar/rechazar anticipo | No | Solo con permiso financiero | Sí |
-| Aprobar con diferencia | No | Solo con permiso financiero y nota | Sí, con nota |
+| Aprobar/rechazar anticipo | Solo con permiso de revisión financiera explícito | Solo con permiso financiero | Sí |
+| Aprobar con diferencia | Solo con permiso de revisión financiera explícito y nota | Solo con permiso financiero y nota | Sí, con nota |
 | Omitir anticipo | No | Solo con permiso financiero y motivo | Sí, con motivo |
-| Autorizar devolución | No | No por defecto | Sí |
+| Autorizar devolución | No | Solo con permiso explícito de devoluciones | Sí |
 | Configurar servicios, depósitos y política | No | No por defecto | Sí |
 | Crear bloqueo operativo del día | No | Sí | Sí |
 | Editar horarios recurrentes y feriados | No | No por defecto | Sí |
@@ -192,7 +205,7 @@ Payment: transferred
 
 ## 5. Servicios, duración, buffer y profesionales habilitados
 
-- Cada servicio activo define nombre, descripción, precio total, duración, buffer, anticipo fijo y profesionales habilitados.
+- Cada servicio activo define nombre, descripción, precio total, duración, buffer predeterminado, modalidad/valor de anticipo opcional y profesionales habilitados.
 - Owner crea o modifica servicios. Manager solo puede hacerlo si en el futuro recibe un permiso explícito de configuración.
 - Duración debe ser mayor que cero; buffer puede ser cero o mayor. Ambos se expresan en minutos enteros.
 - El intervalo ocupado es:
@@ -205,6 +218,8 @@ scheduledEnd = start + duration + buffer
 - “Cualquier profesional” siempre se resuelve a un profesional exacto y habilitado antes de crear el hold.
 - Un profesional no puede ofrecer un servicio si su relación de elegibilidad está inactiva, aunque tenga espacio libre.
 - Precio, duración, buffer, anticipo y profesional se guardan como snapshot en la reserva. Cambios posteriores al catálogo no modifican reservas existentes.
+- Una reserva combinada suma las duraciones de sus servicios, se asigna completa a un solo barbero y usa un bloque continuo con un único buffer final inicial de 10 minutos, configurable. No se suman buffers entre servicios combinados.
+- El anticipo de una reserva combinada se calcula sobre el total y se guarda con su modalidad, valor y monto aplicado.
 - Cambiar duración o buffer no mueve silenciosamente citas confirmadas. Los conflictos resultantes requieren resolución manual y auditada.
 - Un add-on solo se agrega si el intervalo extendido continúa cabiendo antes del siguiente compromiso protegido.
 
@@ -229,7 +244,8 @@ scheduledEnd = start + duration + buffer
 
 ### 6.1 Ventana y cadencia de reserva online
 
-- El inicio más temprano que puede ofrecerse es 30 minutos después de la hora actual confirmada por el servidor.
+- El inicio más temprano que puede ofrecerse públicamente es 2 horas después de la hora actual confirmada por el servidor. El valor es configurable por barbería.
+- Para solicitudes con menos de 2 horas no se promete confirmación online: el staff puede gestionarlas manualmente por WhatsApp si está disponible; si no, el cliente puede presentarse como walk-in sin anticipo.
 - El inicio más lejano que puede ofrecerse está dentro de 1 mes desde la fecha actual de la barbería.
 - Los posibles inicios se generan cada 15 minutos, pero solo se muestran cuando el servicio completo más su buffer cabe dentro del horario y no se superpone con capacidad protegida.
 - La anticipación, el horizonte y la cadencia restringen qué opciones se muestran; nunca sustituyen la revalidación atómica al crear el hold.
@@ -344,7 +360,7 @@ No se usan cuentas creadas, page views o reservas no completadas como evidencia 
 ## 13. Casos mínimos de prueba
 
 - Dos clientes intentan el mismo slot al mismo tiempo.
-- Un cliente consulta exactamente antes y después del límite de 30 minutos y del horizonte de 1 mes.
+- Un cliente consulta exactamente antes y después del límite de 2 horas y del horizonte de 1 mes.
 - Un servicio cuya duración no es múltiplo de 15 minutos se valida correctamente contra slots iniciados cada 15 minutos.
 - El hold vence sin upload.
 - El servidor acepta el upload pero la respuesta no llega al cliente.
@@ -352,24 +368,25 @@ No se usan cuentas creadas, page views o reservas no completadas como evidencia 
 - Nadie revisa el anticipo dentro del SLA y llega la hora del servicio.
 - Barber inicia un servicio con anticipo pendiente y la acción no aprueba el pago.
 - Comprobante ilegible solicita reemplazo; transacción inexistente registra un rechazo distinto; un nuevo archivo conserva la revisión anterior.
+- El reemplazo de comprobante vence a la hora o 30 minutos antes de la cita, lo que ocurra primero, y libera el espacio mediante una transición autoritativa.
 - Manager sin permiso financiero intenta aprobar.
 - Doble toque al crear hold, aprobar, completar servicio y registrar pago.
 - Cliente reprograma una vez y luego intenta una segunda vez.
-- Cliente cancela desde el enlace privado, el intervalo se libera y el pago conserva su resolución separada.
-- Cancelación tardía, no-show, cancelación por barbería y devolución manual.
+- Cliente reprograma con 8 horas o más, intenta hacerlo con menos de 8 horas y conserva el vínculo histórico.
+- Cliente cancela con 24 horas o más, solicita devolución por WhatsApp, y cancela con menos de 24 horas con retención completa del anticipo.
+- No-show reutiliza el intervalo solo cuando cabe el servicio completo más buffer; una llegada dentro de tolerancia acorta el servicio y cobra el precio completo.
+- Cancelación por barbería ofrece transferencia o devolución sin penalización, incluso el mismo día.
+- Servicios combinados quedan en un solo bloque y un solo barbero con buffer final.
 - Cambio de duración, buffer, horario o bloqueo que colisiona con una cita confirmada.
 - Staff trabaja con mala conexión, hace contingencia y reconcilia al volver.
 - Comprobante privado no es accesible por barber ni por URL vencida.
 - Flujo completo con lector de pantalla y teléfono de gama baja.
 
-## 14. Decisiones que deben cerrarse antes del piloto pagado
+## 14. Validaciones que deben completarse antes del piloto pagado
 
-- Definir si el cliente reserva un solo servicio principal o puede combinar varios servicios en una misma reserva.
-- Definir cuánto tiempo puede permanecer abierta la carga de un comprobante de reemplazo y cuándo personal autorizado debe cerrar definitivamente una reserva rechazada.
-- Confirmar margen de tolerancia para no-show.
-- Definir si una cancelación temprana permite devolución o solo transferencia.
-- Validar plazo y mecanismo de devolución.
-- Validar legalmente política de pérdida del anticipo y texto mostrado al cliente.
+- Validar legalmente el texto de retención del anticipo, cancelación tardía, no-show y devolución.
+- Confirmar con la barbería la operación real del plazo de devolución de 24 horas y quién tendrá el permiso explícito.
 - Validar formatos, tamaño y retención de comprobantes.
-- Definir quién recibe permisos financieros y cómo se recupera una cuenta.
+- Definir quién recibe permisos financieros, de revisión y de devoluciones, y cómo se recupera una cuenta.
 - Definir el procedimiento físico de contingencia y reconciliación.
+- Medir durante el piloto el buffer final, los tiempos de revisión, las cancelaciones tardías, los no-shows, el uso de espacios liberados y el impacto de la ventana pública de 2 horas.
