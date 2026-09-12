@@ -17,6 +17,7 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
   const selectedService = selection.kind === "selected"
     ? profile.services.find((service) => service.id === selection.serviceId)
     : undefined;
+  const selectedSlot = selection.kind === "selected" ? selection.selectedSlot : null;
 
   return (
     <main className="min-h-dvh bg-background">
@@ -58,7 +59,7 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
                       serviceId: service.id,
                       date: state.selectedDate,
                     })}
-                    aria-current={isSelected ? "page" : undefined}
+                    aria-current={isSelected ? "true" : undefined}
                     className={`block min-h-11 rounded-lg border p-4 transition-colors ${
                       isSelected
                         ? "border-foreground bg-accent"
@@ -66,15 +67,19 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
                     }`}
                   >
                     <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="font-semibold">{service.name}</p>
+                      <div className="min-w-0">
+                        <p className="break-words font-semibold">{service.name}</p>
                         <p className="mt-1 text-body-sm leading-5 text-muted-foreground">
-                          {service.durationMinutes} min · {service.bufferMinutes} min de preparación
+                          {service.durationMinutes} min · {service.bufferMinutes} min de tiempo adicional
                         </p>
                       </div>
                       <span className="shrink-0 font-semibold">{formatBobMinorUnits(service.priceMinorUnits)}</span>
                     </div>
-                    {isSelected ? <p className="mt-3 text-body-sm font-semibold">Servicio seleccionado</p> : null}
+                    {isSelected ? (
+                      <p className="mt-3 text-body-sm font-semibold" aria-live="polite">
+                        Servicio seleccionado. Ahora elige un día y un horario.
+                      </p>
+                    ) : null}
                   </Link>
                 </li>
               );
@@ -138,41 +143,75 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
                 <CardContent className="p-5 sm:p-6">
                   <p className="font-semibold">{selectedService.name}</p>
                   <p className="mt-1 text-body-sm text-muted-foreground">
-                    {formatBobMinorUnits(selection.availability.selection.totalPriceMinorUnits)} · {selection.availability.selection.serviceDurationMinutes} min
+                    {formatBobMinorUnits(selection.availability.selection.totalPriceMinorUnits)} · {selection.availability.selection.serviceDurationMinutes} min · {selection.availability.selection.finalBufferMinutes} min de tiempo adicional
                   </p>
                 </CardContent>
               </Card>
+
+              {selection.slotError ? (
+                <StatusMessage title="No pudimos usar ese horario" message={selection.slotError} />
+              ) : null}
 
               {selection.availability.slots.length > 0 ? (
                 <ul className="mt-4 grid gap-3" aria-label={`Horarios disponibles para ${selectedService.name}`}>
                   {selection.availability.slots.map((slot) => {
                     const barber = profile.barbers.find((candidate) => candidate.id === slot.barberId);
+                    const isSelected = selectedSlot?.barberId === slot.barberId &&
+                      selectedSlot.startsAt.getTime() === slot.startsAt.getTime();
+                    const barberName = barber?.displayName ?? "Profesional elegible";
                     return (
                       <li key={`${slot.barberId}-${slot.startsAt.toISOString()}`}>
-                        <Card size="sm">
-                          <CardContent className="flex items-center justify-between gap-4">
-                            <div>
-                              <p className="font-semibold">{formatTime(slot.startsAt)}</p>
-                              <p className="mt-1 text-body-sm text-muted-foreground">
-                                {barber?.displayName ?? "Profesional asignado"} · termina {formatTime(slot.serviceEndsAt)}
-                              </p>
-                            </div>
-                            <Badge variant="outline" className="h-7 shrink-0 px-3">Disponible</Badge>
-                          </CardContent>
-                        </Card>
+                        <Link
+                          href={getPublicBookingHref(profile.shop.slug, {
+                            serviceId: selectedService.id,
+                            date: state.selectedDate,
+                            slot,
+                          })}
+                          aria-current={isSelected ? "true" : undefined}
+                          aria-label={`Elegir ${formatTime(slot.startsAt)} con ${barberName}; termina ${formatTime(slot.serviceEndsAt)}. Esto no reserva el horario.`}
+                          className="block min-h-11 rounded-lg"
+                        >
+                          <Card size="sm" className={isSelected ? "border-foreground bg-accent" : "hover:bg-muted"}>
+                            <CardContent className="flex items-center justify-between gap-4">
+                              <div className="min-w-0">
+                                <p className="font-semibold">{formatTime(slot.startsAt)}</p>
+                                <p className="mt-1 break-words text-body-sm text-muted-foreground">
+                                  {barberName} · termina {formatTime(slot.serviceEndsAt)}
+                                </p>
+                                {isSelected ? (
+                                  <p className="mt-2 text-body-sm font-semibold">Horario seleccionado para la demostración</p>
+                                ) : null}
+                              </div>
+                              <Badge variant="outline" className="h-7 shrink-0 px-3">
+                                {isSelected ? "Seleccionado" : "Disponible"}
+                              </Badge>
+                            </CardContent>
+                          </Card>
+                        </Link>
                       </li>
                     );
                   })}
                 </ul>
               ) : (
                 <StatusMessage
-                  title="No hay horarios para este día"
-                  message="Prueba otro día o vuelve a elegir un servicio. No se ha creado ninguna reserva."
+                  title={selection.availability.selection.eligibleBarberIds.length === 0
+                    ? "No hay profesionales elegibles para este servicio"
+                    : "No hay horarios para este día"}
+                  message={selection.availability.selection.eligibleBarberIds.length === 0
+                    ? "Este servicio no tiene un profesional publicado que pueda atenderlo. Prueba otro servicio."
+                    : "Prueba otro día o vuelve a elegir un servicio. No se ha creado ninguna reserva."}
                 />
               )}
 
+              {selectedSlot ? (
+                <StatusMessage
+                  title="Horario seleccionado para la demostración"
+                  message="Esta elección no crea un hold ni confirma una reserva. La disponibilidad se deberá validar nuevamente cuando exista el flujo de reserva."
+                />
+              ) : null}
+
               <p className="mt-5 text-body-sm leading-6 text-muted-foreground">
-                Esta consulta no reserva ni bloquea un horario. La disponibilidad se volverá a validar antes de cualquier reserva futura.
+                Esta consulta muestra disponibilidad calculada. Elegir un horario aquí solo demuestra el flujo: no reserva ni bloquea capacidad.
               </p>
             </section>
           </>
@@ -184,7 +223,7 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
 
 function StatusMessage({ title, message }: { title: string; message: string }) {
   return (
-    <div role="status" className="mt-6 rounded-lg border border-information/30 bg-information-subtle p-4">
+    <div role="status" aria-live="polite" className="mt-6 rounded-lg border border-information/30 bg-information-subtle p-4">
       <p className="font-semibold text-information">{title}</p>
       <p className="mt-1 text-body-sm leading-6 text-foreground">{message}</p>
     </div>

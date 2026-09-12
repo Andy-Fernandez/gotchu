@@ -6,6 +6,7 @@ import type { PublicShopProfile } from "../catalog/public-shop-profile.ts";
 import type { Catalog, Shop } from "../catalog/types.ts";
 import {
   calculatePublicAvailability,
+  type AvailableSlot,
   type BarberWorkingHours,
   type LocalDate,
   type PublicAvailability,
@@ -28,6 +29,9 @@ export type PublicBookingSelection =
       kind: "selected";
       serviceId: string;
       availability: PublicAvailability;
+      /** A validated, advisory choice for the public-flow demonstration only. */
+      selectedSlot: AvailableSlot | null;
+      slotError: string | null;
     };
 
 export type PublicBookingPageState = {
@@ -42,6 +46,7 @@ export type PublicBookingPageStateInput = {
   shopSlug: string;
   service?: QueryValue;
   date?: QueryValue;
+  slot?: QueryValue;
   /** Injectable server time keeps the query boundary deterministic in tests. */
   now?: Date;
 };
@@ -66,24 +71,17 @@ export function createPublicBookingPageStateReader(catalog: Catalog) {
     const dateOptions = getDateOptions(today);
     const dateResult = resolveRequestedDate(input.date, today);
 
-    if (dateResult.kind === "invalid") {
-      return {
-        profile,
-        selectedDate: today,
-        dateOptions,
-        dateError: dateResult.message,
-        selection: { kind: "missing" },
-      };
-    }
-
-    const selectedDate = dateResult.date;
+    // An invalid date never becomes a date we claim to have used. We fall back
+    // to today only so a valid service can keep the customer on a useful path.
+    const selectedDate = dateResult.kind === "valid" ? dateResult.date : today;
+    const dateError = dateResult.kind === "invalid" ? dateResult.message : null;
     const serviceId = getSingleQueryValue(input.service);
     if (serviceId === undefined) {
       return {
         profile,
         selectedDate,
         dateOptions,
-        dateError: null,
+        dateError,
         selection: input.service === undefined
           ? { kind: "missing" }
           : { kind: "invalid", message: "El servicio indicado no es válido." },
@@ -95,7 +93,7 @@ export function createPublicBookingPageStateReader(catalog: Catalog) {
         profile,
         selectedDate,
         dateOptions,
-        dateError: null,
+        dateError,
         selection: { kind: "invalid", message: "El servicio indicado no está disponible." },
       };
     }
@@ -118,13 +116,20 @@ export function createPublicBookingPageStateReader(catalog: Catalog) {
           ),
         }
       : availability;
+    const slotResult = resolveRequestedSlot(input.slot, advisoryAvailability.slots);
 
     return {
       profile,
       selectedDate,
       dateOptions,
-      dateError: null,
-      selection: { kind: "selected", serviceId, availability: advisoryAvailability },
+      dateError,
+      selection: {
+        kind: "selected",
+        serviceId,
+        availability: advisoryAvailability,
+        selectedSlot: slotResult.slot,
+        slotError: slotResult.error,
+      },
     };
   };
 }
@@ -134,13 +139,22 @@ export const getPublicBookingPageState = createPublicBookingPageStateReader(demo
 
 export function getPublicBookingHref(
   shopSlug: string,
-  options: { serviceId?: string; date?: LocalDate } = {},
+  options: { serviceId?: string; date?: LocalDate; slot?: Pick<AvailableSlot, "barberId" | "startsAt"> } = {},
 ): string {
   const searchParams = new URLSearchParams();
   if (options.serviceId) searchParams.set("service", options.serviceId);
   if (options.date) searchParams.set("date", options.date);
+  if (options.slot) searchParams.set("slot", getPublicSlotToken(options.slot));
   const query = searchParams.toString();
   return `/barberias/${encodeURIComponent(shopSlug)}/reservar${query ? `?${query}` : ""}`;
+}
+
+/**
+ * Keeps an advisory slot selection in the URL. The token is always checked
+ * against freshly calculated availability before the page exposes it again.
+ */
+export function getPublicSlotToken(slot: Pick<AvailableSlot, "barberId" | "startsAt">): string {
+  return `${slot.barberId}|${slot.startsAt.toISOString()}`;
 }
 
 function getDemoBarberWorkingHours(
@@ -164,6 +178,25 @@ function getDemoBarberWorkingHours(
 
 function getSingleQueryValue(value: QueryValue): string | undefined {
   return typeof value === "string" && value.length > 0 ? value : undefined;
+}
+
+function resolveRequestedSlot(
+  value: QueryValue,
+  slots: readonly AvailableSlot[],
+): { slot: AvailableSlot | null; error: string | null } {
+  if (value === undefined) return { slot: null, error: null };
+  const token = getSingleQueryValue(value);
+  if (!token) {
+    return { slot: null, error: "El horario indicado no es válido." };
+  }
+
+  const slot = slots.find((candidate) => getPublicSlotToken(candidate) === token);
+  return slot
+    ? { slot, error: null }
+    : {
+        slot: null,
+        error: "Ese horario ya no está disponible para esta consulta. Elige uno de los horarios mostrados.",
+      };
 }
 
 function resolveRequestedDate(

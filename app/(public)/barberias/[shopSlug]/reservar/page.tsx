@@ -5,7 +5,11 @@ import { getPublicBookingPageState } from "@/modules/scheduling/public-booking-p
 
 type BookingPageProps = {
   params: Promise<{ shopSlug: string }>;
-  searchParams: Promise<{ service?: string | string[]; date?: string | string[] }>;
+  searchParams: Promise<{
+    service?: string | string[];
+    date?: string | string[];
+    slot?: string | string[];
+  }>;
 };
 
 export default async function BookingPage({ params, searchParams }: BookingPageProps) {
@@ -14,6 +18,7 @@ export default async function BookingPage({ params, searchParams }: BookingPageP
     shopSlug,
     service: query.service,
     date: query.date,
+    slot: query.slot,
   });
 
   if (!state) notFound();
