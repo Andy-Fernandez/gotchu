@@ -1,4 +1,5 @@
 import { Clock3, MapPin, Scissors, ShieldCheck, UserRound } from "lucide-react";
+import Link from "next/link";
 
 import type { PublicShopProfile } from "@/modules/catalog/public-shop-profile";
 import { Badge } from "@/components/ui/badge";
@@ -201,14 +202,20 @@ export function PublicShopCatalog({ profile }: PublicShopCatalogProps) {
           </div>
         </section>
 
-        <aside className="mt-12 rounded-lg bg-foreground px-5 py-5 text-primary-foreground sm:px-6" aria-label="Estado de las reservas en línea">
+        <aside className="mt-12 rounded-lg bg-foreground px-5 py-5 text-primary-foreground sm:px-6" aria-label="Consulta de horarios">
           <div className="flex gap-3">
             <Scissors className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
             <div>
-              <p className="font-semibold">Catálogo informativo</p>
+              <p className="font-semibold">¿Buscas un horario?</p>
               <p className="mt-1 text-body-sm leading-6 text-neutral-200">
-                La reserva en línea todavía no está disponible en esta etapa de Gotchu.
+                Elige un servicio para consultar los horarios disponibles.
               </p>
+              <Link
+                href={`/barberias/${encodeURIComponent(shop.slug)}/reservar`}
+                className="mt-4 inline-flex min-h-11 items-center text-body-sm font-semibold text-accent-on-dark underline-offset-4 hover:underline"
+              >
+                Elegir servicio y ver horarios
+              </Link>
             </div>
           </div>
         </aside>
