@@ -22,6 +22,29 @@ Before implementation hardens assumptions:
 - Identify the owner accountable for adoption and a staff champion.
 - Secure an anchor commitment and define before/after evidence.
 
+## Phase 1: pre-client demo
+
+The demo exercises the same modular monolith and provider-adapter boundaries intended for the pilot, but it is not a commercial environment. Use local or private non-commercial hosting, fictional shop/customer/staff data, and no real deposits, personal information, or receipt images. Minute-level jobs may remain disabled; authoritative reads and writes must still treat an expired hold as inactive.
+
+The demo is complete when the direct-link booking, one shared schedule, manual appointment, walk-in/queue, service execution, and human receipt-review paths can be exercised with test data and the activation gaps below are known.
+
+## Phase 2: real pilot from the first customer
+
+Do not accept the first real customer until the activation gate is met. The pilot target is Vercel Pro, with Vercel Cron configured for minute-level hold expiry/cleanup, ten-minute deposit-review alerts during operating hours, and daily retention cleanup. Pro is a target, not an activated or contracted service.
+
+### Activation gate
+
+- Vercel Pro enabled, with spend alerts and a conservative cap configured.
+- PostgreSQL and private object storage selected, provisioned, backed up, and connected through server-side adapters.
+- Production Google Auth/session integration configured for individual staff accounts and shop-scoped memberships.
+- Production domain configured.
+- Backup and tested restore process ready.
+- Monitoring, alert routing, and persistent audit verification ready.
+- Concurrency, authorization, security, upload, expiry, and idempotency tests passing.
+- Owner and staff champion trained on the one shared schedule, receipt review, queue, and recovery paths.
+
+This is a configuration and activation step over the demo architecture, not a reimplementation. Costs for services whose providers are not yet chosen remain open.
+
 ## Anchor activation
 
 An account is not an activated shop. Activation includes services and eligibility, hours, existing commitments, QR, deposit policy, owner and staff champion, direct public link placement, Saturday queue training, one completed customer booking, and one completed walk-in.
@@ -32,6 +55,21 @@ Build in this order:
 2. Manual appointments, queue, live board, execution, final payment, no-show, and capture metrics.
 3. Saturday hardening, audit, abuse controls, events, health view, and evidence collection.
 4. Narrow AI assistance only after the deterministic flow is stable and its value can be measured.
+
+## Cost envelope
+
+These are planning entries, not a promise of total operating cost. Confirm current prices, taxes, usage, and billing terms before activation.
+
+| Service | Pilot planning status | Cost recorded now |
+|---|---|---|
+| Vercel Pro | Target for the real pilot | USD 20/month platform base, with USD 20/month included usage credit; additional usage and applicable taxes may apply |
+| Managed PostgreSQL | Provider not selected | Pending provider and capacity decision |
+| Private object storage | Provider not selected | Pending provider, retention, and volume decision |
+| Google Auth/session integration | Integration/provider details open | Pending implementation and any applicable service cost |
+| Production domain | Not selected | Pending registrar/domain decision |
+| Monitoring/alerts | Provider not selected | Pending provider and volume decision |
+
+The pre-client demo uses no money and no real personal data. A total monthly cost is intentionally not stated until the pending services are selected.
 
 ## Scorecard
 

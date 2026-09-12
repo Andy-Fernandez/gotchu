@@ -2,7 +2,7 @@
 
 ## Current baseline
 
-The repository uses Next.js 16.3 App Router, React 19.2, TypeScript, Tailwind CSS 4, and pnpm. Database, authentication, file storage, analytics, AI, and deployment choices are still open decisions.
+The repository uses Next.js 16.3 App Router, React 19.2, TypeScript, Tailwind CSS 4, and pnpm. The modular monolith targets Vercel Pro with Vercel Cron for the first real customer pilot; it has not been activated or contracted. PostgreSQL and private object storage are separate managed services, with concrete providers and access layers still open. Staff identity uses individual Google accounts with shop-scoped memberships and permissions; the concrete auth/session integration remains open.
 
 Before modifying Next.js behavior, follow the repository `AGENTS.md` instruction and read the relevant installed guide under `node_modules/next/dist/docs/`.
 
@@ -22,7 +22,7 @@ domain services
 ├── authorization and audit
 └── controlled AI tools (later)
         ↓
-relational data + private receipt storage + background jobs
+managed relational data + private receipt storage + scheduled server-side jobs
 ```
 
 Business rules belong in shared domain services, not duplicated across pages, route handlers, or AI prompts.
@@ -46,9 +46,12 @@ Pages and layouts are Server Components by default. Add Client Component boundar
 - Expired-hold cleanup that is safe to retry.
 - Structured logs and error monitoring.
 - Private receipt storage with server-generated names and expiring authorized access.
+- Server-authorized direct-to-object-storage uploads for receipt images up to 10 MB. Vercel Functions have a 4.5 MB request/response payload limit, so a receipt must not be proxied through a function.
+- Idempotent scheduled jobs for hold expiry, deposit-review alerts, and retention cleanup; jobs must tolerate duplicate and overlapping invocations.
 - Daily backups and a tested restore process before expansion.
 - A clear online/offline state; do not cache private booking or receipt data in shared browser storage.
 - Immutable audit events for financial, permission, policy, and scheduling exceptions.
+- Persistent audit events are the source of record; Vercel runtime logs support operations but do not replace audit history.
 - Booking writes must snapshot deposit mode/value/applied amount and enforce configurable 24-hour cancellation, 8-hour reschedule, 10-minute lateness, 10-minute combined-service buffer, and 2-hour public online lead-time policies.
 
 ## Application boundaries
@@ -61,6 +64,14 @@ The exact transport is undecided, but preserve these capabilities:
 - **Payment verification:** manual receipt review in the MVP; a provider-neutral boundary for future authenticated, idempotent confirmations from a banking service, using the same payment state machine and human-review fallback. No provider is selected yet.
 - **Owner:** service/staff/hours/policy configuration, operational metrics, adoption metrics, audit.
 - **Platform:** merchant activation and health for founder-led pilot support.
+
+## Hosting, uploads, and jobs
+
+For the real pilot, Vercel Pro is the hosting target and Vercel Cron is the initial scheduler. The pre-client demo may keep minute-level jobs disabled, but server-side reads and writes must still enforce hold expiry from the server clock. PostgreSQL transactions/locking and domain state—not Cron delivery timing—protect capacity and money.
+
+Receipt images are uploaded directly to private object storage using a server-generated key and temporary authorization. The server validates the declared and stored object type/size and records only structured claim metadata in PostgreSQL. This avoids the 4.5 MB Vercel Function payload limit while supporting the 10 MB pilot receipt default. Review access uses short-lived signed URLs for authorized owner/manager actions only.
+
+Vercel Cron does not provide exactly-once delivery: failed invocations are not automatically retried and a slow job can overlap with its next invocation. Job handlers therefore need durable idempotency, transaction/lock protection, structured logs, alerts, and safe reprocessing. Vercel logs are operational evidence only; financial, permission, scheduling, and policy events require persistent audit records.
 
 Every write validates input, authorization, current state, and relevant invariants on the server. Responses are authoritative only after commit.
 
@@ -100,13 +111,10 @@ Pilot-test poor connectivity, low-end phones, upload retry, absent approvers, on
 
 Create ADRs before committing to:
 
-- Database and data-access layer.
-- Authentication and tenant model.
-- Receipt/object storage.
-- Background-job mechanism.
+- PostgreSQL provider and data-access layer.
+- Google Auth/session integration.
+- Private object-storage provider.
 - Analytics and monitoring providers.
 - AI model/provider and tool framework.
-- Hosting and deployment topology.
 - Future automatic banking-confirmation provider and webhook/reconciliation model.
-- Future map rendering, geocoding, and place-search provider, when marketplace work begins.
-- Future geospatial storage and query strategy, when required.
+- Future marketplace providers: map rendering, geocoding, place search, and geospatial storage/query strategy.

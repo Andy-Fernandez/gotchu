@@ -40,4 +40,4 @@ pnpm build
 
 ## Current state
 
-The Next.js scaffold and shared UI primitives are established. Day 1 adds the [public catalog module](modules/catalog/README.md): domain types, a fictional Bolivian demo shop with two barbers and three services, and a tested `getPublicShopProfile(shopSlug)` operation. Public page integration is planned for Day 2; availability, bookings, and infrastructure remain unimplemented.
+The Next.js scaffold and shared UI primitives are established. The only implemented product module is the [public catalog module](modules/catalog/README.md): domain types, a fictional Bolivian demo shop with two barbers and three services, and a tested `getPublicShopProfile(shopSlug)` operation. Availability and bookings are not implemented yet. Infrastructure direction is partially decided for the future real pilot—Next.js modular monolith on target Vercel Pro with Vercel Cron, managed PostgreSQL, private object storage, and individual Google staff authentication—but providers, access integrations, and activation are still pending. No real customer, payment, personal, or receipt data should be used in the demo.
