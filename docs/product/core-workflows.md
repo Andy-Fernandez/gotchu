@@ -28,6 +28,18 @@ The public flow does not promise online confirmation for a start time less than 
 
 Refresh availability when the service, barber preference, or date changes; periodically while selection is open; and immediately after a failed hold.
 
+### Public booking interaction contract
+
+The direct shop page uses a compact, familiar profile pattern: cover image, shop identity, address, one primary booking action, service rows, and collapsed hours and policies. The reservation itself is a four-screen assistant: `service → professional → date/time → customer details and deposit`. Only the current decision is expanded; earlier choices appear in a compact editable summary instead of remaining in the scroll.
+
+- The service screen supports one or more services and keeps one clear continuation action.
+- The professional screen requires an explicit choice between any eligible professional and one named eligible professional.
+- The schedule screen uses a horizontally scrollable short-date strip, an optional native date input for the full booking window, and a native grouped time menu to avoid a long wall of slots.
+- The last screen contains local substates for customer data, deposit instructions, receipt selection, and the resulting pending-review state; it does not add another top-level step.
+- Back navigation preserves upstream choices and clears downstream values that depend on a changed service, professional, date, or time.
+
+Until an authoritative hold and receipt endpoint exist, this interface must remain visibly labeled as a preview. It may demonstrate the form, a non-scannable QR, and the shape of `pending_review`, but it must not claim that a hold, upload, payment, reservation, or confirmation occurred.
+
 ## Manual appointment
 
 An incoming WhatsApp message or phone call is not itself a reservation. Staff captures it using the same scheduling operation as online booking. The backend revalidates availability, duration, exact barber, and buffer; required data is service, date/time, customer name, WhatsApp number when available, and a deposit decision.

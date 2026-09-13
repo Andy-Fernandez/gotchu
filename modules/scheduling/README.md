@@ -35,3 +35,5 @@ For a single service its configured buffer is used. Combined services sum their
 durations and use exactly one configured final buffer; individual service
 buffers are not accumulated. The current operation deliberately does not create
 holds, bookings, queue entries, or database records.
+
+`public-booking-page-state.ts` adapts that operation for the shop-scoped preview. It accepts one or more public services, requires an explicit valid barber preference before accepting a slot token, exposes seven quick dates plus the full 30-day range, and revalidates every URL-supplied slot against freshly calculated advisory availability. Its demo adapter currently has no protected agenda or blocked periods, so the UI must never describe those slots as reserved or authoritative.

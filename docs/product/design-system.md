@@ -59,6 +59,10 @@ Aim for this visual distribution across a normal screen:
 
 The holographic logo treatment is a brand and marketing finish. Product headers should normally use a monochrome wordmark. Do not reproduce the holographic gradient across buttons, inputs, cards, navigation, or operational states.
 
+The canonical brand sheen is `linear-gradient(100deg, #FFB7D5, #FFD88A, #8AE5D4, #A997FF)`. Reserve it for the holographic mark, splash/onboarding moments, or a thin non-semantic brand edge. It never replaces status meaning or the black primary action.
+
+Public cover photography should feel real, warm, clean, and locally credible. Keep embedded text, logos, fake QR codes, and heavy color effects out of photographs; provide useful alternative text and intrinsic dimensions so responsive rendering does not shift the layout.
+
 ## Token architecture
 
 Keep raw values and semantic intent separate:
@@ -255,9 +259,11 @@ Required states are default, hover, focus-visible, pressed, disabled, and loadin
 
 When `asChild` renders a non-native control, disabled and loading states must expose `aria-disabled`, leave the sequential focus order, and prevent activation. ARIA alone does not implement disabled behavior.
 
-### Field and Input
+### Field, Input, and NativeSelect
 
 `Input` is the control; `Field` composes its label, control, description, and error message. Product flows should normally use `Field` so accessible naming and error association are not reimplemented per screen.
+
+`NativeSelect` shares the input boundary, height, radius, focus, and text tokens. Prefer it when a mobile operating-system picker is more familiar and materially reduces vertical UI, such as choosing one time from a long grouped slot list. Its visible label still comes from `Field`; placeholders are not labels.
 
 - Control height: 48 px minimum.
 - Horizontal padding: 16 px.
