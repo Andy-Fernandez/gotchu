@@ -12,8 +12,14 @@ export const demoCatalog: Catalog = {
       slug: "demo",
       name: "Barbería Demo Gotchu",
       description:
-        "Barbería ficticia para conocer Gotchu. No es un negocio real ni acepta reservas.",
+        "Cortes clásicos, fades y barba en un espacio cómodo. Perfil ficticio de demostración.",
       publicAddress: "Dirección ficticia de demostración, La Paz, Bolivia",
+      coverImage: {
+        src: "/demo/barbershop-cover.png",
+        alt: "Barbero trabajando en una barbería contemporánea de demostración",
+        width: 2048,
+        height: 1280,
+      },
       timezone: "America/La_Paz",
       currency: "BOB",
       openingHours: [
