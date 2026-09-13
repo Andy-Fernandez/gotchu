@@ -7,8 +7,10 @@ type BookingPageProps = {
   params: Promise<{ shopSlug: string }>;
   searchParams: Promise<{
     service?: string | string[];
+    barber?: string | string[];
     date?: string | string[];
     slot?: string | string[];
+    step?: string | string[];
   }>;
 };
 
@@ -17,8 +19,10 @@ export default async function BookingPage({ params, searchParams }: BookingPageP
   const state = await getPublicBookingPageState({
     shopSlug,
     service: query.service,
+    barber: query.barber,
     date: query.date,
     slot: query.slot,
+    step: query.step,
   });
 
   if (!state) notFound();
