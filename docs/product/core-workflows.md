@@ -34,7 +34,7 @@ The direct shop page uses a compact, familiar profile pattern: cover image, shop
 
 - The service screen supports one or more services and keeps one clear continuation action.
 - The professional screen requires an explicit choice between any eligible professional and one named eligible professional.
-- The schedule screen uses a horizontally scrollable short-date strip, an optional native date input for the full booking window, and a native grouped time menu to avoid a long wall of slots.
+- The schedule screen uses a horizontally scrollable short-date strip and an optional native date input for the full booking window. Time selection is hybrid: show up to three quick options first; “Ver todos los horarios” reveals fixed `Mañana`, `Tarde`, and `Noche` filters and only the slot grid for the active period. Empty periods stay visible and identify that they have no availability.
 - The last screen contains local substates for customer data, deposit instructions, receipt selection, and the resulting pending-review state; it does not add another top-level step.
 - Back navigation preserves upstream choices and clears downstream values that depend on a changed service, professional, date, or time.
 

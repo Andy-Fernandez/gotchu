@@ -275,7 +275,7 @@ When `asChild` renders a non-native control, disabled and loading states must ex
 
 `Input` is the control; `Field` composes its label, control, description, and error message. Product flows should normally use `Field` so accessible naming and error association are not reimplemented per screen.
 
-`NativeSelect` shares the input boundary, height, radius, focus, and text tokens. Prefer it when a mobile operating-system picker is more familiar and materially reduces vertical UI, such as choosing one time from a long grouped slot list. Its visible label still comes from `Field`; placeholders are not labels.
+`NativeSelect` shares the input boundary, height, radius, focus, and text tokens. Prefer it when a mobile operating-system picker is more familiar and materially reduces vertical UI. Its visible label still comes from `Field`; placeholders are not labels. The public booking time picker uses the progressive pattern below instead of a long select.
 
 - Control height: 48 px minimum.
 - Horizontal padding: 16 px.
@@ -302,6 +302,12 @@ Use `Field` as the normal product-level composition. It generates the control ID
 ```
 
 `Input` and `Textarea` retain their native element props. Features own validation timing and messages; the primitives only provide consistent presentation and accessible association.
+
+### Public booking time picker
+
+The customer first sees up to three unique quick options, chosen deterministically from authoritative availability: the earliest start in each available `Mañana`, `Tarde`, and `Noche` period, then the earliest remaining starts until three are visible. If no more starts exist, the expanded control is omitted.
+
+“Ver todos los horarios” progressively reveals three fixed period filters. Only the active period's slots render in a compact grid; a period without slots remains visible, disabled, and labeled “Sin horarios.” Time buttons use at least a 44 × 44 px target, `aria-pressed`, visible text, and a check mark when selected so state never depends only on color. The selected time remains visible in the continuation action when the customer changes periods.
 
 ### Badge
 

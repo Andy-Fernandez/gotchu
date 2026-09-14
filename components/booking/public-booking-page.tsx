@@ -4,7 +4,6 @@ import {
   ChevronDown,
   ChevronRight,
   Clock3,
-  Info,
   Scissors,
   Sparkles,
   UserRound,
@@ -17,19 +16,21 @@ import {
   PublicServicePicker,
   type PublicServicePickerOption,
 } from "@/components/booking/public-service-picker";
+import { PublicTimePicker } from "@/components/booking/public-time-picker";
 import { formatBobMinorUnits } from "@/components/catalog/public-catalog-formatters";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { NativeSelect } from "@/components/ui/native-select";
 import { Separator } from "@/components/ui/separator";
 import {
   getPublicBookingHref,
-  getPublicSlotToken,
   type PublicBookingPageState,
 } from "@/modules/scheduling/public-booking-page-state";
-import type { AvailableSlot } from "@/modules/scheduling/availability";
+import {
+  createPublicTimePickerOptions,
+  formatPublicTime,
+} from "@/modules/scheduling/public-time-picker-options";
 
 type PublicBookingPageProps = {
   state: PublicBookingPageState;
@@ -133,7 +134,6 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
               <ScheduleStep
                 state={state}
                 bookingPath={bookingPath}
-                selectedBarberName={selectedBarber?.displayName}
               />
             ) : null}
 
@@ -147,7 +147,7 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
                     ? "Cualquier profesional"
                     : selectedBarber?.displayName ?? "Profesional por validar"}
                   dateLabel={formatLongDate(state.selectedDate)}
-                  timeLabel={formatTime(selectedSlot.startsAt)}
+                  timeLabel={formatPublicTime(selectedSlot.startsAt)}
                   totalPriceMinorUnits={selectedDetails.availability.selection.totalPriceMinorUnits}
                   depositMinorUnits={depositMinorUnits}
                   bookingCode={getDemoBookingCode(state.selectedDate, selectedSlot.startsAt)}
@@ -293,18 +293,15 @@ function BarberStep({
 function ScheduleStep({
   state,
   bookingPath,
-  selectedBarberName,
 }: {
   state: PublicBookingPageState;
   bookingPath: string;
-  selectedBarberName?: string;
 }) {
   if (state.selection.kind !== "selected") return null;
   const { selection, profile } = state;
   const barberPreference = selection.barberPreference;
   if (!barberPreference) return null;
-  const slotGroups = groupSlotsByStart(selection.availability.slots);
-  const slotsByPeriod = groupSlotsByPeriod(slotGroups);
+  const timePickerOptions = createPublicTimePickerOptions(selection.availability.slots);
 
   return (
     <div>
@@ -375,36 +372,16 @@ function ScheduleStep({
 
       <Separator className="my-5" />
 
-      {slotGroups.length > 0 ? (
-        <form action={bookingPath} method="get" className="space-y-4">
-          {selection.serviceIds.map((serviceId) => (
-            <input key={serviceId} type="hidden" name="service" value={serviceId} />
-          ))}
-          <input type="hidden" name="barber" value={barberPreference} />
-          <input type="hidden" name="date" value={state.selectedDate} />
-          <Field label="Hora">
-            <NativeSelect name="slot" required defaultValue="">
-              <option value="" disabled>Selecciona una hora</option>
-              {slotsByPeriod.map((period) => (
-                <optgroup key={period.label} label={period.label}>
-                  {period.groups.map((group) => (
-                    <option key={group.startsAt.toISOString()} value={getPublicSlotToken(group.slots[0])}>
-                      {formatTime(group.startsAt)}
-                      {barberPreference === "any"
-                        ? ` · ${group.slots.length} ${group.slots.length === 1 ? "profesional" : "profesionales"}`
-                        : selectedBarberName ? ` · ${selectedBarberName}` : ""}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </NativeSelect>
-          </Field>
-          <div className="flex gap-2 rounded-md bg-information-subtle p-3 text-body-sm text-information">
-            <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-            <p>Horario orientativo. Lo validaríamos antes de crear un hold real.</p>
-          </div>
-          <Button type="submit" size="lg" className="w-full">Continuar</Button>
-        </form>
+      {timePickerOptions.quickOptions.length > 0 ? (
+        <PublicTimePicker
+          bookingPath={bookingPath}
+          serviceIds={selection.serviceIds}
+          barberPreference={barberPreference}
+          date={state.selectedDate}
+          periodGroups={timePickerOptions.periodGroups}
+          quickOptions={timePickerOptions.quickOptions}
+          showProfessionalCount={barberPreference === "any"}
+        />
       ) : (
         <StatusMessage
           title="No hay horarios este día"
@@ -694,34 +671,6 @@ function getBackHref(state: PublicBookingPageState, currentStep: number): string
   });
 }
 
-function groupSlotsByStart(slots: readonly AvailableSlot[]) {
-  const groups: Array<{ startsAt: Date; slots: AvailableSlot[] }> = [];
-  for (const slot of slots) {
-    const previous = groups[groups.length - 1];
-    if (previous && previous.startsAt.getTime() === slot.startsAt.getTime()) {
-      previous.slots.push(slot);
-    } else {
-      groups.push({ startsAt: slot.startsAt, slots: [slot] });
-    }
-  }
-  return groups;
-}
-
-function groupSlotsByPeriod(groups: ReturnType<typeof groupSlotsByStart>) {
-  const periods = [
-    { label: "Mañana", minHour: 0, maxHour: 11 },
-    { label: "Tarde", minHour: 12, maxHour: 17 },
-    { label: "Noche", minHour: 18, maxHour: 23 },
-  ];
-  return periods.flatMap((period) => {
-    const periodGroups = groups.filter((group) => {
-      const hour = Number(formatTime(group.startsAt).split(":")[0]);
-      return hour >= period.minHour && hour <= period.maxHour;
-    });
-    return periodGroups.length > 0 ? [{ label: period.label, groups: periodGroups }] : [];
-  });
-}
-
 function formatWeekday(date: string) {
   return formatDate(date, { weekday: "short" }).replace(".", "");
 }
@@ -745,15 +694,6 @@ function formatDate(
   }).format(new Date(Date.UTC(year, month - 1, day, 16)));
 }
 
-function formatTime(date: Date) {
-  return new Intl.DateTimeFormat("es-BO", {
-    timeZone: "America/La_Paz",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(date);
-}
-
 function getInitials(name: string) {
   return name
     .replace(/\([^)]*\)/g, "")
@@ -766,6 +706,6 @@ function getInitials(name: string) {
 
 function getDemoBookingCode(date: string, startsAt: Date) {
   const compactDate = date.replaceAll("-", "").slice(2);
-  const compactTime = formatTime(startsAt).replace(":", "");
+  const compactTime = formatPublicTime(startsAt).replace(":", "");
   return `GOT-DEMO-${compactDate}-${compactTime}`;
 }
