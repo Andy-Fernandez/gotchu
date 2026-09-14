@@ -1,8 +1,11 @@
 import Link from "next/link";
 
+import { GotchuAppIcon } from "@/components/brand/gotchu-app-icon";
+
 export default function NotFound() {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center gap-5 px-5 py-12 text-center">
+      <GotchuAppIcon alt="" className="mx-auto size-14" />
       <p className="text-sm font-semibold tracking-[0.16em] text-muted-foreground uppercase">
         404
       </p>

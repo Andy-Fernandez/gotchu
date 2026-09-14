@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import { GotchuWordmark } from "@/components/brand/gotchu-wordmark";
+import { GotchuAppIcon } from "@/components/brand/gotchu-app-icon";
 import { PublicBookingCheckout } from "@/components/booking/public-booking-checkout";
 import {
   PublicServicePicker,
@@ -81,7 +81,7 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
             aria-label="Ir al perfil de la barbería"
             className="flex min-h-11 min-w-11 items-center justify-end"
           >
-            <GotchuWordmark className="text-[0.9rem]" />
+            <GotchuAppIcon alt="" className="size-8" />
           </Link>
         </div>
       </header>

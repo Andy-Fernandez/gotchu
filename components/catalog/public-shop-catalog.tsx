@@ -56,7 +56,7 @@ export function PublicShopCatalog({ profile }: PublicShopCatalogProps) {
                 alt={shop.coverImage.alt}
                 width={shop.coverImage.width}
                 height={shop.coverImage.height}
-                priority
+                preload
                 sizes="(min-width: 1024px) 896px, (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)"
                 className="h-full w-full object-cover object-center"
               />
