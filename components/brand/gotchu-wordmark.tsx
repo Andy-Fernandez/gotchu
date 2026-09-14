@@ -1,23 +1,26 @@
-import * as React from "react";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
+import gotchuWordmark from "@/public/brand/gotchu-wordmark-black.png";
 
 export function GotchuWordmark({
+  alt = "Gotchu",
   className,
   ...props
-}: React.ComponentProps<"span">) {
+}: Omit<React.ComponentProps<typeof Image>, "src" | "width" | "height" | "alt"> & {
+  alt?: string;
+}) {
   return (
-    <span
+    <Image
+      src={gotchuWordmark}
+      alt={alt}
+      loading="eager"
+      sizes="(max-width: 640px) 112px, 128px"
       className={cn(
-        "inline-flex items-center gap-1 text-xl font-bold tracking-[-0.055em] text-foreground",
+        "h-auto w-[6.7em] shrink-0 object-contain",
         className,
       )}
       {...props}
-    >
-      <span>gotchu</span>
-      <span aria-hidden="true" className="translate-y-[-0.04em] text-[0.8em] tracking-normal">
-        ✦
-      </span>
-    </span>
+    />
   );
 }
