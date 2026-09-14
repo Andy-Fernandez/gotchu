@@ -13,9 +13,11 @@ test("demo returns a fictional Bolivian shop with two barbers and three services
   assert.ok(profile);
   assert.equal(profile.shop.id, "shop-demo");
   assert.equal(profile.shop.slug, "demo");
-  assert.match(profile.shop.description, /ficticia/);
+  assert.match(profile.shop.description, /fictici/);
   assert.equal(profile.shop.timezone, "America/La_Paz");
   assert.equal(profile.shop.currency, "BOB");
+  assert.equal(profile.shop.coverImage?.src, "/demo/barbershop-cover.png");
+  assert.equal(profile.shop.coverImage?.width, 2048);
   assert.equal(profile.barbers.length, 2);
   assert.equal(profile.services.length, 3);
   assert.ok(profile.shop.openingHours.length > 0);
@@ -106,6 +108,9 @@ test("eligibility includes only explicitly eligible active barbers from the same
 
 test("demo money, durations, and relationships satisfy catalog invariants", () => {
   assert.equal(demoCatalog.shops.length, 1);
+  assert.ok(demoCatalog.shops[0].coverImage?.src.startsWith("/"));
+  assert.ok((demoCatalog.shops[0].coverImage?.width ?? 0) > 0);
+  assert.ok((demoCatalog.shops[0].coverImage?.height ?? 0) > 0);
   assert.equal(new Set(demoCatalog.services.map((service) => service.id)).size, 3);
   assert.equal(new Set(demoCatalog.barbers.map((barber) => barber.id)).size, 2);
   for (const service of demoCatalog.services) {
@@ -148,6 +153,7 @@ test("public responses omit active flags and unexpected private fields, includin
   const shop = catalog.shops[0];
   Object.assign(shop, { privateNote: "internal shop note" });
   Object.assign(shop.publicPolicy, { internalNote: "internal policy note" });
+  Object.assign(shop.coverImage ?? {}, { privateStorageKey: "private/object/key" });
   Object.assign(shop.openingHours[0], { internalNote: "internal hours note" });
   Object.assign(catalog.services[0], { privateNote: "internal service note" });
   Object.assign(catalog.barbers[0], { phone: "private phone" });
@@ -156,6 +162,7 @@ test("public responses omit active flags and unexpected private fields, includin
 
   assert.ok(profile);
   assert.equal("isActive" in profile.shop, false);
+  assert.equal("privateStorageKey" in (profile.shop.coverImage ?? {}), false);
   assert.ok(profile.services.every((service) => !("isActive" in service)));
   assert.ok(profile.barbers.every((barber) => !("isActive" in barber)));
   assert.deepEqual(profile, await getPublicShopProfile("demo"));
@@ -170,6 +177,7 @@ test("changing a returned profile cannot change source data or subsequent reads"
   assert.ok(profile);
   profile.shop.name = "Changed";
   profile.shop.publicPolicy.cancellation = "Changed";
+  if (profile.shop.coverImage) profile.shop.coverImage.alt = "Changed";
   profile.shop.openingHours[0].opensAt = "00:00";
   profile.services[0].priceMinorUnits = 1;
   profile.services[0].eligibleBarberIds = [];

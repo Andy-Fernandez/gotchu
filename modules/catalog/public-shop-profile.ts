@@ -8,6 +8,7 @@ export type PublicShop = Pick<
   | "name"
   | "description"
   | "publicAddress"
+  | "coverImage"
   | "timezone"
   | "currency"
   | "openingHours"

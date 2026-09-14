@@ -51,6 +51,13 @@
   --destructive-subtle: #fef3f2;
   --information: #175cd3;
   --information-subtle: #eff8ff;
+  --brand-sheen: linear-gradient(
+    100deg,
+    #ffb7d5,
+    #ffd88a,
+    #8ae5d4,
+    #a997ff
+  );
 }
 
 @theme inline {
@@ -158,6 +165,14 @@ input,
 select,
 textarea {
   -webkit-tap-highlight-color: transparent;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

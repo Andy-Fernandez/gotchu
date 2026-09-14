@@ -59,6 +59,22 @@ Aim for this visual distribution across a normal screen:
 
 The holographic logo treatment is a brand and marketing finish. Product headers should normally use a monochrome wordmark. Do not reproduce the holographic gradient across buttons, inputs, cards, navigation, or operational states.
 
+The canonical brand sheen is `linear-gradient(100deg, #FFB7D5, #FFD88A, #8AE5D4, #A997FF)`. Reserve it for the holographic mark, splash/onboarding moments, or a thin non-semantic brand edge. It never replaces status meaning or the black primary action.
+
+### Production brand assets
+
+The checked-in brand assets live under `public/brand/` and are exposed through dedicated components in `components/brand/`:
+
+- `GotchuWordmark` is the default monochrome mark for navigation and headers. Its inverse treatment is limited to isolated dark surfaces; it does not introduce a dark product theme.
+- `GotchuPill` exposes the holographic fill and outline treatments for splash, onboarding, marketing, or visual QA. Do not use either treatment as ordinary navigation chrome.
+- `GotchuAppIcon` is the compact `g` plus sparkle mark for favicon, installed-app surfaces, and constrained square slots.
+- `GotchuConfirmationMark` is the circular holographic sparkle used alongside a textual success state. It may render only after the authoritative booking state is `confirmed`; it must never replace the semantic success label or appear for `pending_review`.
+- `GotchuSplash` is the lightweight shared composition used by the App Router loading fallback. It respects the global reduced-motion rule.
+
+Use the PNG masters at their intrinsic aspect ratios through `next/image`. The App Router owns `favicon.ico`, `icon.png`, `apple-icon.png`, and `manifest.ts`; do not duplicate their metadata with manual `<link>` tags.
+
+Public cover photography should feel real, warm, clean, and locally credible. Keep embedded text, logos, fake QR codes, and heavy color effects out of photographs; provide useful alternative text and intrinsic dimensions so responsive rendering does not shift the layout.
+
 ## Token architecture
 
 Keep raw values and semantic intent separate:
@@ -255,9 +271,11 @@ Required states are default, hover, focus-visible, pressed, disabled, and loadin
 
 When `asChild` renders a non-native control, disabled and loading states must expose `aria-disabled`, leave the sequential focus order, and prevent activation. ARIA alone does not implement disabled behavior.
 
-### Field and Input
+### Field, Input, and NativeSelect
 
 `Input` is the control; `Field` composes its label, control, description, and error message. Product flows should normally use `Field` so accessible naming and error association are not reimplemented per screen.
+
+`NativeSelect` shares the input boundary, height, radius, focus, and text tokens. Prefer it when a mobile operating-system picker is more familiar and materially reduces vertical UI. Its visible label still comes from `Field`; placeholders are not labels. The public booking time picker uses the progressive pattern below instead of a long select.
 
 - Control height: 48 px minimum.
 - Horizontal padding: 16 px.
@@ -284,6 +302,12 @@ Use `Field` as the normal product-level composition. It generates the control ID
 ```
 
 `Input` and `Textarea` retain their native element props. Features own validation timing and messages; the primitives only provide consistent presentation and accessible association.
+
+### Public booking time picker
+
+The customer first sees up to three unique quick options, chosen deterministically from authoritative availability: the earliest start in each available `Mañana`, `Tarde`, and `Noche` period, then the earliest remaining starts until three are visible. If no more starts exist, the expanded control is omitted.
+
+“Ver todos los horarios” progressively reveals three fixed period filters. Only the active period's slots render in a compact grid; a period without slots remains visible, disabled, and labeled “Sin horarios.” Time buttons use at least a 44 × 44 px target, `aria-pressed`, visible text, and a check mark when selected so state never depends only on color. The selected time remains visible in the continuation action when the customer changes periods.
 
 ### Badge
 

@@ -6,12 +6,12 @@ Owns the shop-scoped public profile, service catalog, price/duration/deposit sna
 
 | File | Purpose |
 | --- | --- |
-| `types.ts` | Framework-independent `Shop`, `Service`, `Barber`, and in-memory `Catalog` types. |
+| `types.ts` | Framework-independent `Shop`, public cover image, `Service`, `Barber`, and in-memory `Catalog` types. |
 | `demo-catalog.ts` | One explicitly fictional shop, two barbers, and three active services. |
 | `public-shop-profile.ts` | Explicit allowlists of customer-safe response fields. |
 | `get-public-shop-profile.ts` | Shop lookup, active-record filtering, eligibility, and public-field projection. |
 
-The future public page calls the application operation:
+The public page calls the application operation:
 
 ```ts
 import { getPublicShopProfile } from "@/modules/catalog/get-public-shop-profile";
@@ -22,7 +22,7 @@ const profile = await getPublicShopProfile("demo");
 
 Pages must not import `demo-catalog.ts`. The promise-based operation keeps the caller independent of whether a future implementation reads a file, database, or API. `createPublicShopProfileReader` binds isolated in-memory fixtures for tests; it is not a database abstraction or a public write operation.
 
-Only active services and barbers belonging to the selected shop are returned. Each service retains its `shopId` and only its explicitly eligible, active, same-shop barber IDs. An active service with no eligible active barbers retains an empty list; it does not imply availability or permission to use another barber. Responses copy explicit public fields, including nested hours and policy, rather than returning source records.
+Only active services and barbers belonging to the selected shop are returned. Each service retains its `shopId` and only its explicitly eligible, active, same-shop barber IDs. An active service with no eligible active barbers retains an empty list; it does not imply availability or permission to use another barber. Responses copy explicit public fields, including the optional cover image, nested hours, and policy, rather than returning source records.
 
 ## Fictional catalog assumptions
 
@@ -38,4 +38,4 @@ These are configurable catalog values, not UI constants. Additional services suc
 
 `pnpm test` checks lookup, visibility, shop scope, eligibility, money and duration invariants, response privacy, and isolation. TypeScript `number` fields do not validate runtime inputs; these static demo records are checked by tests. Future catalog writes must validate integers, ranges, and relationships at the server boundary.
 
-No booking snapshots, availability calculations, persistence provider, authentication, or public page integration is implemented in Day 1.
+No booking snapshots, persistence provider, authentication, or storage provider is implemented in this catalog boundary.

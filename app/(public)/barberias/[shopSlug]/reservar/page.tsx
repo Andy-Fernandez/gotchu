@@ -1,19 +1,31 @@
-import { RouteSkeleton } from "@/components/ui/route-skeleton";
+import { notFound } from "next/navigation";
+
+import { PublicBookingPage } from "@/components/booking/public-booking-page";
+import { getPublicBookingPageState } from "@/modules/scheduling/public-booking-page-state";
 
 type BookingPageProps = {
   params: Promise<{ shopSlug: string }>;
+  searchParams: Promise<{
+    service?: string | string[];
+    barber?: string | string[];
+    date?: string | string[];
+    slot?: string | string[];
+    step?: string | string[];
+  }>;
 };
 
-export default async function BookingPage({ params }: BookingPageProps) {
-  await params;
+export default async function BookingPage({ params, searchParams }: BookingPageProps) {
+  const [{ shopSlug }, query] = await Promise.all([params, searchParams]);
+  const state = await getPublicBookingPageState({
+    shopSlug,
+    service: query.service,
+    barber: query.barber,
+    date: query.date,
+    slot: query.slot,
+    step: query.step,
+  });
 
-  return (
-    <main className="min-h-dvh">
-      <RouteSkeleton
-        eyebrow="Reserva pública"
-        title="Servicio, profesional y horario"
-        description="Este flujo compondrá catálogo, disponibilidad, hold, datos del cliente y carga del comprobante sin duplicar reglas del dominio."
-      />
-    </main>
-  );
+  if (!state) notFound();
+
+  return <PublicBookingPage state={state} />;
 }

@@ -1,6 +1,7 @@
 # Component boundaries
 
 - `ui/`: reusable visual primitives with no Gotchu business rules.
+- `brand/`: approved logo, icon, confirmation-mark, and splash compositions.
 - `layout/`: reusable shells and navigation composition.
 - `booking/`: customer-booking patterns composed from `ui/` primitives.
 - `schedule/`: agenda and queue presentation patterns.
