@@ -3,12 +3,14 @@
 import * as React from "react";
 import {
   ArrowLeft,
+  ArrowRight,
   CalendarDays,
   Clock3,
   FileImage,
   LockKeyhole,
   QrCode,
 } from "lucide-react";
+import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,6 +33,7 @@ export type PublicBookingCheckoutProps = {
   depositMinorUnits: number;
   bookingCode: string;
   timeZone: string;
+  submissionHref: string;
 };
 
 type CheckoutStep = "details" | "deposit" | "preview";
@@ -50,9 +53,13 @@ const QR_DEMO_PATTERN = [
 
 const MAX_RECEIPT_BYTES = 10 * 1024 * 1024;
 const ACCEPTED_RECEIPT_TYPES = new Set([
-  "application/pdf",
   "image/jpeg",
   "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "image/heic-sequence",
+  "image/heif-sequence",
 ]);
 
 function formatBobMinorUnits(minorUnits: number) {
@@ -100,11 +107,11 @@ function getWhatsappError(value: string) {
 
 function getReceiptError(file: File | null) {
   if (!file) {
-    return "Selecciona una imagen o un PDF.";
+    return "Selecciona una imagen del comprobante.";
   }
 
   if (!ACCEPTED_RECEIPT_TYPES.has(file.type)) {
-    return "Usa un archivo JPG, PNG o PDF.";
+    return "Usa un archivo JPG, PNG, WebP, HEIC o HEIF.";
   }
 
   if (file.size > MAX_RECEIPT_BYTES) {
@@ -136,6 +143,7 @@ export function PublicBookingCheckout({
   depositMinorUnits,
   bookingCode,
   timeZone,
+  submissionHref,
 }: PublicBookingCheckoutProps) {
   const [step, setStep] = React.useState<CheckoutStep>("details");
   const [customerName, setCustomerName] = React.useState("");
@@ -340,7 +348,7 @@ export function PublicBookingCheckout({
 
             <Field
               label="Comprobante"
-                description="JPG, PNG o PDF · máximo 10 MB · selección local."
+              description="JPG, PNG, WebP, HEIC o HEIF · máximo 10 MB · selección local."
               required
               error={receiptError}
             >
@@ -348,7 +356,7 @@ export function PublicBookingCheckout({
                 ref={receiptInputRef}
                 type="file"
                 name="receipt"
-                accept="image/jpeg,image/png,application/pdf"
+                accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif"
                 onChange={handleReceiptChange}
               />
             </Field>
@@ -440,16 +448,24 @@ export function PublicBookingCheckout({
               ) : null}
             </dl>
 
-            <Button
-              type="button"
-              variant="secondary"
-              size="lg"
-              className="w-full"
-              onClick={() => setStep(depositMinorUnits > 0 ? "deposit" : "details")}
-            >
-              <ArrowLeft aria-hidden="true" />
-              {depositMinorUnits > 0 ? "Volver al anticipo" : "Volver a mis datos"}
-            </Button>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <Button
+                type="button"
+                variant="secondary"
+                size="lg"
+                className="w-full"
+                onClick={() => setStep(depositMinorUnits > 0 ? "deposit" : "details")}
+              >
+                <ArrowLeft aria-hidden="true" />
+                {depositMinorUnits > 0 ? "Volver al anticipo" : "Volver a mis datos"}
+              </Button>
+              <Button asChild size="lg" className="w-full">
+                <Link href={submissionHref}>
+                  Simular envío
+                  <ArrowRight aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
           </section>
         ) : null}
       </CardContent>

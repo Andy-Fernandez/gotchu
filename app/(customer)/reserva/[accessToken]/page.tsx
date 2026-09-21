@@ -1,21 +1,43 @@
-import { RouteSkeleton } from "@/components/ui/route-skeleton";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
+import { PrivateBookingStatus } from "@/components/booking/private-booking-status";
+import {
+  getDemoBookingStatusHref,
+  readDemoPrivateBookingAccessToken,
+  resolveDemoBookingStatus,
+} from "@/modules/booking/demo-private-booking";
+
+export const metadata: Metadata = {
+  title: "Estado de tu reserva",
+  description: "Consulta el estado y los detalles de tu reserva en Gotchu.",
+};
 
 type BookingStatusPageProps = {
   params: Promise<{ accessToken: string }>;
+  searchParams: Promise<{ estado?: string | string[] }>;
 };
 
 export default async function BookingStatusPage({
   params,
+  searchParams,
 }: BookingStatusPageProps) {
-  await params;
+  const [{ accessToken }, query] = await Promise.all([params, searchParams]);
+  const booking = readDemoPrivateBookingAccessToken(accessToken);
+
+  if (!booking) notFound();
+
+  const fallbackStatus = booking.depositMinorUnits > 0
+    ? "reserved_pending_review"
+    : "confirmed";
+  const status = resolveDemoBookingStatus(query.estado, fallbackStatus);
 
   return (
-    <main className="min-h-dvh">
-      <RouteSkeleton
-        eyebrow="Estado privado"
-        title="Estado de tu reserva"
-        description="La consulta real validará un token no adivinable y devolverá únicamente el DTO privado necesario para el cliente."
-      />
-    </main>
+    <PrivateBookingStatus
+      booking={booking}
+      status={status}
+      pendingHref={getDemoBookingStatusHref(accessToken)}
+      confirmedHref={getDemoBookingStatusHref(accessToken, "confirmed")}
+    />
   );
 }

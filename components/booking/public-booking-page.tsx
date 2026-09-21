@@ -24,6 +24,10 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
+  createDemoPrivateBookingAccessToken,
+  getDemoBookingSubmissionHref,
+} from "@/modules/booking/demo-private-booking";
+import {
   getPublicBookingHref,
   type PublicBookingPageState,
 } from "@/modules/scheduling/public-booking-page-state";
@@ -66,6 +70,32 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
     (total, service) => total + service.depositMinorUnits,
     0,
   );
+  const assignedBarber = selectedSlot
+    ? profile.barbers.find((barber) => barber.id === selectedSlot.barberId)
+    : undefined;
+  const assignedProfessionalName = assignedBarber?.displayName ?? "Profesional por validar";
+  const bookingCode = selectedSlot
+    ? getDemoBookingCode(state.selectedDate, selectedSlot.startsAt)
+    : null;
+  const demoSubmissionHref = selectedDetails && selectedSlot && bookingCode
+    ? getDemoBookingSubmissionHref(createDemoPrivateBookingAccessToken({
+        shopSlug: profile.shop.slug,
+        shopName: profile.shop.name,
+        shopAddress: profile.shop.publicAddress,
+        timeZone: profile.shop.timezone,
+        serviceName: combinedServiceName,
+        professionalName: assignedProfessionalName,
+        startsAt: selectedSlot.startsAt.toISOString(),
+        serviceEndsAt: selectedSlot.serviceEndsAt.toISOString(),
+        durationMinutes: selectedDetails.availability.selection.serviceDurationMinutes,
+        totalPriceMinorUnits: selectedDetails.availability.selection.totalPriceMinorUnits,
+        depositMinorUnits,
+        balanceMinorUnits:
+          selectedDetails.availability.selection.totalPriceMinorUnits - depositMinorUnits,
+        bookingCode,
+        policySummary: profile.shop.publicPolicy.cancellation,
+      }))
+    : null;
 
   return (
     <main className="min-h-dvh bg-background">
@@ -137,21 +167,20 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
               />
             ) : null}
 
-            {currentStep === 4 && selectedDetails && selectedSlot ? (
+            {currentStep === 4 && selectedDetails && selectedSlot && bookingCode && demoSubmissionHref ? (
               <div>
                 <h1 id="active-step-heading" className="sr-only">Completa tus datos</h1>
                 <PublicBookingCheckout
                   shopName={profile.shop.name}
                   serviceName={combinedServiceName}
-                  professionalName={barberPreference === "any"
-                    ? "Cualquier profesional"
-                    : selectedBarber?.displayName ?? "Profesional por validar"}
+                  professionalName={assignedProfessionalName}
                   dateLabel={formatLongDate(state.selectedDate)}
                   timeLabel={formatPublicTime(selectedSlot.startsAt)}
                   totalPriceMinorUnits={selectedDetails.availability.selection.totalPriceMinorUnits}
                   depositMinorUnits={depositMinorUnits}
-                  bookingCode={getDemoBookingCode(state.selectedDate, selectedSlot.startsAt)}
+                  bookingCode={bookingCode}
                   timeZone={profile.shop.timezone}
+                  submissionHref={demoSubmissionHref}
                 />
               </div>
             ) : null}
