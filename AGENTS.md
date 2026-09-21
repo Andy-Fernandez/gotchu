@@ -50,6 +50,7 @@ Do not load every document by default. The repository documentation is the worki
 
 ## Delivery discipline
 
+- Never create a branch whose name starts with `codex/`. Use a descriptive prefix such as `feature/`, `fix/`, or `chore/` instead.
 - Keep the complete core journey working before adding exceptional automation.
 - Treat the “Outside the MVP” list as a hard boundary unless the user explicitly changes scope.
 - Add or update tests for scheduling, money, permissions, and state-transition behavior.
