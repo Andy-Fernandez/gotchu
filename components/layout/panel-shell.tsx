@@ -2,13 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { GotchuWordmark } from "@/components/brand/gotchu-wordmark";
-
-const panelRoutes = [
-  { href: "/panel/agenda", label: "Agenda" },
-  { href: "/panel/reservas", label: "Reservas" },
-  { href: "/panel/anticipos", label: "Anticipos" },
-  { href: "/panel/configuracion", label: "Configuración" },
-];
+import { PanelNavigation } from "@/components/layout/panel-navigation";
 
 export function PanelShell({ children }: { children: ReactNode }) {
   return (
@@ -23,20 +17,7 @@ export function PanelShell({ children }: { children: ReactNode }) {
         </Link>
         <p className="mt-1 text-sm text-muted-foreground">Panel de la barbería</p>
 
-        <nav
-          className="mt-5 flex gap-2 overflow-x-auto pb-1 lg:mt-8 lg:flex-col"
-          aria-label="Navegación del panel"
-        >
-          {panelRoutes.map((route) => (
-            <Link
-              key={route.href}
-              href={route.href}
-              className="inline-flex min-h-11 shrink-0 items-center rounded-xl px-4 text-sm font-medium hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2"
-            >
-              {route.label}
-            </Link>
-          ))}
-        </nav>
+        <PanelNavigation />
       </aside>
 
       <main className="min-w-0 flex-1">{children}</main>
