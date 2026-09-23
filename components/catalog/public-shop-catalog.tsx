@@ -226,9 +226,6 @@ function ServiceRow({
         : "transition-colors hover:border-input hover:bg-muted active:bg-accent"}`}
     >
       <CardContent className="flex min-h-24 items-center gap-3 p-4">
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted">
-          <Scissors className="size-4" aria-hidden="true" />
-        </span>
         <span className="min-w-0 flex-1">
           <span className="block font-semibold">{name}</span>
           <span className="mt-1 block truncate text-body-sm text-muted-foreground">
