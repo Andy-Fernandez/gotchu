@@ -10,6 +10,7 @@ import {
   Trash2,
 } from "lucide-react"
 
+import { Badge } from "@/components/ui/badge"
 import { Button, IconButton } from "@/components/ui/button"
 import {
   Card,
@@ -22,7 +23,9 @@ import {
 } from "@/components/ui/card"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { NativeSelect } from "@/components/ui/native-select"
 import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 
 export const metadata: Metadata = {
@@ -241,7 +244,7 @@ export default function PrimitivesLabPage() {
           id="form-primitives"
           eyebrow="Primitive 3.2"
           title="Form primitives"
-          description="Input y Textarea conservan la semántica nativa. Field los convierte en una unidad accesible con nombre, ayuda y error conectados."
+          description="Input, Textarea y NativeSelect conservan la semántica nativa. Field los convierte en una unidad accesible con nombre, ayuda y error conectados."
         >
           <div className="space-y-6">
             <Section
@@ -327,6 +330,35 @@ export default function PrimitivesLabPage() {
                   description="Sigue disponible para lectura y selección."
                 >
                   <Textarea defaultValue="Nota registrada por recepción." readOnly />
+                </Field>
+              </div>
+            </Section>
+
+            <Section
+              title="NativeSelect states"
+              description="El selector mantiene el control nativo del dispositivo y comparte etiqueta, ayuda, error y estados con los demás campos."
+            >
+              <div className="grid gap-6 md:grid-cols-2">
+                <Field label="Barbero" description="Elige un profesional disponible.">
+                  <NativeSelect defaultValue="">
+                    <option value="" disabled>Selecciona un barbero</option>
+                    <option value="andres">Andrés</option>
+                    <option value="marco">Marco</option>
+                  </NativeSelect>
+                </Field>
+
+                <Field label="Servicio" description="Selección no disponible.">
+                  <NativeSelect defaultValue="corte" disabled>
+                    <option value="corte">Corte clásico</option>
+                  </NativeSelect>
+                </Field>
+
+                <Field label="Horario" error="Selecciona un horario para continuar.">
+                  <NativeSelect defaultValue="">
+                    <option value="" disabled>Selecciona un horario</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                  </NativeSelect>
                 </Field>
               </div>
             </Section>
@@ -465,6 +497,31 @@ export default function PrimitivesLabPage() {
                   <Separator orientation="vertical" />
                   <span className="text-body-sm font-semibold">Elemento</span>
                 </div>
+              </div>
+            </Section>
+
+            <Section
+              title="Badge variants"
+              description="Las etiquetas comunican significado con texto y color. No actúan como controles."
+            >
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge variant="neutral">Neutral</Badge>
+                <Badge variant="success">Confirmada</Badge>
+                <Badge variant="warning">Pendiente</Badge>
+                <Badge variant="danger">Rechazada</Badge>
+                <Badge variant="information">Información</Badge>
+                <Badge variant="outline">Demo</Badge>
+              </div>
+            </Section>
+
+            <Section
+              title="Skeleton"
+              description="Bloques de carga que conservan el espacio del contenido mientras llega la página."
+            >
+              <div aria-hidden="true" className="max-w-sm space-y-3">
+                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-4 w-4/5" />
               </div>
             </Section>
           </div>

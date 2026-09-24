@@ -7,16 +7,25 @@ const routes = [
     href: "/barberias/demo",
     title: "Experiencia del cliente",
     description: "Perfil público y entrada al flujo de reserva de una barbería.",
+    action: "Ver experiencia",
   },
   {
     href: "/panel/agenda",
     title: "Operación del negocio",
     description: "Agenda compartida para barberos, manager y owner.",
+    action: "Ver agenda",
   },
   {
     href: "/dev/brand",
     title: "Sistema de marca",
     description: "Variantes, icono y sello de confirmación listos para QA.",
+    action: "Ver marca",
+  },
+  {
+    href: "/dev/ui",
+    title: "Componentes UI",
+    description: "Prueba los componentes compartidos, sus variantes y estados.",
+    action: "Ver componentes",
   },
 ];
 
@@ -52,7 +61,7 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-label="Superficies del MVP">
+      <section className="grid gap-4 sm:grid-cols-2" aria-label="Superficies de la demo">
         {routes.map((route) => (
           <Link
             key={route.href}
@@ -61,8 +70,8 @@ export default function Home() {
           >
             <h2 className="text-lg font-semibold">{route.title}</h2>
             <p className="mt-2 leading-6 text-muted-foreground">{route.description}</p>
-            <span className="mt-6 inline-flex min-h-11 items-center font-medium">
-              Abrir estructura <span aria-hidden="true">→</span>
+            <span className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-md border border-foreground px-4 text-button transition-colors group-hover:bg-foreground group-hover:text-primary-foreground">
+              {route.action} <span aria-hidden="true">→</span>
             </span>
           </Link>
         ))}

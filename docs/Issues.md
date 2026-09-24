@@ -1,7 +1,7 @@
 Things that I could improve in this document:
 1. Set original photos of people who whant to in the 'Profesional disponible'.
 2. Have many more photos from barbershop. And you can change the photos.
-3. Is not necesary to put Icons in services.
+3. Is not necesary to put Icons in services. ✅
 4. We can set some combos like 'Corte de pelo + Cejas' and the respective prices.
 5. In description of barbershop set the real location.
 6. Take a personal review about how is deffinded the barbers services.

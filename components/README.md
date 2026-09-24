@@ -8,3 +8,5 @@
 - `payments/`: receipt and payment-review presentation patterns.
 
 Business decisions do not belong in components. Components receive minimal typed DTOs and invoke controlled application operations.
+
+The `/dev/ui` lab previews shared UI primitives and their established variants and states. Add examples there when a new reusable UI variant is introduced so it can be reviewed before product use.
