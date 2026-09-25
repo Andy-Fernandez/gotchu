@@ -11,4 +11,5 @@ Things that I could improve in this document:
    3. The button 'Continuar' should be sticky and always visible, even if the user scrolls down.
 8. Set and real QR code and if you click on it should show it more bigger and with the option to download it.
 9. After simulated the sent request we need to set a timer like 5 seconds and then show the message 'Solicitud enviada con éxito' and then redirect to the home page.
+   1.  For example afeter click 'Reservar ahora' button, show a loading spinner in the button and then after 3 seconds before doing the request.
 10. Finaly page, be more magical. And without that amount of text.
