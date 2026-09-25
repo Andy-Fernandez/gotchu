@@ -54,7 +54,10 @@ export function BookingSubmissionComplete({
     <DemoBookingFrame sectionLabel="Solicitud">
       <main className="mx-auto w-full max-w-xl px-4 py-6 sm:px-6 sm:py-10">
         <Card className="gap-0 overflow-hidden py-0 shadow-sm">
-          <div className="h-1 [background:var(--brand-sheen)]" aria-hidden="true" />
+          <div
+            className="h-1 [background:var(--brand-sheen)]"
+            aria-hidden="true"
+          />
           <CardContent className="p-5 sm:p-8">
             <div className="flex flex-col items-center text-center">
               <span className="flex size-16 items-center justify-center rounded-full bg-foreground text-primary-foreground">
@@ -62,16 +65,21 @@ export function BookingSubmissionComplete({
               </span>
 
               <Badge
-                className={`mt-5 h-7 px-3 ${isImmediatelyConfirmed
-                  ? "bg-success-subtle text-success"
-                  : "bg-warning-subtle text-warning"}`}
+                className={`mt-5 h-7 px-3 ${
+                  isImmediatelyConfirmed
+                    ? "bg-success-subtle text-success"
+                    : "bg-warning-subtle text-warning"
+                }`}
               >
                 {isImmediatelyConfirmed ? (
                   <CircleCheck data-icon="inline-start" aria-hidden="true" />
                 ) : (
                   <Clock3 data-icon="inline-start" aria-hidden="true" />
                 )}
-                Ejemplo · {isImmediatelyConfirmed ? "Confirmada" : "Pendiente de revisión"}
+                Ejemplo ·{" "}
+                {isImmediatelyConfirmed
+                  ? "Confirmada"
+                  : "Pendiente de revisión"}
               </Badge>
 
               <p className="mt-5 text-caption font-semibold tracking-[0.14em] text-muted-foreground uppercase">
@@ -92,9 +100,14 @@ export function BookingSubmissionComplete({
               aria-live="polite"
               className="mt-6 flex gap-3 rounded-lg border border-information/25 bg-information-subtle p-4"
             >
-              <ShieldCheck className="mt-0.5 size-5 shrink-0 text-information" aria-hidden="true" />
+              <ShieldCheck
+                className="mt-0.5 size-5 shrink-0 text-information"
+                aria-hidden="true"
+              />
               <div className="text-body-sm">
-                <p className="font-semibold text-information">Vista de demostración</p>
+                <p className="font-semibold text-information">
+                  Vista de demostración
+                </p>
                 <p className="mt-1 text-foreground">
                   No se creó una reserva real y ningún comprobante fue enviado.
                 </p>
@@ -103,11 +116,17 @@ export function BookingSubmissionComplete({
 
             {!isImmediatelyConfirmed ? (
               <div className="mt-4 flex gap-3 rounded-lg border border-warning/25 bg-warning-subtle p-4 text-body-sm">
-                <Clock3 className="mt-0.5 size-5 shrink-0 text-warning" aria-hidden="true" />
+                <Clock3
+                  className="mt-0.5 size-5 shrink-0 text-warning"
+                  aria-hidden="true"
+                />
                 <div>
-                  <p className="font-semibold text-warning">Pendiente de revisión</p>
+                  <p className="font-semibold text-warning">
+                    Pendiente de revisión
+                  </p>
                   <p className="mt-1 text-foreground">
-                    Revisaremos tu comprobante en un plazo de hasta 2 horas durante nuestro horario de atención.
+                    Revisaremos tu comprobante en un plazo de hasta 2 horas
+                    durante nuestro horario de atención.
                   </p>
                 </div>
               </div>
@@ -127,8 +146,12 @@ export function BookingSubmissionComplete({
             </div>
 
             <p className="mt-5 flex items-start justify-center gap-2 text-center text-caption leading-5 text-muted-foreground">
-              <LockKeyhole className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
-              En producción, este enlace será privado y permitirá consultar siempre el estado más reciente.
+              <LockKeyhole
+                className="mt-0.5 size-3.5 shrink-0"
+                aria-hidden="true"
+              />
+              En producción, este enlace será privado y permitirá consultar
+              siempre el estado más reciente.
             </p>
           </CardContent>
         </Card>
@@ -154,7 +177,10 @@ export function PrivateBookingStatus({
       <main className="mx-auto w-full max-w-xl px-4 py-6 sm:px-6 sm:py-10">
         <section aria-labelledby="booking-status-heading" className="space-y-4">
           <Card className="gap-0 overflow-hidden py-0 shadow-sm">
-            <div className="h-1 [background:var(--brand-sheen)]" aria-hidden="true" />
+            <div
+              className="h-1 [background:var(--brand-sheen)]"
+              aria-hidden="true"
+            />
             <CardContent className="p-5 sm:p-8">
               <div className="flex flex-col items-center text-center">
                 {presentation.showConfirmationMark ? (
@@ -166,9 +192,11 @@ export function PrivateBookingStatus({
                 )}
 
                 <Badge
-                  className={`mt-5 h-7 px-3 ${isConfirmed
-                    ? "bg-success-subtle text-success"
-                    : "bg-warning-subtle text-warning"}`}
+                  className={`mt-5 h-7 px-3 ${
+                    isConfirmed
+                      ? "bg-success-subtle text-success"
+                      : "bg-warning-subtle text-warning"
+                  }`}
                 >
                   {isConfirmed ? (
                     <CircleCheck data-icon="inline-start" aria-hidden="true" />
@@ -191,10 +219,17 @@ export function PrivateBookingStatus({
 
               {presentation.expectation ? (
                 <div className="mt-6 flex gap-3 rounded-lg border border-warning/25 bg-warning-subtle p-4 text-body-sm">
-                  <Clock3 className="mt-0.5 size-5 shrink-0 text-warning" aria-hidden="true" />
+                  <Clock3
+                    className="mt-0.5 size-5 shrink-0 text-warning"
+                    aria-hidden="true"
+                  />
                   <div>
-                    <p className="font-semibold text-warning">Tiempo de revisión</p>
-                    <p className="mt-1 text-foreground">{presentation.expectation}</p>
+                    <p className="font-semibold text-warning">
+                      Tiempo de revisión
+                    </p>
+                    <p className="mt-1 text-foreground">
+                      {presentation.expectation}
+                    </p>
                   </div>
                 </div>
               ) : null}
@@ -213,7 +248,10 @@ export function PrivateBookingStatus({
 
           <details className="group rounded-lg border border-border bg-card">
             <summary className="flex min-h-14 cursor-pointer list-none items-center gap-3 px-4 font-semibold marker:content-none">
-              <ShieldCheck className="size-4 text-muted-foreground" aria-hidden="true" />
+              <ShieldCheck
+                className="size-4 text-muted-foreground"
+                aria-hidden="true"
+              />
               <span className="flex-1">Política de cambios y cancelación</span>
               <span className="text-body-sm font-medium text-accent-foreground group-open:hidden">
                 Ver
@@ -245,8 +283,12 @@ export function PrivateBookingStatus({
           </div>
 
           <p className="flex items-start justify-center gap-2 px-2 pt-1 text-center text-caption leading-5 text-muted-foreground">
-            <LockKeyhole className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
-            Guarda el enlace privado de esta página. La barbería también puede contactarte por WhatsApp.
+            <LockKeyhole
+              className="mt-0.5 size-3.5 shrink-0"
+              aria-hidden="true"
+            />
+            Guarda el enlace privado de esta página. La barbería también puede
+            contactarte por WhatsApp.
           </p>
 
           <DemoStateSwitcher
@@ -281,7 +323,9 @@ function DemoBookingFrame({
           >
             <GotchuWordmark alt="Gotchu" className="w-28" />
           </Link>
-          <p className="text-body-sm font-semibold text-muted-foreground">{sectionLabel}</p>
+          <p className="text-body-sm font-semibold text-muted-foreground">
+            {sectionLabel}
+          </p>
         </div>
       </header>
       <div className="flex-1">{children}</div>
@@ -319,7 +363,10 @@ function ReviewProgress({ steps }: { steps: readonly BookingStatusStep[] }) {
                   ) : step.state === "current" ? (
                     <Clock3 className="size-4" aria-hidden="true" />
                   ) : (
-                    <span className="size-2 rounded-full bg-current" aria-hidden="true" />
+                    <span
+                      className="size-2 rounded-full bg-current"
+                      aria-hidden="true"
+                    />
                   )}
                 </span>
                 {index < steps.length - 1 ? (
@@ -327,7 +374,13 @@ function ReviewProgress({ steps }: { steps: readonly BookingStatusStep[] }) {
                 ) : null}
               </div>
               <div className="pt-1">
-                <p className={step.state === "upcoming" ? "text-muted-foreground" : "font-semibold"}>
+                <p
+                  className={
+                    step.state === "upcoming"
+                      ? "text-muted-foreground"
+                      : "font-semibold"
+                  }
+                >
                   {step.label}
                 </p>
                 <p className="mt-0.5 text-caption text-muted-foreground">
@@ -368,7 +421,9 @@ function BookingSnapshot({
             <CalendarDays className="size-5" aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-caption font-medium text-muted-foreground">Tu cita</p>
+            <p className="text-caption font-medium text-muted-foreground">
+              Tu cita
+            </p>
             <p className="mt-0.5 font-semibold text-pretty">{date}</p>
             <p className="mt-1 text-title-sm">
               {time}
@@ -428,13 +483,20 @@ function BookingDetailRow({
 }) {
   return (
     <div className="flex gap-3">
-      <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+      <Icon
+        className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+        aria-hidden="true"
+      />
       <div className="min-w-0 flex-1">
         <dt className="text-caption text-muted-foreground">{label}</dt>
-        <dd className={`mt-0.5 break-words font-semibold ${mono ? "font-mono text-body-sm" : ""}`}>
+        <dd
+          className={`mt-0.5 break-words font-semibold ${mono ? "font-mono text-body-sm" : ""}`}
+        >
           {value}
         </dd>
-        {meta ? <dd className="mt-0.5 text-body-sm text-muted-foreground">{meta}</dd> : null}
+        {meta ? (
+          <dd className="mt-0.5 text-body-sm text-muted-foreground">{meta}</dd>
+        ) : null}
       </div>
     </div>
   );
@@ -462,9 +524,11 @@ function PaymentSummary({
             <h2 className="mt-1 text-title-sm">Resumen</h2>
           </div>
           <Badge
-            className={`h-7 px-3 ${isConfirmed
-              ? "bg-success-subtle text-success"
-              : "bg-warning-subtle text-warning"}`}
+            className={`h-7 px-3 ${
+              isConfirmed
+                ? "bg-success-subtle text-success"
+                : "bg-warning-subtle text-warning"
+            }`}
           >
             {depositStateLabel}
           </Badge>
@@ -478,9 +542,11 @@ function PaymentSummary({
           />
           <AmountRow
             label="Anticipo"
-            value={requiresDeposit
-              ? formatBobMinorUnits(booking.depositMinorUnits)
-              : "No requiere"}
+            value={
+              requiresDeposit
+                ? formatBobMinorUnits(booking.depositMinorUnits)
+                : "No requiere"
+            }
           />
           <Separator />
           <AmountRow
@@ -505,7 +571,9 @@ function AmountRow({
   return (
     <div className="flex items-center justify-between gap-4">
       <dt className="text-muted-foreground">{label}</dt>
-      <dd className={emphasis ? "text-body font-semibold" : "font-semibold"}>{value}</dd>
+      <dd className={emphasis ? "text-body font-semibold" : "font-semibold"}>
+        {value}
+      </dd>
     </div>
   );
 }
@@ -530,11 +598,15 @@ function DemoStateSwitcher({
       <div className="mt-4 grid grid-cols-2 gap-2">
         <Button
           asChild
-          variant={status === "reserved_pending_review" ? "primary" : "secondary"}
+          variant={
+            status === "reserved_pending_review" ? "primary" : "secondary"
+          }
         >
           <Link
             href={pendingHref}
-            aria-current={status === "reserved_pending_review" ? "page" : undefined}
+            aria-current={
+              status === "reserved_pending_review" ? "page" : undefined
+            }
           >
             Pendiente
           </Link>
@@ -567,7 +639,11 @@ function formatBookingDate(instant: string, timeZone: string) {
   return `${formatted.charAt(0).toLocaleUpperCase("es-BO")}${formatted.slice(1)}`;
 }
 
-function formatBookingTimeRange(startsAt: string, endsAt: string, timeZone: string) {
+function formatBookingTimeRange(
+  startsAt: string,
+  endsAt: string,
+  timeZone: string,
+) {
   const formatter = new Intl.DateTimeFormat("es-BO", {
     hour: "2-digit",
     minute: "2-digit",

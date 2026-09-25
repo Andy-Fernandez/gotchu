@@ -26,20 +26,20 @@ The MVP ships with a light theme only. Do not add a dark palette, theme switcher
 
 ### Semantic variable mapping
 
-| Gotchu intent | shadcn variable | Mapping |
-|---|---|---|
-| Page background | `--background` | `neutral/50` |
-| Primary foreground | `--foreground` | `neutral/950` |
-| Surface | `--card`, `--popover` | `neutral/0` |
-| Primary action | `--primary` | `neutral/950` |
-| Secondary action | `--secondary` | `neutral/0` |
-| Muted foreground | `--muted-foreground` | `neutral/600` |
-| Subtle accent surface | `--accent` | `purple/50` |
-| Accent content | `--accent-foreground` | `purple/500` |
-| Default boundary | `--border` | `neutral/200` |
-| Interactive control boundary | `--input` | `neutral/450` |
-| Keyboard focus | `--ring` | `purple/500` |
-| Destructive meaning | `--destructive` | Danger foreground |
+| Gotchu intent                | shadcn variable       | Mapping           |
+| ---------------------------- | --------------------- | ----------------- |
+| Page background              | `--background`        | `neutral/50`      |
+| Primary foreground           | `--foreground`        | `neutral/950`     |
+| Surface                      | `--card`, `--popover` | `neutral/0`       |
+| Primary action               | `--primary`           | `neutral/950`     |
+| Secondary action             | `--secondary`         | `neutral/0`       |
+| Muted foreground             | `--muted-foreground`  | `neutral/600`     |
+| Subtle accent surface        | `--accent`            | `purple/50`       |
+| Accent content               | `--accent-foreground` | `purple/500`      |
+| Default boundary             | `--border`            | `neutral/200`     |
+| Interactive control boundary | `--input`             | `neutral/450`     |
+| Keyboard focus               | `--ring`              | `purple/500`      |
+| Destructive meaning          | `--destructive`       | Danger foreground |
 
 The shadcn `accent` variable represents an accent surface, so the purple brand foreground belongs in `accent-foreground`. Gotchu-specific roles such as accent hover, accent on dark, rating, and operational statuses remain semantic extensions alongside the shadcn contract.
 
@@ -88,41 +88,41 @@ Components must consume semantic tokens. They must not bind directly to primitiv
 
 ### Color primitives
 
-| Token | Value | Purpose |
-|---|---:|---|
-| `neutral/0` | `#FFFFFF` | White surface and inverse foreground |
-| `neutral/50` | `#F7F7F5` | App background |
-| `neutral/200` | `#E3E3DF` | Default border and divider |
-| `neutral/450` | `#8C8C86` | Interactive control boundary |
-| `neutral/600` | `#686864` | Muted foreground |
-| `neutral/950` | `#181817` | Primary foreground and action |
-| `purple/50` | `#F1EEFF` | Subtle accent background |
-| `purple/300` | `#B8ACFF` | Accent foreground on dark surfaces |
-| `purple/500` | `#6C4DFF` | Secondary accent and focus |
-| `purple/600` | `#5638E8` | Accent hover or pressed state |
-| `amber/500` | `#F5A800` | Rating and warm highlight; use dark foreground |
+| Token         |     Value | Purpose                                        |
+| ------------- | --------: | ---------------------------------------------- |
+| `neutral/0`   | `#FFFFFF` | White surface and inverse foreground           |
+| `neutral/50`  | `#F7F7F5` | App background                                 |
+| `neutral/200` | `#E3E3DF` | Default border and divider                     |
+| `neutral/450` | `#8C8C86` | Interactive control boundary                   |
+| `neutral/600` | `#686864` | Muted foreground                               |
+| `neutral/950` | `#181817` | Primary foreground and action                  |
+| `purple/50`   | `#F1EEFF` | Subtle accent background                       |
+| `purple/300`  | `#B8ACFF` | Accent foreground on dark surfaces             |
+| `purple/500`  | `#6C4DFF` | Secondary accent and focus                     |
+| `purple/600`  | `#5638E8` | Accent hover or pressed state                  |
+| `amber/500`   | `#F5A800` | Rating and warm highlight; use dark foreground |
 
 ### Semantic colors
 
-| Token | Alias/value | Usage |
-|---|---|---|
-| `color/background` | `neutral/50` | Page background |
-| `color/surface` | `neutral/0` | Cards, sheets, inputs, and bars |
-| `color/foreground` | `neutral/950` | Primary text and icons |
-| `color/foreground-muted` | `neutral/600` | Supporting text |
-| `color/foreground-inverse` | `neutral/0` | Content over black |
-| `color/border` | `neutral/200` | Cards, separators, and subtle dividers |
-| `color/input-boundary` | `neutral/450` | Input and textarea boundaries |
-| `color/action-primary` | `neutral/950` | Primary button background |
-| `color/action-primary-foreground` | `neutral/0` | Primary button content |
-| `color/action-secondary` | `neutral/0` | Secondary button background |
-| `color/action-secondary-foreground` | `neutral/950` | Secondary button content |
-| `color/accent` | `purple/500` | Tertiary links and small details |
-| `color/accent-hover` | `purple/600` | Hovered or pressed accent |
-| `color/accent-subtle` | `purple/50` | Rare subtle accent surface |
-| `color/accent-on-dark` | `purple/300` | Small accent over dark surfaces |
-| `color/focus` | `purple/500` | Keyboard focus ring |
-| `color/rating` | `amber/500` | Rating star or score highlight |
+| Token                               | Alias/value   | Usage                                  |
+| ----------------------------------- | ------------- | -------------------------------------- |
+| `color/background`                  | `neutral/50`  | Page background                        |
+| `color/surface`                     | `neutral/0`   | Cards, sheets, inputs, and bars        |
+| `color/foreground`                  | `neutral/950` | Primary text and icons                 |
+| `color/foreground-muted`            | `neutral/600` | Supporting text                        |
+| `color/foreground-inverse`          | `neutral/0`   | Content over black                     |
+| `color/border`                      | `neutral/200` | Cards, separators, and subtle dividers |
+| `color/input-boundary`              | `neutral/450` | Input and textarea boundaries          |
+| `color/action-primary`              | `neutral/950` | Primary button background              |
+| `color/action-primary-foreground`   | `neutral/0`   | Primary button content                 |
+| `color/action-secondary`            | `neutral/0`   | Secondary button background            |
+| `color/action-secondary-foreground` | `neutral/950` | Secondary button content               |
+| `color/accent`                      | `purple/500`  | Tertiary links and small details       |
+| `color/accent-hover`                | `purple/600`  | Hovered or pressed accent              |
+| `color/accent-subtle`               | `purple/50`   | Rare subtle accent surface             |
+| `color/accent-on-dark`              | `purple/300`  | Small accent over dark surfaces        |
+| `color/focus`                       | `purple/500`  | Keyboard focus ring                    |
+| `color/rating`                      | `amber/500`   | Rating star or score highlight         |
 
 `purple/500` on white has a contrast ratio of approximately `5.07:1`, so it is suitable for normal-size link text. Do not use the base purple for small text on black; use `color/accent-on-dark` instead.
 
@@ -130,12 +130,12 @@ Components must consume semantic tokens. They must not bind directly to primitiv
 
 Status colors are independent from the brand accent. Always pair color with a label, icon, or other non-color cue.
 
-| Status | Foreground | Background | Approx. contrast |
-|---|---:|---:|---:|
-| Success | `#067647` | `#ECFDF3` | `5.40:1` |
-| Warning | `#B54708` | `#FFFAEB` | `5.20:1` |
-| Danger | `#B42318` | `#FEF3F2` | `6.05:1` |
-| Information | `#175CD3` | `#EFF8FF` | `5.57:1` |
+| Status      | Foreground | Background | Approx. contrast |
+| ----------- | ---------: | ---------: | ---------------: |
+| Success     |  `#067647` |  `#ECFDF3` |         `5.40:1` |
+| Warning     |  `#B54708` |  `#FFFAEB` |         `5.20:1` |
+| Danger      |  `#B42318` |  `#FEF3F2` |         `6.05:1` |
+| Information |  `#175CD3` |  `#EFF8FF` |         `5.57:1` |
 
 Do not use purple for held, pending review, confirmed, rejected, cancelled, or payment states merely because it is the brand accent. Map those states to their actual operational meaning.
 
@@ -150,16 +150,16 @@ font/mono: "Geist Mono", "SFMono-Regular", Consolas, monospace
 
 The initial type styles are:
 
-| Token | Size / line height | Weight | Usage |
-|---|---:|---:|---|
-| `text/caption` | `12 / 16` | 400 | Metadata and nonessential supporting copy |
-| `text/body-sm` | `14 / 20` | 400 | Secondary body copy |
-| `text/body` | `16 / 24` | 400 | Default body and input text |
-| `text/body-lg` | `18 / 28` | 400 | Introductory copy |
-| `text/title-sm` | `20 / 28` | 600 | Card or section heading |
-| `text/title-md` | `24 / 32` | 600 | Screen heading |
-| `text/title-lg` | `32 / 38` | 700 | Public profile or major page title |
-| `text/button` | `14 / 20` | 600 | Buttons and compact actions |
+| Token           | Size / line height | Weight | Usage                                     |
+| --------------- | -----------------: | -----: | ----------------------------------------- |
+| `text/caption`  |          `12 / 16` |    400 | Metadata and nonessential supporting copy |
+| `text/body-sm`  |          `14 / 20` |    400 | Secondary body copy                       |
+| `text/body`     |          `16 / 24` |    400 | Default body and input text               |
+| `text/body-lg`  |          `18 / 28` |    400 | Introductory copy                         |
+| `text/title-sm` |          `20 / 28` |    600 | Card or section heading                   |
+| `text/title-md` |          `24 / 32` |    600 | Screen heading                            |
+| `text/title-lg` |          `32 / 38` |    700 | Public profile or major page title        |
+| `text/button`   |          `14 / 20` |    600 | Buttons and compact actions               |
 
 Use weights 400, 500, 600, and 700. Avoid lighter weights for functional UI. Do not use functional text below 12 px. Inputs use at least 16 px body text.
 
@@ -167,20 +167,20 @@ Use weights 400, 500, 600, and 700. Avoid lighter weights for functional UI. Do 
 
 Use a 4 px base rhythm with a 2 px exception for optical corrections and hairline relationships.
 
-| Token | Value |
-|---|---:|
-| `space/0` | `0` |
-| `space/0.5` | `2px` |
-| `space/1` | `4px` |
-| `space/2` | `8px` |
-| `space/3` | `12px` |
-| `space/4` | `16px` |
-| `space/5` | `20px` |
-| `space/6` | `24px` |
-| `space/8` | `32px` |
-| `space/10` | `40px` |
-| `space/12` | `48px` |
-| `space/16` | `64px` |
+| Token       |  Value |
+| ----------- | -----: |
+| `space/0`   |    `0` |
+| `space/0.5` |  `2px` |
+| `space/1`   |  `4px` |
+| `space/2`   |  `8px` |
+| `space/3`   | `12px` |
+| `space/4`   | `16px` |
+| `space/5`   | `20px` |
+| `space/6`   | `24px` |
+| `space/8`   | `32px` |
+| `space/10`  | `40px` |
+| `space/12`  | `48px` |
+| `space/16`  | `64px` |
 
 Default conventions:
 
@@ -195,26 +195,26 @@ Default conventions:
 
 ## Radius
 
-| Token | Value | Usage |
-|---|---:|---|
-| `radius/none` | `0` | Flush boundaries and dividers |
-| `radius/sm` | `8px` | Compact controls |
-| `radius/md` | `12px` | Buttons and inputs |
-| `radius/lg` | `16px` | Cards |
-| `radius/xl` | `24px` | Sheets, prominent panels, and mobile content surfaces |
-| `radius/full` | `9999px` | Badges, chips, and circular controls |
+| Token         |    Value | Usage                                                 |
+| ------------- | -------: | ----------------------------------------------------- |
+| `radius/none` |      `0` | Flush boundaries and dividers                         |
+| `radius/sm`   |    `8px` | Compact controls                                      |
+| `radius/md`   |   `12px` | Buttons and inputs                                    |
+| `radius/lg`   |   `16px` | Cards                                                 |
+| `radius/xl`   |   `24px` | Sheets, prominent panels, and mobile content surfaces |
+| `radius/full` | `9999px` | Badges, chips, and circular controls                  |
 
 Rounded geometry should communicate grouping and touchability. Do not apply a large radius to every container.
 
 ## Shadows and elevation
 
-| Token | Value | Usage |
-|---|---|---|
-| `shadow/none` | `none` | Default flat surfaces |
-| `shadow/sm` | `0 1px 2px rgb(0 0 0 / 0.06)` | Slight separation |
-| `shadow/md` | `0 4px 12px -2px rgb(0 0 0 / 0.10)` | Menus and floating controls |
-| `shadow/lg` | `0 12px 28px -8px rgb(0 0 0 / 0.18)` | Dialogs and sheets |
-| `shadow/sticky` | `0 -6px 20px -8px rgb(0 0 0 / 0.16)` | Bottom sticky action bar |
+| Token           | Value                                | Usage                       |
+| --------------- | ------------------------------------ | --------------------------- |
+| `shadow/none`   | `none`                               | Default flat surfaces       |
+| `shadow/sm`     | `0 1px 2px rgb(0 0 0 / 0.06)`        | Slight separation           |
+| `shadow/md`     | `0 4px 12px -2px rgb(0 0 0 / 0.10)`  | Menus and floating controls |
+| `shadow/lg`     | `0 12px 28px -8px rgb(0 0 0 / 0.18)` | Dialogs and sheets          |
+| `shadow/sticky` | `0 -6px 20px -8px rgb(0 0 0 / 0.16)` | Bottom sticky action bar    |
 
 Prefer surface color and borders over shadows for ordinary cards. A focus ring is not elevation and must never be implemented through the shadow scale.
 
@@ -228,14 +228,14 @@ Do not add multiple decorative border strengths prematurely. Status and selectio
 
 Use Tailwind's mobile-first breakpoints without adding device-specific breakpoints prematurely:
 
-| Token | Minimum width | Product behavior |
-|---|---:|---|
-| Base | `0` | One column, 16 px gutter, sticky primary actions when useful |
-| `sm` | `640px` | Density and gutter adjustments; usually no structural fork |
-| `md` | `768px` | Medium layout; introduce a second column when it improves the task |
-| `lg` | `1024px` | Expanded layout; map/list or schedule/detail may coexist |
-| `xl` | `1280px` | Centered wide content and operational workspaces |
-| `2xl` | `1536px` | Extra canvas, not a requirement for core flows |
+| Token | Minimum width | Product behavior                                                   |
+| ----- | ------------: | ------------------------------------------------------------------ |
+| Base  |           `0` | One column, 16 px gutter, sticky primary actions when useful       |
+| `sm`  |       `640px` | Density and gutter adjustments; usually no structural fork         |
+| `md`  |       `768px` | Medium layout; introduce a second column when it improves the task |
+| `lg`  |      `1024px` | Expanded layout; map/list or schedule/detail may coexist           |
+| `xl`  |      `1280px` | Centered wide content and operational workspaces                   |
+| `2xl` |      `1536px` | Extra canvas, not a requirement for core flows                     |
 
 Think in three behavioral regimes:
 
@@ -325,12 +325,12 @@ If a badge can be clicked, filtered, removed, or selected, it is a `Chip` or but
 
 Use a shared container to keep gutters and maximum widths consistent:
 
-| Variant | Maximum width | Intended use |
-|---|---:|---|
-| `form` | `640px` | Booking steps, policies, and settings forms |
-| `content` | `960px` | Profiles, lists, and normal product pages |
-| `wide` | `1280px` | Marketplace and operational workspaces |
-| `full` | none | Maps, schedule canvases, and intentionally edge-to-edge content |
+| Variant   | Maximum width | Intended use                                                    |
+| --------- | ------------: | --------------------------------------------------------------- |
+| `form`    |       `640px` | Booking steps, policies, and settings forms                     |
+| `content` |       `960px` | Profiles, lists, and normal product pages                       |
+| `wide`    |      `1280px` | Marketplace and operational workspaces                          |
+| `full`    |          none | Maps, schedule canvases, and intentionally edge-to-edge content |
 
 All variants are full width below their maximum and use the responsive gutters defined above.
 

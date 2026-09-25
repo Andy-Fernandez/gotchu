@@ -1,4 +1,10 @@
-import type { Barber, Catalog, OpeningHours, Service, Shop } from "../catalog/types.ts";
+import type {
+  Barber,
+  Catalog,
+  OpeningHours,
+  Service,
+  Shop,
+} from "../catalog/types.ts";
 
 /** The initial shop-local scheduling zone. Instants are returned as `Date` values. */
 export const INITIAL_SHOP_TIMEZONE = "America/La_Paz" as const;
@@ -116,19 +122,30 @@ export function calculatePublicAvailability(
   }
 
   validatePolicy(input.policy);
-  const selection = selectServices(input.catalog, shop, input.serviceIds, input.policy);
+  const selection = selectServices(
+    input.catalog,
+    shop,
+    input.serviceIds,
+    input.policy,
+  );
   const eligibleBarberIds = resolveEligibleBarberIds(
     selection.eligibleBarberIds,
     input.barberPreference,
   );
   const dayOfWeek = getIsoDayOfWeek(input.date);
-  const shopHours = getShopHoursForDate(shop, input.date, input.shopDateOverrides ?? []);
+  const shopHours = getShopHoursForDate(
+    shop,
+    input.date,
+    input.shopDateOverrides ?? [],
+  );
   const shopIntervals = toInstantIntervals(input.date, shopHours);
   const slots: AvailableSlot[] = [];
 
   for (const barberId of eligibleBarberIds) {
     const barberHours = input.barberWorkingHours
-      .filter((hours) => hours.barberId === barberId && hours.dayOfWeek === dayOfWeek)
+      .filter(
+        (hours) => hours.barberId === barberId && hours.dayOfWeek === dayOfWeek,
+      )
       .map((hours) => ({ startsAt: hours.startsAt, endsAt: hours.endsAt }));
     const workingIntervals = intersectIntervals(
       shopIntervals,
@@ -146,14 +163,30 @@ export function calculatePublicAvailability(
         workingInterval,
         input.policy.slotIntervalMinutes,
       )) {
-        const serviceEndsAt = addMinutes(candidateStart, selection.serviceDurationMinutes);
-        const protectedEndsAt = addMinutes(candidateStart, selection.protectedDurationMinutes);
+        const serviceEndsAt = addMinutes(
+          candidateStart,
+          selection.serviceDurationMinutes,
+        );
+        const protectedEndsAt = addMinutes(
+          candidateStart,
+          selection.protectedDurationMinutes,
+        );
         if (protectedEndsAt > workingInterval.endsAt) continue;
 
         const candidate = { startsAt: candidateStart, endsAt: protectedEndsAt };
-        if (excludedIntervals.some((excluded) => intervalsOverlap(excluded, candidate))) continue;
+        if (
+          excludedIntervals.some((excluded) =>
+            intervalsOverlap(excluded, candidate),
+          )
+        )
+          continue;
 
-        slots.push({ barberId, startsAt: candidateStart, serviceEndsAt, protectedEndsAt });
+        slots.push({
+          barberId,
+          startsAt: candidateStart,
+          serviceEndsAt,
+          protectedEndsAt,
+        });
       }
     }
   }
@@ -163,19 +196,32 @@ export function calculatePublicAvailability(
     return byStart || left.barberId.localeCompare(right.barberId);
   });
 
-  return { timezone: INITIAL_SHOP_TIMEZONE, date: input.date, selection, slots };
+  return {
+    timezone: INITIAL_SHOP_TIMEZONE,
+    date: input.date,
+    selection,
+    slots,
+  };
 }
 
 /** The half-open interval rule shared by scheduling reads and future writes. */
-export function intervalsOverlap(left: InstantInterval, right: InstantInterval): boolean {
+export function intervalsOverlap(
+  left: InstantInterval,
+  right: InstantInterval,
+): boolean {
   assertValidInstantInterval(left, "left interval");
   assertValidInstantInterval(right, "right interval");
   return left.startsAt < right.endsAt && right.startsAt < left.endsAt;
 }
 
 function getActiveShop(catalog: Catalog, shopId: string): Shop {
-  const shop = catalog.shops.find((candidate) => candidate.id === shopId && candidate.isActive);
-  if (!shop) throw new RangeError("An active shop is required to calculate availability.");
+  const shop = catalog.shops.find(
+    (candidate) => candidate.id === shopId && candidate.isActive,
+  );
+  if (!shop)
+    throw new RangeError(
+      "An active shop is required to calculate availability.",
+    );
   return shop;
 }
 
@@ -185,33 +231,48 @@ function selectServices(
   serviceIds: readonly string[],
   policy: AvailabilityPolicy,
 ): ServiceSelection {
-  if (serviceIds.length === 0) throw new RangeError("At least one service is required.");
+  if (serviceIds.length === 0)
+    throw new RangeError("At least one service is required.");
   const services = serviceIds.map((serviceId) => {
     const service = catalog.services.find(
-      (candidate) => candidate.id === serviceId && candidate.shopId === shop.id && candidate.isActive,
+      (candidate) =>
+        candidate.id === serviceId &&
+        candidate.shopId === shop.id &&
+        candidate.isActive,
     );
-    if (!service) throw new RangeError("Every selected service must be active and belong to the shop.");
+    if (!service)
+      throw new RangeError(
+        "Every selected service must be active and belong to the shop.",
+      );
     assertServiceTiming(service);
     return service;
   });
 
   const eligibleBarberIds = services
-    .map((service) => new Set(getActiveEligibleBarberIds(catalog, shop.id, service)))
-    .reduce((intersection, current) =>
-      new Set([...intersection].filter((barberId) => current.has(barberId))),
+    .map(
+      (service) =>
+        new Set(getActiveEligibleBarberIds(catalog, shop.id, service)),
+    )
+    .reduce(
+      (intersection, current) =>
+        new Set([...intersection].filter((barberId) => current.has(barberId))),
     );
 
   const serviceDurationMinutes = services.reduce(
     (total, service) => total + service.durationMinutes,
     0,
   );
-  const finalBufferMinutes = services.length === 1
-    ? services[0].bufferMinutes
-    : policy.combinedServiceBufferMinutes;
+  const finalBufferMinutes =
+    services.length === 1
+      ? services[0].bufferMinutes
+      : policy.combinedServiceBufferMinutes;
 
   return {
     serviceIds: [...serviceIds],
-    totalPriceMinorUnits: services.reduce((total, service) => total + service.priceMinorUnits, 0),
+    totalPriceMinorUnits: services.reduce(
+      (total, service) => total + service.priceMinorUnits,
+      0,
+    ),
     serviceDurationMinutes,
     finalBufferMinutes,
     protectedDurationMinutes: serviceDurationMinutes + finalBufferMinutes,
@@ -219,13 +280,19 @@ function selectServices(
   };
 }
 
-function getActiveEligibleBarberIds(catalog: Catalog, shopId: string, service: Service): string[] {
+function getActiveEligibleBarberIds(
+  catalog: Catalog,
+  shopId: string,
+  service: Service,
+): string[] {
   const activeBarberIds = new Set(
     catalog.barbers
       .filter((barber) => barber.shopId === shopId && barber.isActive)
       .map((barber) => barber.id),
   );
-  return service.eligibleBarberIds.filter((barberId) => activeBarberIds.has(barberId));
+  return service.eligibleBarberIds.filter((barberId) =>
+    activeBarberIds.has(barberId),
+  );
 }
 
 function resolveEligibleBarberIds(
@@ -233,7 +300,9 @@ function resolveEligibleBarberIds(
   barberPreference: string | "any" | undefined,
 ): string[] {
   if (barberPreference && barberPreference !== "any") {
-    return eligibleBarberIds.includes(barberPreference) ? [barberPreference] : [];
+    return eligibleBarberIds.includes(barberPreference)
+      ? [barberPreference]
+      : [];
   }
   return [...eligibleBarberIds];
 }
@@ -248,7 +317,10 @@ function getShopHoursForDate(
   const dayOfWeek = getIsoDayOfWeek(date);
   return shop.openingHours
     .filter((hours) => hours.dayOfWeek === dayOfWeek)
-    .map((hours) => ({ startsAt: hours.opensAt as LocalTime, endsAt: hours.closesAt as LocalTime }));
+    .map((hours) => ({
+      startsAt: hours.opensAt as LocalTime,
+      endsAt: hours.closesAt as LocalTime,
+    }));
 }
 
 function getExcludedIntervals(
@@ -258,7 +330,10 @@ function getExcludedIntervals(
 ): InstantInterval[] {
   const protectedForBarber = protectedIntervals
     .filter((interval) => interval.barberId === barberId)
-    .map((interval) => ({ startsAt: interval.startsAt, endsAt: interval.endsAt }));
+    .map((interval) => ({
+      startsAt: interval.startsAt,
+      endsAt: interval.endsAt,
+    }));
   const blocksForBarber = blockedPeriods
     .filter((period) => period.scope === "shop" || period.barberId === barberId)
     .map((period) => ({ startsAt: period.startsAt, endsAt: period.endsAt }));
@@ -268,7 +343,10 @@ function getExcludedIntervals(
   return [...protectedForBarber, ...blocksForBarber];
 }
 
-function toInstantIntervals(date: LocalDate, intervals: readonly LocalTimeInterval[]): InstantInterval[] {
+function toInstantIntervals(
+  date: LocalDate,
+  intervals: readonly LocalTimeInterval[],
+): InstantInterval[] {
   return intervals.map((interval) => {
     const startsAt = localDateTimeToInstant(date, interval.startsAt);
     const endsAt = localDateTimeToInstant(date, interval.endsAt);
@@ -285,12 +363,14 @@ function intersectIntervals(
   const intersections: InstantInterval[] = [];
   for (const leftInterval of left) {
     for (const rightInterval of right) {
-      const startsAt = leftInterval.startsAt > rightInterval.startsAt
-        ? leftInterval.startsAt
-        : rightInterval.startsAt;
-      const endsAt = leftInterval.endsAt < rightInterval.endsAt
-        ? leftInterval.endsAt
-        : rightInterval.endsAt;
+      const startsAt =
+        leftInterval.startsAt > rightInterval.startsAt
+          ? leftInterval.startsAt
+          : rightInterval.startsAt;
+      const endsAt =
+        leftInterval.endsAt < rightInterval.endsAt
+          ? leftInterval.endsAt
+          : rightInterval.endsAt;
       if (startsAt < endsAt) intersections.push({ startsAt, endsAt });
     }
   }
@@ -303,10 +383,17 @@ function* generateStarts(
   cadenceMinutes: number,
 ): Generator<Date> {
   const startOfDay = localDateTimeToInstant(date, "00:00");
-  const firstAlignedMinute = Math.ceil(
-    (interval.startsAt.getTime() - startOfDay.getTime()) / 60_000 / cadenceMinutes,
-  ) * cadenceMinutes;
-  for (let minute = firstAlignedMinute; minute < MINUTES_PER_DAY; minute += cadenceMinutes) {
+  const firstAlignedMinute =
+    Math.ceil(
+      (interval.startsAt.getTime() - startOfDay.getTime()) /
+        60_000 /
+        cadenceMinutes,
+    ) * cadenceMinutes;
+  for (
+    let minute = firstAlignedMinute;
+    minute < MINUTES_PER_DAY;
+    minute += cadenceMinutes
+  ) {
     const candidate = addMinutes(startOfDay, minute);
     if (candidate >= interval.endsAt) return;
     yield candidate;
@@ -318,7 +405,9 @@ function localDateTimeToInstant(date: LocalDate, time: LocalTime): Date {
   const [hours, minutes] = parseTime(time);
   // America/La_Paz is UTC−04:00 year-round. Keeping this conversion here makes
   // the IANA-zone assumption explicit instead of treating local strings as UTC.
-  return new Date(Date.UTC(year, month - 1, day, hours, minutes + LA_PAZ_OFFSET_MINUTES));
+  return new Date(
+    Date.UTC(year, month - 1, day, hours, minutes + LA_PAZ_OFFSET_MINUTES),
+  );
 }
 
 function getIsoDayOfWeek(date: LocalDate): OpeningHours["dayOfWeek"] {
@@ -329,10 +418,15 @@ function getIsoDayOfWeek(date: LocalDate): OpeningHours["dayOfWeek"] {
 
 function parseDate(date: LocalDate): [number, number, number] {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
-  if (!match) throw new RangeError("Dates must use YYYY-MM-DD in the shop timezone.");
+  if (!match)
+    throw new RangeError("Dates must use YYYY-MM-DD in the shop timezone.");
   const [year, month, day] = match.slice(1).map(Number);
   const parsed = new Date(Date.UTC(year, month - 1, day));
-  if (parsed.getUTCFullYear() !== year || parsed.getUTCMonth() !== month - 1 || parsed.getUTCDate() !== day) {
+  if (
+    parsed.getUTCFullYear() !== year ||
+    parsed.getUTCMonth() !== month - 1 ||
+    parsed.getUTCDate() !== day
+  ) {
     throw new RangeError("Date is not a valid calendar date.");
   }
   return [year, month, day];
@@ -340,9 +434,11 @@ function parseDate(date: LocalDate): [number, number, number] {
 
 function parseTime(time: LocalTime): [number, number] {
   const match = /^(\d{2}):(\d{2})$/.exec(time);
-  if (!match) throw new RangeError("Times must use HH:mm in the shop timezone.");
+  if (!match)
+    throw new RangeError("Times must use HH:mm in the shop timezone.");
   const [hours, minutes] = match.slice(1).map(Number);
-  if (hours > 23 || minutes > 59) throw new RangeError("Time is not a valid 24-hour value.");
+  if (hours > 23 || minutes > 59)
+    throw new RangeError("Time is not a valid 24-hour value.");
   return [hours, minutes];
 }
 
@@ -355,30 +451,64 @@ function copyLocalInterval(interval: LocalTimeInterval): LocalTimeInterval {
 }
 
 function validatePolicy(policy: AvailabilityPolicy): void {
-  if (!Number.isSafeInteger(policy.slotIntervalMinutes) || policy.slotIntervalMinutes <= 0) {
-    throw new RangeError("Slot cadence must be a positive whole number of minutes.");
+  if (
+    !Number.isSafeInteger(policy.slotIntervalMinutes) ||
+    policy.slotIntervalMinutes <= 0
+  ) {
+    throw new RangeError(
+      "Slot cadence must be a positive whole number of minutes.",
+    );
   }
-  if (!Number.isSafeInteger(policy.combinedServiceBufferMinutes) || policy.combinedServiceBufferMinutes < 0) {
-    throw new RangeError("Combined-service buffer must be a non-negative whole number of minutes.");
+  if (
+    !Number.isSafeInteger(policy.combinedServiceBufferMinutes) ||
+    policy.combinedServiceBufferMinutes < 0
+  ) {
+    throw new RangeError(
+      "Combined-service buffer must be a non-negative whole number of minutes.",
+    );
   }
 }
 
 function assertServiceTiming(service: Service): void {
-  if (!Number.isSafeInteger(service.durationMinutes) || service.durationMinutes <= 0) {
-    throw new RangeError("Service duration must be a positive whole number of minutes.");
+  if (
+    !Number.isSafeInteger(service.durationMinutes) ||
+    service.durationMinutes <= 0
+  ) {
+    throw new RangeError(
+      "Service duration must be a positive whole number of minutes.",
+    );
   }
-  if (!Number.isSafeInteger(service.bufferMinutes) || service.bufferMinutes < 0) {
-    throw new RangeError("Service buffer must be a non-negative whole number of minutes.");
+  if (
+    !Number.isSafeInteger(service.bufferMinutes) ||
+    service.bufferMinutes < 0
+  ) {
+    throw new RangeError(
+      "Service buffer must be a non-negative whole number of minutes.",
+    );
   }
-  if (!Number.isSafeInteger(service.priceMinorUnits) || service.priceMinorUnits < 0) {
-    throw new RangeError("Service price must be non-negative integer minor units.");
+  if (
+    !Number.isSafeInteger(service.priceMinorUnits) ||
+    service.priceMinorUnits < 0
+  ) {
+    throw new RangeError(
+      "Service price must be non-negative integer minor units.",
+    );
   }
 }
 
-function assertValidInstantInterval(interval: InstantInterval, label: string): void {
-  if (!(interval.startsAt instanceof Date) || Number.isNaN(interval.startsAt.getTime()) ||
-      !(interval.endsAt instanceof Date) || Number.isNaN(interval.endsAt.getTime()) ||
-      interval.startsAt >= interval.endsAt) {
-    throw new RangeError(`${label} must have valid startsAt and endsAt values with startsAt before endsAt.`);
+function assertValidInstantInterval(
+  interval: InstantInterval,
+  label: string,
+): void {
+  if (
+    !(interval.startsAt instanceof Date) ||
+    Number.isNaN(interval.startsAt.getTime()) ||
+    !(interval.endsAt instanceof Date) ||
+    Number.isNaN(interval.endsAt.getTime()) ||
+    interval.startsAt >= interval.endsAt
+  ) {
+    throw new RangeError(
+      `${label} must have valid startsAt and endsAt values with startsAt before endsAt.`,
+    );
   }
 }

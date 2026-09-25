@@ -31,7 +31,8 @@ export function PanelNavigation() {
             aria-current={isCurrent ? "page" : undefined}
             className={cn(
               "inline-flex min-h-11 shrink-0 items-center rounded-xl px-4 text-sm font-medium transition-colors hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2",
-              isCurrent && "bg-foreground text-background hover:bg-foreground/90",
+              isCurrent &&
+                "bg-foreground text-background hover:bg-foreground/90",
             )}
           >
             {route.label}

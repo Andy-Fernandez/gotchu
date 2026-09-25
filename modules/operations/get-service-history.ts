@@ -38,7 +38,9 @@ export function createServiceHistoryReader(
       return source
         .filter((record) => record.shopId === shopId)
         .toSorted((left, right) => {
-          const byStart = right.scheduledStart.localeCompare(left.scheduledStart);
+          const byStart = right.scheduledStart.localeCompare(
+            left.scheduledStart,
+          );
           return byStart || left.id.localeCompare(right.id);
         })
         .map(copyRecord);
@@ -59,9 +61,7 @@ export function parseServiceHistoryFilter(
 ): ServiceHistoryFilter {
   const candidate = Array.isArray(value) ? value[0] : value;
 
-  return serviceHistoryFilterValues.includes(
-    candidate as ServiceHistoryFilter,
-  )
+  return serviceHistoryFilterValues.includes(candidate as ServiceHistoryFilter)
     ? (candidate as ServiceHistoryFilter)
     : "todos";
 }
@@ -73,7 +73,9 @@ export function filterServiceHistory(
   const bookingStatus = bookingStatusByFilter[filter];
 
   return records
-    .filter((record) => !bookingStatus || record.bookingStatus === bookingStatus)
+    .filter(
+      (record) => !bookingStatus || record.bookingStatus === bookingStatus,
+    )
     .map(copyRecord);
 }
 
@@ -88,9 +90,8 @@ export function countServiceHistory(
     confirmados: records.filter(
       (record) => record.bookingStatus === "confirmed",
     ).length,
-    realizados: records.filter(
-      (record) => record.bookingStatus === "completed",
-    ).length,
+    realizados: records.filter((record) => record.bookingStatus === "completed")
+      .length,
   };
 }
 

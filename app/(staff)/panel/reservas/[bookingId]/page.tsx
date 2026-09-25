@@ -118,7 +118,9 @@ export default async function ServiceHistoryDetailPage({
                 <p className="text-caption font-semibold text-muted-foreground">
                   Estado actual
                 </p>
-                <p className="mt-1 text-body-sm leading-6">{status.description}</p>
+                <p className="mt-1 text-body-sm leading-6">
+                  {status.description}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -223,7 +225,10 @@ export default async function ServiceHistoryDetailPage({
                     Horario real
                   </p>
                   <p className="mt-2 text-body-sm text-muted-foreground">
-                    {formatServiceTimeRange(record.actualStart, record.actualEnd)}
+                    {formatServiceTimeRange(
+                      record.actualStart,
+                      record.actualEnd,
+                    )}
                   </p>
                 </div>
                 {record.completedByName ? (

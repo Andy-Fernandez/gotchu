@@ -37,16 +37,25 @@ export default function BrandLabPage() {
         </p>
       </header>
 
-      <section className="mt-8 grid gap-4 md:grid-cols-2" aria-label="Logos holográficos">
+      <section
+        className="mt-8 grid gap-4 md:grid-cols-2"
+        aria-label="Logos holográficos"
+      >
         <article className="flex min-h-64 items-center justify-center overflow-hidden rounded-3xl bg-foreground p-6 sm:p-10">
           <GotchuPill variant="fill" alt="Logo holográfico claro de Gotchu" />
         </article>
         <article className="flex min-h-64 items-center justify-center rounded-3xl border border-border bg-card p-6 sm:p-10">
-          <GotchuPill variant="outline" alt="Logo holográfico oscuro de Gotchu" />
+          <GotchuPill
+            variant="outline"
+            alt="Logo holográfico oscuro de Gotchu"
+          />
         </article>
       </section>
 
-      <section className="mt-4 grid gap-4 md:grid-cols-2" aria-label="Aplicaciones compactas">
+      <section
+        className="mt-4 grid gap-4 md:grid-cols-2"
+        aria-label="Aplicaciones compactas"
+      >
         <article className="rounded-3xl border border-border bg-card p-6 sm:p-8">
           <p className="text-caption font-semibold tracking-[0.12em] text-muted-foreground uppercase">
             Icono de aplicación
@@ -63,8 +72,12 @@ export default function BrandLabPage() {
 
         <article className="rounded-3xl border border-border bg-card p-6 text-center sm:p-8">
           <GotchuConfirmationMark className="mx-auto size-16" />
-          <Badge className="mt-5 bg-success-subtle text-success">Confirmada</Badge>
-          <h2 className="mt-3 text-title-md tracking-tight">¡Reserva confirmada!</h2>
+          <Badge className="mt-5 bg-success-subtle text-success">
+            Confirmada
+          </Badge>
+          <h2 className="mt-3 text-title-md tracking-tight">
+            ¡Reserva confirmada!
+          </h2>
           <p className="mt-2 text-body-sm text-muted-foreground">
             Este sello se renderiza únicamente después de recibir el estado
             autoritativo <code>confirmed</code>.
@@ -72,17 +85,25 @@ export default function BrandLabPage() {
         </article>
       </section>
 
-      <section className="mt-4 grid gap-4 md:grid-cols-2" aria-label="Wordmarks monocromáticos">
+      <section
+        className="mt-4 grid gap-4 md:grid-cols-2"
+        aria-label="Wordmarks monocromáticos"
+      >
         <article className="flex min-h-36 items-center justify-center rounded-3xl border border-border bg-card p-8">
           <GotchuWordmark className="text-3xl" />
         </article>
         <article className="flex min-h-36 items-center justify-center rounded-3xl bg-foreground p-8">
-          <GotchuWordmark alt="Gotchu" className="text-3xl brightness-0 invert" />
+          <GotchuWordmark
+            alt="Gotchu"
+            className="text-3xl brightness-0 invert"
+          />
         </article>
       </section>
 
       <section className="mt-4" aria-labelledby="splash-heading">
-        <h2 id="splash-heading" className="sr-only">Pantalla de carga</h2>
+        <h2 id="splash-heading" className="sr-only">
+          Pantalla de carga
+        </h2>
         <GotchuSplash className="min-h-80 rounded-3xl" />
       </section>
     </main>

@@ -62,7 +62,9 @@ export function createDemoPrivateBookingAccessToken(
     throw new TypeError("The demo private booking snapshot is invalid.");
   }
 
-  const encoded = Buffer.from(JSON.stringify(booking), "utf8").toString("base64url");
+  const encoded = Buffer.from(JSON.stringify(booking), "utf8").toString(
+    "base64url",
+  );
   return `${DEMO_ACCESS_TOKEN_PREFIX}${encoded}`;
 }
 
@@ -121,13 +123,22 @@ export function getBookingStatusPresentation(
     return {
       badgeLabel: "Confirmada",
       title: "¡Tu cita está confirmada!",
-      description: "Tu horario y tu profesional ya están asegurados. Te esperamos.",
+      description:
+        "Tu horario y tu profesional ya están asegurados. Te esperamos.",
       expectation: null,
       depositStateLabel: requiresDeposit ? "Aprobado" : "No requiere",
       showConfirmationMark: true,
       steps: [
-        { label: requiresDeposit ? "Comprobante recibido" : "Solicitud recibida", state: "complete" },
-        { label: requiresDeposit ? "Anticipo aprobado" : "Solicitud revisada", state: "complete" },
+        {
+          label: requiresDeposit
+            ? "Comprobante recibido"
+            : "Solicitud recibida",
+          state: "complete",
+        },
+        {
+          label: requiresDeposit ? "Anticipo aprobado" : "Solicitud revisada",
+          state: "complete",
+        },
         { label: "Cita confirmada", state: "complete" },
       ],
     };
@@ -144,11 +155,21 @@ export function getBookingStatusPresentation(
     expectation: requiresDeposit
       ? "Revisaremos tu comprobante en un plazo de hasta 2 horas durante nuestro horario de atención."
       : "Vuelve a esta pantalla para consultar el resultado.",
-    depositStateLabel: requiresDeposit ? "Pendiente de revisión" : "No requiere",
+    depositStateLabel: requiresDeposit
+      ? "Pendiente de revisión"
+      : "No requiere",
     showConfirmationMark: false,
     steps: [
-      { label: requiresDeposit ? "Comprobante recibido" : "Solicitud recibida", state: "complete" },
-      { label: requiresDeposit ? "Revisión del anticipo" : "Revisión de la solicitud", state: "current" },
+      {
+        label: requiresDeposit ? "Comprobante recibido" : "Solicitud recibida",
+        state: "complete",
+      },
+      {
+        label: requiresDeposit
+          ? "Revisión del anticipo"
+          : "Revisión de la solicitud",
+        state: "current",
+      },
       { label: "Confirmación de la cita", state: "upcoming" },
     ],
   };

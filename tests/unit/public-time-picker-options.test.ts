@@ -2,9 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import type { AvailableSlot } from "../../modules/scheduling/availability.ts";
-import {
-  createPublicTimePickerOptions,
-} from "../../modules/scheduling/public-time-picker-options.ts";
+import { createPublicTimePickerOptions } from "../../modules/scheduling/public-time-picker-options.ts";
 
 test("time picker options deduplicate starts across barbers and preserve their count", () => {
   const result = createPublicTimePickerOptions([
@@ -13,16 +11,17 @@ test("time picker options deduplicate starts across barbers and preserve their c
     slot("barber-sam", "2026-09-14T14:00:00-04:00"),
   ]);
 
-  assert.deepEqual(result.periodGroups.map((group) => group.label), [
-    "Mañana",
-    "Tarde",
-    "Noche",
-  ]);
   assert.deepEqual(
-    result.periodGroups.flatMap((group) => group.options).map((option) => ({
-      label: option.label,
-      professionalCount: option.professionalCount,
-    })),
+    result.periodGroups.map((group) => group.label),
+    ["Mañana", "Tarde", "Noche"],
+  );
+  assert.deepEqual(
+    result.periodGroups
+      .flatMap((group) => group.options)
+      .map((option) => ({
+        label: option.label,
+        professionalCount: option.professionalCount,
+      })),
     [
       { label: "10:15", professionalCount: 2 },
       { label: "14:00", professionalCount: 1 },
@@ -39,11 +38,10 @@ test("quick options show one chronological start from each available period", ()
     slot("barber-alex", "2026-09-14T10:30:00-04:00"),
   ]);
 
-  assert.deepEqual(result.quickOptions.map((option) => option.label), [
-    "10:15",
-    "14:00",
-    "18:00",
-  ]);
+  assert.deepEqual(
+    result.quickOptions.map((option) => option.label),
+    ["10:15", "14:00", "18:00"],
+  );
 });
 
 test("quick options fill with the earliest unique starts when only one period is available", () => {
@@ -55,11 +53,10 @@ test("quick options fill with the earliest unique starts when only one period is
     slot("barber-alex", "2026-09-14T11:00:00-04:00"),
   ]);
 
-  assert.deepEqual(result.quickOptions.map((option) => option.label), [
-    "10:15",
-    "10:30",
-    "10:45",
-  ]);
+  assert.deepEqual(
+    result.quickOptions.map((option) => option.label),
+    ["10:15", "10:30", "10:45"],
+  );
 });
 
 test("period boundaries use the shop-local time in La Paz", () => {

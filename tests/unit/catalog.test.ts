@@ -25,7 +25,11 @@ test("demo returns a fictional Bolivian shop with two barbers and three services
   assert.ok(profile.shop.publicPolicy.noShow);
   assert.deepEqual(
     profile.services.map((service) => [service.name, service.priceMinorUnits]),
-    [["Corte de pelo normal", 4500], ["Cejas", 500], ["Barba", 1500]],
+    [
+      ["Corte de pelo normal", 4500],
+      ["Cejas", 500],
+      ["Barba", 1500],
+    ],
   );
 });
 
@@ -57,7 +61,11 @@ test("inactive services are excluded without removing the active catalog", async
 test("each slug returns only its own services and barbers", async () => {
   const catalog = structuredClone(demoCatalog);
   const otherShop = { ...catalog.shops[0], id: "shop-other", slug: "other" };
-  const otherBarber = { ...catalog.barbers[0], id: "barber-other", shopId: otherShop.id };
+  const otherBarber = {
+    ...catalog.barbers[0],
+    id: "barber-other",
+    shopId: otherShop.id,
+  };
   const otherService = {
     ...catalog.services[0],
     id: "service-other",
@@ -76,11 +84,21 @@ test("each slug returns only its own services and barbers", async () => {
   assert.ok(other);
   assert.equal(demo.services.length, 3);
   assert.equal(demo.barbers.length, 2);
-  assert.deepEqual(other.services.map((service) => service.id), [otherService.id]);
-  assert.deepEqual(other.barbers.map((barber) => barber.id), [otherBarber.id]);
+  assert.deepEqual(
+    other.services.map((service) => service.id),
+    [otherService.id],
+  );
+  assert.deepEqual(
+    other.barbers.map((barber) => barber.id),
+    [otherBarber.id],
+  );
   for (const profile of [demo, other]) {
-    assert.ok(profile.services.every((service) => service.shopId === profile.shop.id));
-    assert.ok(profile.barbers.every((barber) => barber.shopId === profile.shop.id));
+    assert.ok(
+      profile.services.every((service) => service.shopId === profile.shop.id),
+    );
+    assert.ok(
+      profile.barbers.every((barber) => barber.shopId === profile.shop.id),
+    );
   }
 });
 
@@ -100,7 +118,10 @@ test("eligibility includes only explicitly eligible active barbers from the same
   const profile = await createPublicShopProfileReader(catalog)("demo");
 
   assert.ok(profile);
-  assert.deepEqual(profile.barbers.map((barber) => barber.id), ["barber-demo-alex"]);
+  assert.deepEqual(
+    profile.barbers.map((barber) => barber.id),
+    ["barber-demo-alex"],
+  );
   assert.deepEqual(profile.services[0].eligibleBarberIds, ["barber-demo-alex"]);
   // An empty eligible list must not silently become "any barber".
   assert.deepEqual(profile.services[1].eligibleBarberIds, []);
@@ -111,7 +132,10 @@ test("demo money, durations, and relationships satisfy catalog invariants", () =
   assert.ok(demoCatalog.shops[0].coverImage?.src.startsWith("/"));
   assert.ok((demoCatalog.shops[0].coverImage?.width ?? 0) > 0);
   assert.ok((demoCatalog.shops[0].coverImage?.height ?? 0) > 0);
-  assert.equal(new Set(demoCatalog.services.map((service) => service.id)).size, 3);
+  assert.equal(
+    new Set(demoCatalog.services.map((service) => service.id)).size,
+    3,
+  );
   assert.equal(new Set(demoCatalog.barbers.map((barber) => barber.id)).size, 2);
   for (const service of demoCatalog.services) {
     assert.ok(demoCatalog.shops.some((shop) => shop.id === service.shopId));
@@ -120,13 +144,23 @@ test("demo money, durations, and relationships satisfy catalog invariants", () =
     assert.ok(service.priceMinorUnits >= 0);
     assert.ok(service.depositMinorUnits >= 0);
     assert.ok(service.depositMinorUnits <= service.priceMinorUnits);
-    assert.ok(Number.isSafeInteger(service.durationMinutes) && service.durationMinutes > 0);
-    assert.ok(Number.isSafeInteger(service.bufferMinutes) && service.bufferMinutes >= 0);
+    assert.ok(
+      Number.isSafeInteger(service.durationMinutes) &&
+        service.durationMinutes > 0,
+    );
+    assert.ok(
+      Number.isSafeInteger(service.bufferMinutes) && service.bufferMinutes >= 0,
+    );
     assert.ok(service.eligibleBarberIds.length > 0);
     for (const id of service.eligibleBarberIds) {
-      assert.ok(demoCatalog.barbers.some(
-        (barber) => barber.id === id && barber.shopId === service.shopId && barber.isActive,
-      ));
+      assert.ok(
+        demoCatalog.barbers.some(
+          (barber) =>
+            barber.id === id &&
+            barber.shopId === service.shopId &&
+            barber.isActive,
+        ),
+      );
     }
   }
 });
@@ -153,7 +187,9 @@ test("public responses omit active flags and unexpected private fields, includin
   const shop = catalog.shops[0];
   Object.assign(shop, { privateNote: "internal shop note" });
   Object.assign(shop.publicPolicy, { internalNote: "internal policy note" });
-  Object.assign(shop.coverImage ?? {}, { privateStorageKey: "private/object/key" });
+  Object.assign(shop.coverImage ?? {}, {
+    privateStorageKey: "private/object/key",
+  });
   Object.assign(shop.openingHours[0], { internalNote: "internal hours note" });
   Object.assign(catalog.services[0], { privateNote: "internal service note" });
   Object.assign(catalog.barbers[0], { phone: "private phone" });
@@ -185,5 +221,8 @@ test("changing a returned profile cannot change source data or subsequent reads"
   profile.services.pop();
 
   assert.deepEqual(catalog, original);
-  assert.deepEqual(await readProfile("demo"), await getPublicShopProfile("demo"));
+  assert.deepEqual(
+    await readProfile("demo"),
+    await getPublicShopProfile("demo"),
+  );
 });

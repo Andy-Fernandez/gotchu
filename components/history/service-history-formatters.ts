@@ -120,7 +120,9 @@ export function formatServiceTimeRange(start: string, end: string): string {
   return `${formatServiceTime(start)}–${formatServiceTime(end)}`;
 }
 
-export function formatServiceItems(items: readonly ServiceHistoryItem[]): string {
+export function formatServiceItems(
+  items: readonly ServiceHistoryItem[],
+): string {
   return items.map((item) => item.name).join(" + ");
 }
 

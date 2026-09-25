@@ -9,7 +9,10 @@ export default function ServiceHistoryNotFound() {
       <Card className="w-full">
         <CardContent className="flex flex-col items-center px-5 py-10 text-center sm:px-8">
           <span className="flex size-12 items-center justify-center rounded-full bg-muted">
-            <SearchX className="size-5 text-muted-foreground" aria-hidden="true" />
+            <SearchX
+              className="size-5 text-muted-foreground"
+              aria-hidden="true"
+            />
           </span>
           <p className="mt-5 text-caption font-semibold tracking-[0.16em] text-muted-foreground uppercase">
             Registro no encontrado

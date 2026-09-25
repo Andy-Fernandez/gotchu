@@ -40,24 +40,34 @@ type PublicBookingPageProps = {
   state: PublicBookingPageState;
 };
 
-const STEP_LABELS = ["Servicio", "Profesional", "Horario", "Tus datos"] as const;
+const STEP_LABELS = [
+  "Servicio",
+  "Profesional",
+  "Horario",
+  "Tus datos",
+] as const;
 
 export function PublicBookingPage({ state }: PublicBookingPageProps) {
   const { profile, selection } = state;
   const selectedDetails = selection.kind === "selected" ? selection : null;
   const selectedServices = selectedDetails
     ? selectedDetails.serviceIds.flatMap((serviceId) => {
-        const service = profile.services.find((candidate) => candidate.id === serviceId);
+        const service = profile.services.find(
+          (candidate) => candidate.id === serviceId,
+        );
         return service ? [service] : [];
       })
     : [];
   const barberPreference = selectedDetails?.barberPreference ?? null;
-  const selectedBarber = barberPreference && barberPreference !== "any"
-    ? profile.barbers.find((barber) => barber.id === barberPreference)
-    : undefined;
+  const selectedBarber =
+    barberPreference && barberPreference !== "any"
+      ? profile.barbers.find((barber) => barber.id === barberPreference)
+      : undefined;
   const eligibleBarbers = selectedDetails
     ? profile.barbers.filter((barber) =>
-        selectedDetails.availability.selection.eligibleBarberIds.includes(barber.id)
+        selectedDetails.availability.selection.eligibleBarberIds.includes(
+          barber.id,
+        ),
       )
     : [];
   const selectedSlot = selectedDetails?.selectedSlot ?? null;
@@ -65,7 +75,9 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
   const shopHref = `/barberias/${encodeURIComponent(profile.shop.slug)}`;
   const bookingPath = `${shopHref}/reservar`;
   const backHref = getBackHref(state, currentStep);
-  const combinedServiceName = selectedServices.map((service) => service.name).join(" + ");
+  const combinedServiceName = selectedServices
+    .map((service) => service.name)
+    .join(" + ");
   const depositMinorUnits = selectedServices.reduce(
     (total, service) => total + service.depositMinorUnits,
     0,
@@ -73,40 +85,56 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
   const assignedBarber = selectedSlot
     ? profile.barbers.find((barber) => barber.id === selectedSlot.barberId)
     : undefined;
-  const assignedProfessionalName = assignedBarber?.displayName ?? "Profesional por validar";
+  const assignedProfessionalName =
+    assignedBarber?.displayName ?? "Profesional por validar";
   const bookingCode = selectedSlot
     ? getDemoBookingCode(state.selectedDate, selectedSlot.startsAt)
     : null;
-  const demoSubmissionHref = selectedDetails && selectedSlot && bookingCode
-    ? getDemoBookingSubmissionHref(createDemoPrivateBookingAccessToken({
-        shopSlug: profile.shop.slug,
-        shopName: profile.shop.name,
-        shopAddress: profile.shop.publicAddress,
-        timeZone: profile.shop.timezone,
-        serviceName: combinedServiceName,
-        professionalName: assignedProfessionalName,
-        startsAt: selectedSlot.startsAt.toISOString(),
-        serviceEndsAt: selectedSlot.serviceEndsAt.toISOString(),
-        durationMinutes: selectedDetails.availability.selection.serviceDurationMinutes,
-        totalPriceMinorUnits: selectedDetails.availability.selection.totalPriceMinorUnits,
-        depositMinorUnits,
-        balanceMinorUnits:
-          selectedDetails.availability.selection.totalPriceMinorUnits - depositMinorUnits,
-        bookingCode,
-        policySummary: profile.shop.publicPolicy.cancellation,
-      }))
-    : null;
+  const demoSubmissionHref =
+    selectedDetails && selectedSlot && bookingCode
+      ? getDemoBookingSubmissionHref(
+          createDemoPrivateBookingAccessToken({
+            shopSlug: profile.shop.slug,
+            shopName: profile.shop.name,
+            shopAddress: profile.shop.publicAddress,
+            timeZone: profile.shop.timezone,
+            serviceName: combinedServiceName,
+            professionalName: assignedProfessionalName,
+            startsAt: selectedSlot.startsAt.toISOString(),
+            serviceEndsAt: selectedSlot.serviceEndsAt.toISOString(),
+            durationMinutes:
+              selectedDetails.availability.selection.serviceDurationMinutes,
+            totalPriceMinorUnits:
+              selectedDetails.availability.selection.totalPriceMinorUnits,
+            depositMinorUnits,
+            balanceMinorUnits:
+              selectedDetails.availability.selection.totalPriceMinorUnits -
+              depositMinorUnits,
+            bookingCode,
+            policySummary: profile.shop.publicPolicy.cancellation,
+          }),
+        )
+      : null;
 
   return (
     <main className="min-h-dvh bg-background">
       <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur">
         <div className="mx-auto grid h-14 w-full max-w-5xl grid-cols-[2.75rem_1fr_2.75rem] items-center px-2 sm:px-4">
           <Button asChild variant="ghost" size="icon">
-            <Link href={backHref} aria-label={currentStep === 1 ? "Volver a la barbería" : "Volver al paso anterior"}>
+            <Link
+              href={backHref}
+              aria-label={
+                currentStep === 1
+                  ? "Volver a la barbería"
+                  : "Volver al paso anterior"
+              }
+            >
               <ArrowLeft aria-hidden="true" />
             </Link>
           </Button>
-          <p className="text-center text-body-sm font-semibold">Nueva reserva</p>
+          <p className="text-center text-body-sm font-semibold">
+            Nueva reserva
+          </p>
           <Link
             href={shopHref}
             aria-label="Ir al perfil de la barbería"
@@ -127,16 +155,20 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
         <div className="mt-5 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
           <section
             aria-labelledby="active-step-heading"
-            className={currentStep === 4
-              ? "min-w-0"
-              : "min-w-0 md:rounded-xl md:border md:border-border md:bg-card md:p-6"}
+            className={
+              currentStep === 4
+                ? "min-w-0"
+                : "min-w-0 md:rounded-xl md:border md:border-border md:bg-card md:p-6"
+            }
           >
             {currentStep > 1 && currentStep < 4 && selectedDetails ? (
               <MobileSelectionSummary
                 services={combinedServiceName}
-                professional={barberPreference === "any"
-                  ? "Cualquier profesional"
-                  : selectedBarber?.displayName ?? "Por elegir"}
+                professional={
+                  barberPreference === "any"
+                    ? "Cualquier profesional"
+                    : (selectedBarber?.displayName ?? "Por elegir")
+                }
                 editHref={getPublicBookingHref(profile.shop.slug, {
                   serviceIds: selectedDetails.serviceIds,
                   date: state.selectedDate,
@@ -161,22 +193,27 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
             ) : null}
 
             {currentStep === 3 && selectedDetails && barberPreference ? (
-              <ScheduleStep
-                state={state}
-                bookingPath={bookingPath}
-              />
+              <ScheduleStep state={state} bookingPath={bookingPath} />
             ) : null}
 
-            {currentStep === 4 && selectedDetails && selectedSlot && bookingCode && demoSubmissionHref ? (
+            {currentStep === 4 &&
+            selectedDetails &&
+            selectedSlot &&
+            bookingCode &&
+            demoSubmissionHref ? (
               <div>
-                <h1 id="active-step-heading" className="sr-only">Completa tus datos</h1>
+                <h1 id="active-step-heading" className="sr-only">
+                  Completa tus datos
+                </h1>
                 <PublicBookingCheckout
                   shopName={profile.shop.name}
                   serviceName={combinedServiceName}
                   professionalName={assignedProfessionalName}
                   dateLabel={formatLongDate(state.selectedDate)}
                   timeLabel={formatPublicTime(selectedSlot.startsAt)}
-                  totalPriceMinorUnits={selectedDetails.availability.selection.totalPriceMinorUnits}
+                  totalPriceMinorUnits={
+                    selectedDetails.availability.selection.totalPriceMinorUnits
+                  }
                   depositMinorUnits={depositMinorUnits}
                   bookingCode={bookingCode}
                   timeZone={profile.shop.timezone}
@@ -190,9 +227,11 @@ export function PublicBookingPage({ state }: PublicBookingPageProps) {
             <BookingSummaryAside
               state={state}
               serviceName={combinedServiceName}
-              barberName={barberPreference === "any"
-                ? "Cualquier profesional"
-                : selectedBarber?.displayName ?? "Por elegir"}
+              barberName={
+                barberPreference === "any"
+                  ? "Cualquier profesional"
+                  : (selectedBarber?.displayName ?? "Por elegir")
+              }
               depositMinorUnits={depositMinorUnits}
             />
           ) : null}
@@ -209,17 +248,20 @@ function ServiceStep({
   state: PublicBookingPageState;
   initialSelectedIds: readonly string[];
 }) {
-  const options: PublicServicePickerOption[] = state.profile.services.map((service) => ({
-    id: service.id,
-    name: service.name,
-    description: service.description,
-    durationMinutes: service.durationMinutes,
-    priceLabel: formatBobMinorUnits(service.priceMinorUnits),
-    priceMinorUnits: service.priceMinorUnits,
-    depositLabel: service.depositMinorUnits > 0
-      ? formatBobMinorUnits(service.depositMinorUnits)
-      : null,
-  }));
+  const options: PublicServicePickerOption[] = state.profile.services.map(
+    (service) => ({
+      id: service.id,
+      name: service.name,
+      description: service.description,
+      durationMinutes: service.durationMinutes,
+      priceLabel: formatBobMinorUnits(service.priceMinorUnits),
+      priceMinorUnits: service.priceMinorUnits,
+      depositLabel:
+        service.depositMinorUnits > 0
+          ? formatBobMinorUnits(service.depositMinorUnits)
+          : null,
+    }),
+  );
 
   return (
     <div>
@@ -228,7 +270,10 @@ function ServiceStep({
         helper="Puedes elegir más de uno."
       />
       {state.selection.kind === "invalid" ? (
-        <StatusMessage title="Revisa tu selección" message={state.selection.message} />
+        <StatusMessage
+          title="Revisa tu selección"
+          message={state.selection.message}
+        />
       ) : null}
       <div className="mt-5">
         <PublicServicePicker
@@ -259,10 +304,16 @@ function BarberStep({
 
   return (
     <div>
-      <StepHeading title="¿Con quién?" helper="Elige una opción para ver horarios." />
+      <StepHeading
+        title="¿Con quién?"
+        helper="Elige una opción para ver horarios."
+      />
 
       {selection.barberError ? (
-        <StatusMessage title="Ese profesional no está disponible" message={selection.barberError} />
+        <StatusMessage
+          title="Ese profesional no está disponible"
+          message={selection.barberError}
+        />
       ) : null}
 
       {eligibleBarbers.length > 0 ? (
@@ -330,7 +381,9 @@ function ScheduleStep({
   const { selection, profile } = state;
   const barberPreference = selection.barberPreference;
   if (!barberPreference) return null;
-  const timePickerOptions = createPublicTimePickerOptions(selection.availability.slots);
+  const timePickerOptions = createPublicTimePickerOptions(
+    selection.availability.slots,
+  );
 
   return (
     <div>
@@ -340,7 +393,10 @@ function ScheduleStep({
         <StatusMessage title="Revisa la fecha" message={state.dateError} />
       ) : null}
       {selection.slotError ? (
-        <StatusMessage title="Ese horario cambió" message={selection.slotError} />
+        <StatusMessage
+          title="Ese horario cambió"
+          message={selection.slotError}
+        />
       ) : null}
 
       <div className="mt-5">
@@ -367,7 +423,9 @@ function ScheduleStep({
                       : "border-border bg-card hover:bg-muted"
                   }`}
                 >
-                  <span className="text-caption font-medium capitalize">{formatWeekday(date)}</span>
+                  <span className="text-caption font-medium capitalize">
+                    {formatWeekday(date)}
+                  </span>
                   <span className="mt-1 font-semibold">{formatDay(date)}</span>
                 </Link>
               </li>
@@ -378,11 +436,23 @@ function ScheduleStep({
         <details className="group mt-2">
           <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 text-body-sm font-semibold text-accent-foreground marker:content-none">
             Elegir otra fecha
-            <ChevronDown className="size-4 transition-transform group-open:rotate-180" aria-hidden="true" />
+            <ChevronDown
+              className="size-4 transition-transform group-open:rotate-180"
+              aria-hidden="true"
+            />
           </summary>
-          <form action={bookingPath} method="get" className="mt-2 grid gap-3 rounded-lg border border-border bg-muted p-3 sm:grid-cols-[1fr_auto] sm:items-end">
+          <form
+            action={bookingPath}
+            method="get"
+            className="mt-2 grid gap-3 rounded-lg border border-border bg-muted p-3 sm:grid-cols-[1fr_auto] sm:items-end"
+          >
             {selection.serviceIds.map((serviceId) => (
-              <input key={serviceId} type="hidden" name="service" value={serviceId} />
+              <input
+                key={serviceId}
+                type="hidden"
+                name="service"
+                value={serviceId}
+              />
             ))}
             <input type="hidden" name="barber" value={barberPreference} />
             <Field label="Fecha exacta">
@@ -394,7 +464,9 @@ function ScheduleStep({
                 defaultValue={state.selectedDate}
               />
             </Field>
-            <Button type="submit" variant="secondary">Ver horarios</Button>
+            <Button type="submit" variant="secondary">
+              Ver horarios
+            </Button>
           </form>
         </details>
       </div>
@@ -425,10 +497,15 @@ function BookingProgress({ currentStep }: { currentStep: number }) {
   return (
     <div aria-live="polite">
       <div className="flex items-center justify-between gap-4 text-body-sm">
-        <p className="font-semibold">Paso {currentStep} de {STEP_LABELS.length}</p>
+        <p className="font-semibold">
+          Paso {currentStep} de {STEP_LABELS.length}
+        </p>
         <p className="text-muted-foreground">{STEP_LABELS[currentStep - 1]}</p>
       </div>
-      <ol className="mt-3 grid grid-cols-4 gap-2" aria-label="Progreso de la reserva">
+      <ol
+        className="mt-3 grid grid-cols-4 gap-2"
+        aria-label="Progreso de la reserva"
+      >
         {STEP_LABELS.map((label, index) => {
           const step = index + 1;
           const isCurrent = step === currentStep;
@@ -442,7 +519,8 @@ function BookingProgress({ currentStep }: { currentStep: number }) {
                 }`}
               />
               <span className="sr-only">
-                {label}{isComplete ? ", completado" : isCurrent ? ", actual" : ""}
+                {label}
+                {isComplete ? ", completado" : isCurrent ? ", actual" : ""}
               </span>
             </li>
           );
@@ -455,7 +533,11 @@ function BookingProgress({ currentStep }: { currentStep: number }) {
 function StepHeading({ title, helper }: { title: string; helper: string }) {
   return (
     <div>
-      <h1 id="active-step-heading" tabIndex={-1} className="text-title-md tracking-tight outline-none sm:text-3xl">
+      <h1
+        id="active-step-heading"
+        tabIndex={-1}
+        className="text-title-md tracking-tight outline-none sm:text-3xl"
+      >
         {title}
       </h1>
       <p className="mt-1 text-body-sm text-muted-foreground">{helper}</p>
@@ -484,16 +566,27 @@ function ChoiceCard({
       }`}
     >
       <CardContent className="flex min-h-20 items-center gap-3 p-4">
-        <span className={`flex size-11 shrink-0 items-center justify-center rounded-full font-semibold ${
-          highlighted ? "bg-foreground text-primary-foreground" : "bg-muted"
-        }`}>
-          {icon === "sparkles" ? <Sparkles className="size-4" aria-hidden="true" /> : initials}
+        <span
+          className={`flex size-11 shrink-0 items-center justify-center rounded-full font-semibold ${
+            highlighted ? "bg-foreground text-primary-foreground" : "bg-muted"
+          }`}
+        >
+          {icon === "sparkles" ? (
+            <Sparkles className="size-4" aria-hidden="true" />
+          ) : (
+            initials
+          )}
         </span>
         <span className="min-w-0 flex-1">
           <span className="block font-semibold">{title}</span>
-          <span className="mt-1 block text-body-sm text-muted-foreground">{description}</span>
+          <span className="mt-1 block text-body-sm text-muted-foreground">
+            {description}
+          </span>
         </span>
-        <ChevronRight className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+        <ChevronRight
+          className="size-4 shrink-0 text-muted-foreground"
+          aria-hidden="true"
+        />
       </CardContent>
     </Card>
   );
@@ -512,7 +605,9 @@ function MobileSelectionSummary({
     <div className="mb-5 flex items-center gap-3 rounded-lg border border-border bg-card p-3 lg:hidden">
       <div className="min-w-0 flex-1">
         <p className="truncate text-body-sm font-semibold">{services}</p>
-        <p className="mt-0.5 truncate text-caption text-muted-foreground">{professional}</p>
+        <p className="mt-0.5 truncate text-caption text-muted-foreground">
+          {professional}
+        </p>
       </div>
       <Button asChild variant="link" className="px-2">
         <Link href={editHref}>Editar</Link>
@@ -536,13 +631,18 @@ function BookingSummaryAside({
   const { selection, profile } = state;
 
   return (
-    <aside className="sticky top-24 hidden lg:block" aria-labelledby="booking-summary-heading">
+    <aside
+      className="sticky top-24 hidden lg:block"
+      aria-labelledby="booking-summary-heading"
+    >
       <Card className="gap-0 py-0">
         <CardContent className="p-5">
           <p className="text-caption font-semibold tracking-[0.12em] text-muted-foreground uppercase">
             Tu selección
           </p>
-          <h2 id="booking-summary-heading" className="mt-1 font-semibold">{profile.shop.name}</h2>
+          <h2 id="booking-summary-heading" className="mt-1 font-semibold">
+            {profile.shop.name}
+          </h2>
 
           <dl className="mt-5 space-y-4 text-body-sm">
             <SummaryItem
@@ -559,19 +659,25 @@ function BookingSummaryAside({
               icon={UserRound}
               label="Profesional"
               value={barberName}
-              editHref={selection.barberPreference
-                ? getPublicBookingHref(profile.shop.slug, {
-                    serviceIds: selection.serviceIds,
-                    barberId: selection.barberPreference,
-                    date: state.selectedDate,
-                    step: "barber",
-                  })
-                : undefined}
+              editHref={
+                selection.barberPreference
+                  ? getPublicBookingHref(profile.shop.slug, {
+                      serviceIds: selection.serviceIds,
+                      barberId: selection.barberPreference,
+                      date: state.selectedDate,
+                      step: "barber",
+                    })
+                  : undefined
+              }
             />
             <SummaryItem
               icon={CalendarDays}
               label="Fecha"
-              value={selection.barberPreference ? formatLongDate(state.selectedDate) : "Por elegir"}
+              value={
+                selection.barberPreference
+                  ? formatLongDate(state.selectedDate)
+                  : "Por elegir"
+              }
             />
           </dl>
 
@@ -579,12 +685,18 @@ function BookingSummaryAside({
           <dl className="space-y-3 text-body-sm">
             <SummaryAmount
               label="Total"
-              value={formatBobMinorUnits(selection.availability.selection.totalPriceMinorUnits)}
+              value={formatBobMinorUnits(
+                selection.availability.selection.totalPriceMinorUnits,
+              )}
               emphasis
             />
             <SummaryAmount
               label="Anticipo"
-              value={depositMinorUnits > 0 ? formatBobMinorUnits(depositMinorUnits) : "No requiere"}
+              value={
+                depositMinorUnits > 0
+                  ? formatBobMinorUnits(depositMinorUnits)
+                  : "No requiere"
+              }
             />
           </dl>
           <p className="mt-4 flex gap-2 text-caption leading-5 text-muted-foreground">
@@ -610,13 +722,19 @@ function SummaryItem({
 }) {
   return (
     <div className="flex gap-3">
-      <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+      <Icon
+        className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+        aria-hidden="true"
+      />
       <div className="min-w-0 flex-1">
         <dt className="text-caption text-muted-foreground">{label}</dt>
         <dd className="mt-0.5 text-pretty font-semibold">{value}</dd>
       </div>
       {editHref ? (
-        <Link href={editHref} className="inline-flex min-h-11 items-center text-caption font-semibold text-accent-foreground hover:underline">
+        <Link
+          href={editHref}
+          className="inline-flex min-h-11 items-center text-caption font-semibold text-accent-foreground hover:underline"
+        >
           Cambiar
         </Link>
       ) : null}
@@ -636,7 +754,9 @@ function SummaryAmount({
   return (
     <div className="flex items-center justify-between gap-3">
       <dt className="text-muted-foreground">{label}</dt>
-      <dd className={emphasis ? "text-body font-semibold" : "font-semibold"}>{value}</dd>
+      <dd className={emphasis ? "text-body font-semibold" : "font-semibold"}>
+        {value}
+      </dd>
     </div>
   );
 }
@@ -653,7 +773,11 @@ function StatusMessage({
   actionLabel?: string;
 }) {
   return (
-    <div role="status" aria-live="polite" className="mt-4 rounded-lg border border-information/25 bg-information-subtle p-4">
+    <div
+      role="status"
+      aria-live="polite"
+      className="mt-4 rounded-lg border border-information/25 bg-information-subtle p-4"
+    >
       <p className="font-semibold text-information">{title}</p>
       <p className="mt-1 text-body-sm text-foreground">{message}</p>
       {actionHref && actionLabel ? (
@@ -673,7 +797,10 @@ function getCurrentStep(state: PublicBookingPageState): number {
   return state.selection.selectedSlot ? 4 : 3;
 }
 
-function getBackHref(state: PublicBookingPageState, currentStep: number): string {
+function getBackHref(
+  state: PublicBookingPageState,
+  currentStep: number,
+): string {
   const shopSlug = state.profile.shop.slug;
   if (state.selection.kind !== "selected" || currentStep === 1) {
     return `/barberias/${encodeURIComponent(shopSlug)}`;
@@ -712,10 +839,7 @@ function formatLongDate(date: string) {
   return formatDate(date, { weekday: "long", day: "numeric", month: "long" });
 }
 
-function formatDate(
-  date: string,
-  options: Intl.DateTimeFormatOptions,
-) {
+function formatDate(date: string, options: Intl.DateTimeFormatOptions) {
   const [year, month, day] = date.split("-").map(Number);
   return new Intl.DateTimeFormat("es-BO", {
     ...options,
@@ -724,13 +848,15 @@ function formatDate(
 }
 
 function getInitials(name: string) {
-  return name
-    .replace(/\([^)]*\)/g, "")
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("") || "G";
+  return (
+    name
+      .replace(/\([^)]*\)/g, "")
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase())
+      .join("") || "G"
+  );
 }
 
 function getDemoBookingCode(date: string, startsAt: Date) {

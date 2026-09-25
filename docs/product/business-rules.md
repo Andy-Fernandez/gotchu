@@ -2,7 +2,7 @@
 
 **Alcance:** MVP cerrado para una barbería y una ubicación  
 **Estado:** base implementable para el piloto  
-**Fuente:** *Barbershop Local Operating System — Strategic Lean MVP Guide v0.4*  
+**Fuente:** _Barbershop Local Operating System — Strategic Lean MVP Guide v0.4_\
 **Última actualización:** 2026-09-11
 
 Este documento es la fuente de verdad para los casos operativos que suelen quedar ambiguos entre producto, diseño y backend. Complementa `core-workflows.md` y `domain-model.md`.
@@ -16,24 +16,24 @@ Este documento es la fuente de verdad para los casos operativos que suelen queda
 
 ## Defaults que deben validarse con la barbería
 
-| Configuración | Default inicial | Estado |
-|---|---:|---|
-| Duración del hold | 10 minutos | Regla firme |
-| Anticipación mínima para reserva online | 2 horas antes del inicio | Decisión de producto para el MVP |
-| Horizonte máximo de reserva online | 1 mes desde la fecha actual | Decisión de producto para el MVP |
-| Separación entre inicios de slots | 15 minutos | Decisión de producto para el MVP |
-| Objetivo de revisión del anticipo | 2 horas acumuladas dentro del horario abierto de la barbería | Decisión de producto para el MVP |
-| Anticipación mínima para cancelar sin penalización | 24 horas | Decisión de producto para el MVP; configurable |
-| Anticipación mínima para reprogramar sin penalización | 8 horas | Decisión de producto para el MVP; configurable |
-| Reprogramaciones con transferencia de anticipo | 1 por reserva | Decisión de producto para el MVP |
-| Anticipo predeterminado | 20% del total | Decisión de producto para el MVP; configurable |
-| Modalidad del anticipo | Porcentaje o monto fijo en BOB, con override por servicio | Decisión de producto para el MVP |
-| Margen de tolerancia para no-show | 10 minutos | Decisión de producto para el MVP; configurable |
-| Buffer final de una reserva combinada | 10 minutos | Decisión de producto para el MVP; configurable |
-| Plazo máximo para devolución manual | 24 horas desde la solicitud | Decisión de producto para el MVP; validar operación y normativa |
-| Ventana de reemplazo del comprobante | 1 hora, con tope 30 minutos antes de la cita | Decisión de producto para el MVP |
-| Retención del archivo del comprobante | 180 días después del cierre financiero | Default de piloto; validar normativa contable y privacidad |
-| Tamaño máximo del comprobante | 10 MB | Default técnico de piloto |
+| Configuración                                         |                                              Default inicial | Estado                                                          |
+| ----------------------------------------------------- | -----------------------------------------------------------: | --------------------------------------------------------------- |
+| Duración del hold                                     |                                                   10 minutos | Regla firme                                                     |
+| Anticipación mínima para reserva online               |                                     2 horas antes del inicio | Decisión de producto para el MVP                                |
+| Horizonte máximo de reserva online                    |                                  1 mes desde la fecha actual | Decisión de producto para el MVP                                |
+| Separación entre inicios de slots                     |                                                   15 minutos | Decisión de producto para el MVP                                |
+| Objetivo de revisión del anticipo                     | 2 horas acumuladas dentro del horario abierto de la barbería | Decisión de producto para el MVP                                |
+| Anticipación mínima para cancelar sin penalización    |                                                     24 horas | Decisión de producto para el MVP; configurable                  |
+| Anticipación mínima para reprogramar sin penalización |                                                      8 horas | Decisión de producto para el MVP; configurable                  |
+| Reprogramaciones con transferencia de anticipo        |                                                1 por reserva | Decisión de producto para el MVP                                |
+| Anticipo predeterminado                               |                                                20% del total | Decisión de producto para el MVP; configurable                  |
+| Modalidad del anticipo                                |    Porcentaje o monto fijo en BOB, con override por servicio | Decisión de producto para el MVP                                |
+| Margen de tolerancia para no-show                     |                                                   10 minutos | Decisión de producto para el MVP; configurable                  |
+| Buffer final de una reserva combinada                 |                                                   10 minutos | Decisión de producto para el MVP; configurable                  |
+| Plazo máximo para devolución manual                   |                                  24 horas desde la solicitud | Decisión de producto para el MVP; validar operación y normativa |
+| Ventana de reemplazo del comprobante                  |                 1 hora, con tope 30 minutos antes de la cita | Decisión de producto para el MVP                                |
+| Retención del archivo del comprobante                 |                       180 días después del cierre financiero | Default de piloto; validar normativa contable y privacidad      |
+| Tamaño máximo del comprobante                         |                                                        10 MB | Default técnico de piloto                                       |
 
 ## 1. Hold, upload y revisión del anticipo
 
@@ -177,28 +177,28 @@ Payment: transferred
 
 ### 4.2 Matriz inicial
 
-| Acción | Barber | Manager | Owner |
-|---|:---:|:---:|:---:|
-| Ver agenda propia | Sí | Sí | Sí |
-| Ver toda la agenda de la barbería | No | Sí | Sí |
-| Registrar walk-in propio | Sí | Sí | Sí |
-| Asignar o reasignar walk-ins | Solo hacia sí mismo | Sí | Sí |
-| Crear cita manual | No | Sí | Sí |
-| Iniciar/completar servicio asignado a sí mismo | Sí | Solo si también es el profesional asignado | Solo si también es el profesional asignado |
-| Corregir estado de servicio de otro profesional | No | Sí, como excepción y con motivo | Sí, como excepción y con motivo |
-| Registrar saldo final pagado | Sí, en servicio propio | Sí | Sí |
-| Editar un pago ya registrado | No | Solo con permiso financiero y motivo | Sí, con motivo |
-| Marcar no-show | Agenda propia | Toda la barbería | Toda la barbería |
-| Aprobar/rechazar anticipo | Solo con permiso de revisión financiera explícito | Solo con permiso financiero | Sí |
-| Aprobar con diferencia | Solo con permiso de revisión financiera explícito y nota | Solo con permiso financiero y nota | Sí, con nota |
-| Omitir anticipo | No | Solo con permiso financiero y motivo | Sí, con motivo |
-| Autorizar devolución | No | Solo con permiso explícito de devoluciones | Sí |
-| Configurar servicios, depósitos y política | No | No por defecto | Sí |
-| Crear bloqueo operativo del día | No | Sí | Sí |
-| Editar horarios recurrentes y feriados | No | No por defecto | Sí |
-| Gestionar personal y roles | No | No | Sí |
-| Ver métricas operativas | Propias | Barbería | Barbería |
-| Exportar datos y ver auditoría sensible | No | No por defecto | Sí |
+| Acción                                          |                          Barber                          |                  Manager                   |                   Owner                    |
+| ----------------------------------------------- | :------------------------------------------------------: | :----------------------------------------: | :----------------------------------------: |
+| Ver agenda propia                               |                            Sí                            |                     Sí                     |                     Sí                     |
+| Ver toda la agenda de la barbería               |                            No                            |                     Sí                     |                     Sí                     |
+| Registrar walk-in propio                        |                            Sí                            |                     Sí                     |                     Sí                     |
+| Asignar o reasignar walk-ins                    |                   Solo hacia sí mismo                    |                     Sí                     |                     Sí                     |
+| Crear cita manual                               |                            No                            |                     Sí                     |                     Sí                     |
+| Iniciar/completar servicio asignado a sí mismo  |                            Sí                            | Solo si también es el profesional asignado | Solo si también es el profesional asignado |
+| Corregir estado de servicio de otro profesional |                            No                            |      Sí, como excepción y con motivo       |      Sí, como excepción y con motivo       |
+| Registrar saldo final pagado                    |                  Sí, en servicio propio                  |                     Sí                     |                     Sí                     |
+| Editar un pago ya registrado                    |                            No                            |    Solo con permiso financiero y motivo    |               Sí, con motivo               |
+| Marcar no-show                                  |                      Agenda propia                       |              Toda la barbería              |              Toda la barbería              |
+| Aprobar/rechazar anticipo                       |    Solo con permiso de revisión financiera explícito     |        Solo con permiso financiero         |                     Sí                     |
+| Aprobar con diferencia                          | Solo con permiso de revisión financiera explícito y nota |     Solo con permiso financiero y nota     |                Sí, con nota                |
+| Omitir anticipo                                 |                            No                            |    Solo con permiso financiero y motivo    |               Sí, con motivo               |
+| Autorizar devolución                            |                            No                            | Solo con permiso explícito de devoluciones |                     Sí                     |
+| Configurar servicios, depósitos y política      |                            No                            |               No por defecto               |                     Sí                     |
+| Crear bloqueo operativo del día                 |                            No                            |                     Sí                     |                     Sí                     |
+| Editar horarios recurrentes y feriados          |                            No                            |               No por defecto               |                     Sí                     |
+| Gestionar personal y roles                      |                            No                            |                     No                     |                     Sí                     |
+| Ver métricas operativas                         |                         Propias                          |                  Barbería                  |                  Barbería                  |
+| Exportar datos y ver auditoría sensible         |                            No                            |               No por defecto               |                     Sí                     |
 
 - Los permisos opcionales de manager son flags explícitos, no una ampliación implícita del rol.
 - Platform operator no aparece en la matriz del negocio: solo accede bajo una sesión de soporte autorizada, temporal y auditada; nunca altera silenciosamente registros financieros.

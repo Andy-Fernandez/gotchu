@@ -99,7 +99,9 @@ export default async function ServiceHistoryPage({
             </p>
           </div>
           <p className="text-body-sm text-muted-foreground">
-            <span className="font-semibold text-foreground">{counts.todos}</span>{" "}
+            <span className="font-semibold text-foreground">
+              {counts.todos}
+            </span>{" "}
             registros
           </p>
         </header>
@@ -150,7 +152,9 @@ export default async function ServiceHistoryPage({
                 <span
                   className={cn(
                     "inline-flex min-w-5 justify-center rounded-full px-1.5 text-caption",
-                    isCurrent ? "bg-white/15" : "bg-muted text-muted-foreground",
+                    isCurrent
+                      ? "bg-white/15"
+                      : "bg-muted text-muted-foreground",
                   )}
                 >
                   {counts[filter.value]}
@@ -162,7 +166,10 @@ export default async function ServiceHistoryPage({
 
         <section className="mt-7" aria-labelledby="history-list-heading">
           <div className="flex flex-col items-start justify-between gap-1 sm:flex-row sm:items-center sm:gap-4">
-            <h2 id="history-list-heading" className="text-title-sm tracking-tight">
+            <h2
+              id="history-list-heading"
+              className="text-title-sm tracking-tight"
+            >
               {activeFilterLabel}
             </h2>
             <p className="text-caption text-muted-foreground">
@@ -198,17 +205,8 @@ function StatusCount({
 }) {
   return (
     <div className="min-w-0 px-2 py-3 text-center sm:px-4 sm:py-4">
-      <span
-        className={cn(
-          "text-title-sm font-bold",
-          className,
-        )}
-      >
-        {count}
-      </span>
-      <p className="mt-1 text-caption font-semibold sm:text-body-sm">
-        {label}
-      </p>
+      <span className={cn("text-title-sm font-bold", className)}>{count}</span>
+      <p className="mt-1 text-caption font-semibold sm:text-body-sm">{label}</p>
     </div>
   );
 }
@@ -249,7 +247,10 @@ function ServiceHistoryCard({ record }: { record: ServiceHistoryRecord }) {
                     {services}
                   </h3>
                   <p className="mt-1 flex items-center gap-1.5 text-body-sm text-muted-foreground">
-                    <UserRound className="size-3.5 shrink-0" aria-hidden="true" />
+                    <UserRound
+                      className="size-3.5 shrink-0"
+                      aria-hidden="true"
+                    />
                     <span className="truncate">{record.customerName}</span>
                   </p>
                 </div>
@@ -288,7 +289,10 @@ function EmptyHistory({ counts }: { counts: ServiceHistoryCounts }) {
     <Card className="mt-4">
       <CardContent className="flex flex-col items-center px-5 py-10 text-center">
         <span className="flex size-11 items-center justify-center rounded-full bg-muted">
-          <SearchX className="size-5 text-muted-foreground" aria-hidden="true" />
+          <SearchX
+            className="size-5 text-muted-foreground"
+            aria-hidden="true"
+          />
         </span>
         <h3 className="mt-4 font-semibold">No hay servicios en este estado</h3>
         <p className="mt-2 max-w-sm text-body-sm leading-6 text-muted-foreground">

@@ -74,7 +74,7 @@ After a no-show is marked, remaining capacity may be reused for a walk-in or ano
 Use the half-open interval rule:
 
 ```ts
-existingStart < candidateEnd && candidateStart < existingEnd
+existingStart < candidateEnd && candidateStart < existingEnd;
 ```
 
 Polling every 15–30 seconds is acceptable for the MVP, but every write must revalidate on the server. Hold, booking, and queue allocation writes must be atomic and safe under concurrent requests.

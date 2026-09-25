@@ -4,12 +4,12 @@ Owns the shop-scoped public profile, service catalog, price/duration/deposit sna
 
 ## Day 1 implementation
 
-| File | Purpose |
-| --- | --- |
-| `types.ts` | Framework-independent `Shop`, public cover image, `Service`, `Barber`, and in-memory `Catalog` types. |
-| `demo-catalog.ts` | One explicitly fictional shop, two barbers, and three active services. |
-| `public-shop-profile.ts` | Explicit allowlists of customer-safe response fields. |
-| `get-public-shop-profile.ts` | Shop lookup, active-record filtering, eligibility, and public-field projection. |
+| File                         | Purpose                                                                                               |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `types.ts`                   | Framework-independent `Shop`, public cover image, `Service`, `Barber`, and in-memory `Catalog` types. |
+| `demo-catalog.ts`            | One explicitly fictional shop, two barbers, and three active services.                                |
+| `public-shop-profile.ts`     | Explicit allowlists of customer-safe response fields.                                                 |
+| `get-public-shop-profile.ts` | Shop lookup, active-record filtering, eligibility, and public-field projection.                       |
 
 The public page calls the application operation:
 
@@ -28,11 +28,11 @@ Only active services and barbers belonging to the selected shop are returned. Ea
 
 Currency is `BOB`, displayed as Bs. All money is stored in integer minor units (Bs 45 = `4500`). Prices are provisional user-suggested examples; durations, buffers, deposits, opening hours, address, names, and policy text are demonstration assumptions, not validated business data.
 
-| Service | Price (Bs) | Duration (minutes) | Buffer (minutes) | Deposit (Bs) | Eligible barbers |
-| --- | ---: | ---: | ---: | ---: | --- |
-| Corte de pelo normal | 45 | 30 | 5 | 10 | Alex, Sam |
-| Cejas | 5 | 10 | 5 | 0 | Sam |
-| Barba | 15 | 20 | 5 | 5 | Alex |
+| Service              | Price (Bs) | Duration (minutes) | Buffer (minutes) | Deposit (Bs) | Eligible barbers |
+| -------------------- | ---------: | -----------------: | ---------------: | -----------: | ---------------- |
+| Corte de pelo normal |         45 |                 30 |                5 |           10 | Alex, Sam        |
+| Cejas                |          5 |                 10 |                5 |            0 | Sam              |
+| Barba                |         15 |                 20 |                5 |            5 | Alex             |
 
 These are configurable catalog values, not UI constants. Additional services such as ondulado/base can be added as records later. Opening hours are recurring `HH:mm` intervals interpreted in `America/La_Paz`; omitted weekdays are closed. They are not appointment timestamps or calculated availability.
 

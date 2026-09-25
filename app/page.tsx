@@ -6,7 +6,8 @@ const routes = [
   {
     href: "/barberias/demo",
     title: "Experiencia del cliente",
-    description: "Perfil público y entrada al flujo de reserva de una barbería.",
+    description:
+      "Perfil público y entrada al flujo de reserva de una barbería.",
     action: "Ver experiencia",
   },
   {
@@ -43,11 +44,7 @@ export default function Home() {
         />
 
         <div className="relative max-w-3xl">
-          <GotchuPill
-            variant="fill"
-            className="max-w-72 sm:max-w-sm"
-            preload
-          />
+          <GotchuPill variant="fill" className="max-w-72 sm:max-w-sm" preload />
           <p className="mt-8 text-caption font-semibold tracking-[0.18em] text-accent-on-dark uppercase sm:mt-10">
             Tu corte, asegurado
           </p>
@@ -61,7 +58,10 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="grid gap-4 sm:grid-cols-2" aria-label="Superficies de la demo">
+      <section
+        className="grid gap-4 sm:grid-cols-2"
+        aria-label="Superficies de la demo"
+      >
         {routes.map((route) => (
           <Link
             key={route.href}
@@ -69,7 +69,9 @@ export default function Home() {
             className="group rounded-3xl border border-border bg-card p-6 transition hover:-translate-y-0.5 hover:border-foreground/25 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-4"
           >
             <h2 className="text-lg font-semibold">{route.title}</h2>
-            <p className="mt-2 leading-6 text-muted-foreground">{route.description}</p>
+            <p className="mt-2 leading-6 text-muted-foreground">
+              {route.description}
+            </p>
             <span className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-md border border-foreground px-4 text-button transition-colors group-hover:bg-foreground group-hover:text-primary-foreground">
               {route.action} <span aria-hidden="true">→</span>
             </span>
@@ -84,11 +86,7 @@ export default function Home() {
             Entrada directa de clientes y panel operativo de una barbería.
           </p>
         </div>
-        <GotchuPill
-          variant="outline"
-          alt=""
-          className="w-40 sm:w-44"
-        />
+        <GotchuPill variant="outline" alt="" className="w-40 sm:w-44" />
       </footer>
     </main>
   );

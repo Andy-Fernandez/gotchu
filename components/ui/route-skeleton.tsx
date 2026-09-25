@@ -22,7 +22,9 @@ export function RouteSkeleton({
         <h1 className="mt-3 text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
           {title}
         </h1>
-        <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">{description}</p>
+        <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
+          {description}
+        </p>
         {children ? <div className="mt-8">{children}</div> : null}
       </div>
     </section>

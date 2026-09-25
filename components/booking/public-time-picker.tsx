@@ -37,11 +37,13 @@ export function PublicTimePicker({
     periodGroups.find((group) => group.options.length > 0)?.id ?? "morning",
   );
   const options = periodGroups.flatMap((group) => group.options);
-  const selectedOption = options.find((option) => option.token === candidateToken) ?? null;
+  const selectedOption =
+    options.find((option) => option.token === candidateToken) ?? null;
   const selectedToken = selectedOption?.token ?? "";
-  const selectedPeriod = periodGroups.find(
-    (group) => group.id === selectedPeriodId && group.options.length > 0,
-  ) ?? periodGroups.find((group) => group.options.length > 0);
+  const selectedPeriod =
+    periodGroups.find(
+      (group) => group.id === selectedPeriodId && group.options.length > 0,
+    ) ?? periodGroups.find((group) => group.options.length > 0);
   const hasMoreOptions = options.length > quickOptions.length;
 
   function selectTime(option: PublicTimeOption) {
@@ -92,9 +94,14 @@ export function PublicTimePicker({
             />
           </summary>
 
-          <div id="all-public-time-options" className="border-t border-border px-3 pt-3">
+          <div
+            id="all-public-time-options"
+            className="border-t border-border px-3 pt-3"
+          >
             <fieldset>
-              <legend className="sr-only">Filtrar horarios por momento del día</legend>
+              <legend className="sr-only">
+                Filtrar horarios por momento del día
+              </legend>
               <div className="grid grid-cols-3 gap-1 rounded-md bg-muted p-1">
                 {periodGroups.map((period) => {
                   const isSelected = period.id === selectedPeriod?.id;
@@ -105,7 +112,9 @@ export function PublicTimePicker({
                       key={period.id}
                       type="button"
                       aria-pressed={isSelected}
-                      aria-label={isEmpty ? `${period.label}, sin horarios` : undefined}
+                      aria-label={
+                        isEmpty ? `${period.label}, sin horarios` : undefined
+                      }
                       disabled={isEmpty}
                       onClick={() => setSelectedPeriodId(period.id)}
                       className={cn(
@@ -127,9 +136,16 @@ export function PublicTimePicker({
 
             {selectedPeriod ? (
               <fieldset className="mt-3">
-                <legend className="sr-only">Horarios de {selectedPeriod.label.toLowerCase()}</legend>
-                <p aria-live="polite" className="mb-3 text-caption text-muted-foreground">
-                  {selectedPeriod.options.length} {selectedPeriod.options.length === 1 ? "horario" : "horarios"} en {selectedPeriod.label.toLowerCase()}
+                <legend className="sr-only">
+                  Horarios de {selectedPeriod.label.toLowerCase()}
+                </legend>
+                <p
+                  aria-live="polite"
+                  className="mb-3 text-caption text-muted-foreground"
+                >
+                  {selectedPeriod.options.length}{" "}
+                  {selectedPeriod.options.length === 1 ? "horario" : "horarios"}{" "}
+                  en {selectedPeriod.label.toLowerCase()}
                 </p>
                 <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                   {selectedPeriod.options.map((option) => (
@@ -147,7 +163,10 @@ export function PublicTimePicker({
         </details>
       ) : null}
 
-      <p aria-live="polite" className="min-h-5 text-center text-caption text-muted-foreground">
+      <p
+        aria-live="polite"
+        className="min-h-5 text-center text-caption text-muted-foreground"
+      >
         {selectedOption
           ? getSelectedTimeMessage(selectedOption, showProfessionalCount)
           : "Elige una hora para continuar."}
@@ -182,14 +201,19 @@ function TimeButton({
       )}
     >
       {selected ? (
-        <Check className="absolute top-1.5 end-1.5 size-3.5" aria-hidden="true" />
+        <Check
+          className="absolute top-1.5 end-1.5 size-3.5"
+          aria-hidden="true"
+        />
       ) : null}
       <span className="font-semibold tabular-nums">{option.label}</span>
       {helper ? (
-        <span className={cn(
-          "mt-0.5 text-caption",
-          selected ? "text-primary-foreground" : "text-muted-foreground",
-        )}>
+        <span
+          className={cn(
+            "mt-0.5 text-caption",
+            selected ? "text-primary-foreground" : "text-muted-foreground",
+          )}
+        >
           {helper}
         </span>
       ) : null}
@@ -201,18 +225,29 @@ function ContinueButton({ timeLabel }: { timeLabel: string | null }) {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" size="lg" className="w-full" disabled={!timeLabel} loading={pending}>
+    <Button
+      type="submit"
+      size="lg"
+      className="w-full"
+      disabled={!timeLabel}
+      loading={pending}
+    >
       {timeLabel ? `Continuar · ${timeLabel}` : "Continuar"}
     </Button>
   );
 }
 
-function getSelectedTimeMessage(option: PublicTimeOption, showProfessionalCount: boolean) {
+function getSelectedTimeMessage(
+  option: PublicTimeOption,
+  showProfessionalCount: boolean,
+) {
   if (!showProfessionalCount) {
     return `Horario elegido: ${option.label}.`;
   }
 
   return `Horario elegido: ${option.label} · ${option.professionalCount} ${
-    option.professionalCount === 1 ? "profesional disponible" : "profesionales disponibles"
+    option.professionalCount === 1
+      ? "profesional disponible"
+      : "profesionales disponibles"
   }.`;
 }

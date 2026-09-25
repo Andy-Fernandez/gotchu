@@ -48,10 +48,7 @@ type PaymentStatus =
   | "refunded";
 
 type ReceiptClaimStatus =
-  | "pending_review"
-  | "needs_replacement"
-  | "accepted"
-  | "rejected";
+  "pending_review" | "needs_replacement" | "accepted" | "rejected";
 
 type ReceiptReviewReason =
   | "unreadable"
@@ -62,18 +59,10 @@ type ReceiptReviewReason =
   | "other";
 
 type QueueStatus =
-  | "waiting"
-  | "called"
-  | "in_service"
-  | "completed"
-  | "left"
-  | "cancelled";
+  "waiting" | "called" | "in_service" | "completed" | "left" | "cancelled";
 
 type ServiceExecutionStatus =
-  | "not_started"
-  | "in_progress"
-  | "completed"
-  | "cancelled";
+  "not_started" | "in_progress" | "completed" | "cancelled";
 ```
 
 Transitions must be explicit, authorized, auditable where sensitive, and covered by tests. A reschedule creates a linked booking rather than mutating the original interval.
@@ -121,13 +110,13 @@ Transitions must be explicit, authorized, auditable where sensitive, and covered
 
 ## Roles
 
-| Role | Core authority |
-|---|---|
-| Customer | View public catalog/availability; manage own private booking |
-| Barber | Own schedule and queue; register walk-ins; execute services; record payment/no-show; review deposits only with an explicit financial-review permission |
-| Manager | Shop-wide board; manual appointments; queue resolution; deposit review and refunds only when the corresponding explicit permissions are granted |
-| Owner | Configuration, staff, policy, financial review, refunds, metrics, export, audit |
-| Platform operator | Onboarding and platform health under explicit support permissions |
+| Role              | Core authority                                                                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Customer          | View public catalog/availability; manage own private booking                                                                                           |
+| Barber            | Own schedule and queue; register walk-ins; execute services; record payment/no-show; review deposits only with an explicit financial-review permission |
+| Manager           | Shop-wide board; manual appointments; queue resolution; deposit review and refunds only when the corresponding explicit permissions are granted        |
+| Owner             | Configuration, staff, policy, financial review, refunds, metrics, export, audit                                                                        |
+| Platform operator | Onboarding and platform health under explicit support permissions                                                                                      |
 
 Backend authorization is mandatory. UI visibility is not an authorization boundary.
 

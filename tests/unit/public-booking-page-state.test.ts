@@ -32,19 +32,36 @@ test("a selected public service is encoded in the booking URL and calculated by 
   });
 
   assert.ok(state);
-  assert.equal(getPublicBookingHref("demo", {
-    serviceId: "service-demo-cejas",
-    date: "2026-09-14",
-  }), "/barberias/demo/reservar?service=service-demo-cejas&date=2026-09-14");
+  assert.equal(
+    getPublicBookingHref("demo", {
+      serviceId: "service-demo-cejas",
+      date: "2026-09-14",
+    }),
+    "/barberias/demo/reservar?service=service-demo-cejas&date=2026-09-14",
+  );
   assert.equal(state.selection.kind, "selected");
   if (state.selection.kind !== "selected") return;
   assert.deepEqual(state.selection.serviceIds, ["service-demo-cejas"]);
   assert.equal(state.selection.barberPreference, null);
-  assert.equal(state.selection.availability.selection.totalPriceMinorUnits, 500);
-  assert.equal(state.selection.availability.selection.serviceDurationMinutes, 10);
+  assert.equal(
+    state.selection.availability.selection.totalPriceMinorUnits,
+    500,
+  );
+  assert.equal(
+    state.selection.availability.selection.serviceDurationMinutes,
+    10,
+  );
   assert.ok(state.selection.availability.slots.length > 0);
-  assert.ok(state.selection.availability.slots.every((slot) => slot.barberId === "barber-demo-sam"));
-  assert.ok(state.selection.availability.slots.every((slot) => slot.startsAt >= new Date("2026-09-14T10:00:00-04:00")));
+  assert.ok(
+    state.selection.availability.slots.every(
+      (slot) => slot.barberId === "barber-demo-sam",
+    ),
+  );
+  assert.ok(
+    state.selection.availability.slots.every(
+      (slot) => slot.startsAt >= new Date("2026-09-14T10:00:00-04:00"),
+    ),
+  );
 });
 
 test("a named barber preference filters advisory availability and is preserved in the URL", async () => {
@@ -62,7 +79,11 @@ test("a named barber preference filters advisory availability and is preserved i
   assert.equal(state.selection.barberPreference, "barber-demo-alex");
   assert.equal(state.selection.barberError, null);
   assert.ok(state.selection.availability.slots.length > 0);
-  assert.ok(state.selection.availability.slots.every((slot) => slot.barberId === "barber-demo-alex"));
+  assert.ok(
+    state.selection.availability.slots.every(
+      (slot) => slot.barberId === "barber-demo-alex",
+    ),
+  );
   assert.equal(
     getPublicBookingHref("demo", {
       serviceId: "service-demo-corte",
@@ -89,13 +110,18 @@ test("multiple services preserve their order and use common barber eligibility",
     "service-demo-corte",
     "service-demo-barba",
   ]);
-  assert.equal(state.selection.availability.selection.totalPriceMinorUnits, 6000);
-  assert.equal(state.selection.availability.selection.serviceDurationMinutes, 50);
-  assert.equal(state.selection.availability.selection.finalBufferMinutes, 10);
-  assert.deepEqual(
-    state.selection.availability.selection.eligibleBarberIds,
-    ["barber-demo-alex"],
+  assert.equal(
+    state.selection.availability.selection.totalPriceMinorUnits,
+    6000,
   );
+  assert.equal(
+    state.selection.availability.selection.serviceDurationMinutes,
+    50,
+  );
+  assert.equal(state.selection.availability.selection.finalBufferMinutes, 10);
+  assert.deepEqual(state.selection.availability.selection.eligibleBarberIds, [
+    "barber-demo-alex",
+  ]);
   assert.equal(
     getPublicBookingHref("demo", {
       serviceIds: state.selection.serviceIds,
@@ -173,7 +199,10 @@ test("a slot is selected only when it exactly matches fresh advisory availabilit
   if (selected.selection.kind !== "selected") return;
   assert.equal(selected.selection.slotError, null);
   assert.equal(selected.selection.selectedSlot?.barberId, slot.barberId);
-  assert.equal(selected.selection.selectedSlot?.startsAt.getTime(), slot.startsAt.getTime());
+  assert.equal(
+    selected.selection.selectedSlot?.startsAt.getTime(),
+    slot.startsAt.getTime(),
+  );
   assert.match(
     getPublicBookingHref("demo", {
       serviceId: "service-demo-cejas",
@@ -232,7 +261,10 @@ test("a malformed or stale slot query never becomes a selected slot", async () =
 });
 
 test("unknown shops remain absent and a closed day produces no advisory slots", async () => {
-  const missingShop = await getPublicBookingPageState({ shopSlug: "unknown", now });
+  const missingShop = await getPublicBookingPageState({
+    shopSlug: "unknown",
+    now,
+  });
   const closedDay = await getPublicBookingPageState({
     shopSlug: "demo",
     service: "service-demo-corte",

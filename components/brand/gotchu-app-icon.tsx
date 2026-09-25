@@ -7,7 +7,10 @@ export function GotchuAppIcon({
   alt = "Gotchu",
   className,
   ...props
-}: Omit<React.ComponentProps<typeof Image>, "src" | "width" | "height" | "alt"> & {
+}: Omit<
+  React.ComponentProps<typeof Image>,
+  "src" | "width" | "height" | "alt"
+> & {
   alt?: string;
 }) {
   return (

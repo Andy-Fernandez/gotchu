@@ -14,11 +14,7 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -44,11 +40,7 @@ type DetailsErrors = {
 };
 
 const QR_DEMO_PATTERN = [
-  1, 1, 1, 0, 1,
-  1, 0, 1, 1, 0,
-  1, 1, 1, 0, 1,
-  0, 1, 0, 1, 0,
-  1, 0, 1, 1, 1,
+  1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,
 ] as const;
 
 const MAX_RECEIPT_BYTES = 10 * 1024 * 1024;
@@ -220,7 +212,11 @@ export function PublicBookingCheckout({
     <Card className="mx-auto w-full min-w-0 max-w-xl gap-0 py-0 shadow-sm">
       <CardContent className="space-y-5 p-4 sm:p-6">
         <Badge variant="outline" aria-live="polite">
-          {step === "details" ? "Tus datos" : step === "deposit" ? "Anticipo demo" : "Vista previa"}
+          {step === "details"
+            ? "Tus datos"
+            : step === "deposit"
+              ? "Anticipo demo"
+              : "Vista previa"}
         </Badge>
 
         <BookingSummary
@@ -316,12 +312,10 @@ export function PublicBookingCheckout({
               </Field>
             </div>
 
-            <Button
-              type="submit"
-              size="lg"
-              className="w-full"
-            >
-              {depositMinorUnits > 0 ? "Continuar al anticipo" : "Revisar solicitud"}
+            <Button type="submit" size="lg" className="w-full">
+              {depositMinorUnits > 0
+                ? "Continuar al anticipo"
+                : "Revisar solicitud"}
             </Button>
           </form>
         ) : null}
@@ -388,11 +382,7 @@ export function PublicBookingCheckout({
                 <ArrowLeft aria-hidden="true" />
                 Volver
               </Button>
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full"
-              >
+              <Button type="submit" size="lg" className="w-full">
                 Revisar archivo
               </Button>
             </div>
@@ -407,7 +397,9 @@ export function PublicBookingCheckout({
               </div>
               <div className="min-w-0">
                 <Badge className="mb-2 bg-warning-subtle text-warning">
-                  {depositMinorUnits > 0 ? "Ejemplo · pending_review" : "Ejemplo · solicitud"}
+                  {depositMinorUnits > 0
+                    ? "Ejemplo · pending_review"
+                    : "Ejemplo · solicitud"}
                 </Badge>
                 <h2
                   id="preview-heading"
@@ -454,10 +446,14 @@ export function PublicBookingCheckout({
                 variant="secondary"
                 size="lg"
                 className="w-full"
-                onClick={() => setStep(depositMinorUnits > 0 ? "deposit" : "details")}
+                onClick={() =>
+                  setStep(depositMinorUnits > 0 ? "deposit" : "details")
+                }
               >
                 <ArrowLeft aria-hidden="true" />
-                {depositMinorUnits > 0 ? "Volver al anticipo" : "Volver a mis datos"}
+                {depositMinorUnits > 0
+                  ? "Volver al anticipo"
+                  : "Volver a mis datos"}
               </Button>
               <Button asChild size="lg" className="w-full">
                 <Link href={submissionHref}>
@@ -512,10 +508,7 @@ function BookingSummary({
           <p className="text-caption font-medium text-muted-foreground">
             Tu reserva
           </p>
-          <h2
-            id="checkout-summary-heading"
-            className="truncate font-semibold"
-          >
+          <h2 id="checkout-summary-heading" className="truncate font-semibold">
             {shopName}
           </h2>
           <p className="mt-0.5 truncate text-body-sm text-muted-foreground">
@@ -540,7 +533,9 @@ function BookingSummary({
             Anticipo
           </span>
           <span className="font-semibold">
-            {depositMinorUnits > 0 ? formatBobMinorUnits(depositMinorUnits) : "No requiere"}
+            {depositMinorUnits > 0
+              ? formatBobMinorUnits(depositMinorUnits)
+              : "No requiere"}
           </span>
         </p>
       </div>
@@ -551,10 +546,7 @@ function BookingSummary({
 function DemoQrCard({
   depositMinorUnits,
   bookingCode,
-}: Pick<
-  PublicBookingCheckoutProps,
-  "depositMinorUnits" | "bookingCode"
->) {
+}: Pick<PublicBookingCheckoutProps, "depositMinorUnits" | "bookingCode">) {
   return (
     <div className="grid grid-cols-[6rem_1fr] items-center gap-4 rounded-lg bg-foreground p-4 text-primary-foreground sm:grid-cols-[8rem_1fr]">
       <div className="relative mx-auto aspect-square w-24 rounded-md bg-card p-3 text-foreground sm:w-32">
@@ -565,7 +557,9 @@ function DemoQrCard({
           {QR_DEMO_PATTERN.map((cell, index) => (
             <span
               key={index}
-              className={cell ? "rounded-[2px] bg-foreground" : "bg-transparent"}
+              className={
+                cell ? "rounded-[2px] bg-foreground" : "bg-transparent"
+              }
             />
           ))}
         </div>
@@ -605,7 +599,9 @@ function SummaryDetail({
   return (
     <div className="grid grid-cols-[6.5rem_1fr] gap-3">
       <dt className="text-muted-foreground">{label}</dt>
-      <dd className={`min-w-0 break-words font-semibold ${mono ? "font-mono" : ""}`}>
+      <dd
+        className={`min-w-0 break-words font-semibold ${mono ? "font-mono" : ""}`}
+      >
         {value}
       </dd>
     </div>

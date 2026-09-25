@@ -27,9 +27,8 @@ export default async function BookingStatusPage({
 
   if (!booking) notFound();
 
-  const fallbackStatus = booking.depositMinorUnits > 0
-    ? "reserved_pending_review"
-    : "confirmed";
+  const fallbackStatus =
+    booking.depositMinorUnits > 0 ? "reserved_pending_review" : "confirmed";
   const status = resolveDemoBookingStatus(query.estado, fallbackStatus);
 
   return (

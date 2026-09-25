@@ -60,14 +60,14 @@ Build in this order:
 
 These are planning entries, not a promise of total operating cost. Confirm current prices, taxes, usage, and billing terms before activation.
 
-| Service | Pilot planning status | Cost recorded now |
-|---|---|---|
-| Vercel Pro | Target for the real pilot | USD 20/month platform base, with USD 20/month included usage credit; additional usage and applicable taxes may apply |
-| Managed PostgreSQL | Provider not selected | Pending provider and capacity decision |
-| Private object storage | Provider not selected | Pending provider, retention, and volume decision |
-| Google Auth/session integration | Integration/provider details open | Pending implementation and any applicable service cost |
-| Production domain | Not selected | Pending registrar/domain decision |
-| Monitoring/alerts | Provider not selected | Pending provider and volume decision |
+| Service                         | Pilot planning status             | Cost recorded now                                                                                                    |
+| ------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Vercel Pro                      | Target for the real pilot         | USD 20/month platform base, with USD 20/month included usage credit; additional usage and applicable taxes may apply |
+| Managed PostgreSQL              | Provider not selected             | Pending provider and capacity decision                                                                               |
+| Private object storage          | Provider not selected             | Pending provider, retention, and volume decision                                                                     |
+| Google Auth/session integration | Integration/provider details open | Pending implementation and any applicable service cost                                                               |
+| Production domain               | Not selected                      | Pending registrar/domain decision                                                                                    |
+| Monitoring/alerts               | Provider not selected             | Pending provider and volume decision                                                                                 |
 
 The pre-client demo uses no money and no real personal data. A total monthly cost is intentionally not stated until the pending services are selected.
 

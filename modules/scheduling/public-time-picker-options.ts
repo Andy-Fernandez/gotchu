@@ -28,7 +28,9 @@ const PERIODS: ReadonlyArray<{
   { id: "evening", label: "Noche", minHour: 18, maxHour: 23 },
 ];
 
-export function createPublicTimePickerOptions(slots: readonly AvailableSlot[]): {
+export function createPublicTimePickerOptions(
+  slots: readonly AvailableSlot[],
+): {
   periodGroups: readonly PublicTimePeriodGroup[];
   quickOptions: readonly PublicTimeOption[];
 } {
@@ -57,7 +59,8 @@ export function createPublicTimePickerOptions(slots: readonly AvailableSlot[]): 
       label: formatPublicTime(representative.startsAt),
       periodId: period.id,
       periodLabel: period.label,
-      professionalCount: new Set(matchingSlots.map((slot) => slot.barberId)).size,
+      professionalCount: new Set(matchingSlots.map((slot) => slot.barberId))
+        .size,
     } satisfies PublicTimeOption;
   });
 
@@ -81,7 +84,9 @@ export function createPublicTimePickerOptions(slots: readonly AvailableSlot[]): 
 
   return {
     periodGroups,
-    quickOptions: options.filter((option) => quickTokens.has(option.token)).slice(0, 3),
+    quickOptions: options
+      .filter((option) => quickTokens.has(option.token))
+      .slice(0, 3),
   };
 }
 
@@ -95,12 +100,16 @@ export function formatPublicTime(date: Date): string {
 }
 
 function getTimePeriod(date: Date) {
-  const hour = Number(new Intl.DateTimeFormat("en-GB", {
-    timeZone: "America/La_Paz",
-    hour: "2-digit",
-    hourCycle: "h23",
-  }).format(date));
-  const period = PERIODS.find((candidate) => hour >= candidate.minHour && hour <= candidate.maxHour);
+  const hour = Number(
+    new Intl.DateTimeFormat("en-GB", {
+      timeZone: "America/La_Paz",
+      hour: "2-digit",
+      hourCycle: "h23",
+    }).format(date),
+  );
+  const period = PERIODS.find(
+    (candidate) => hour >= candidate.minHour && hour <= candidate.maxHour,
+  );
 
   if (!period) {
     throw new RangeError("A valid shop-local hour is required.");

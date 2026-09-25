@@ -28,12 +28,17 @@ export function PublicServicePicker({
   services,
   initialSelectedIds = [],
 }: PublicServicePickerProps) {
-  const allowedIds = useMemo(() => new Set(services.map((service) => service.id)), [services]);
+  const allowedIds = useMemo(
+    () => new Set(services.map((service) => service.id)),
+    [services],
+  );
   const [selectedIds, setSelectedIds] = useState(() =>
     initialSelectedIds.filter((id) => allowedIds.has(id)),
   );
   const selectedSet = new Set(selectedIds);
-  const selectedServices = services.filter((service) => selectedSet.has(service.id));
+  const selectedServices = services.filter((service) =>
+    selectedSet.has(service.id),
+  );
   const totalMinorUnits = selectedServices.reduce(
     (total, service) => total + service.priceMinorUnits,
     0,
@@ -64,9 +69,11 @@ export function PublicServicePicker({
               >
                 <Card
                   size="sm"
-                  className={isSelected
-                    ? "border-foreground bg-accent shadow-sm"
-                    : "transition-colors hover:bg-muted active:bg-accent"}
+                  className={
+                    isSelected
+                      ? "border-foreground bg-accent shadow-sm"
+                      : "transition-colors hover:bg-muted active:bg-accent"
+                  }
                 >
                   <CardContent className="flex min-h-20 items-center gap-3 p-4">
                     <span
@@ -84,18 +91,26 @@ export function PublicServicePicker({
                     </span>
 
                     <span className="min-w-0 flex-1">
-                      <span className="block font-semibold">{service.name}</span>
+                      <span className="block font-semibold">
+                        {service.name}
+                      </span>
                       <span className="mt-1 block truncate text-body-sm text-muted-foreground">
                         {service.durationMinutes} min
-                        {service.depositLabel ? ` · Anticipo ${service.depositLabel}` : " · Sin anticipo"}
+                        {service.depositLabel
+                          ? ` · Anticipo ${service.depositLabel}`
+                          : " · Sin anticipo"}
                       </span>
                     </span>
 
                     <span className="shrink-0 text-right">
-                      <span className="block font-semibold">{service.priceLabel}</span>
+                      <span className="block font-semibold">
+                        {service.priceLabel}
+                      </span>
                       <span className="mt-1 inline-flex items-center gap-1 text-caption font-semibold text-muted-foreground">
                         {isSelected ? "Añadido" : "Añadir"}
-                        {!isSelected ? <Plus className="size-3" aria-hidden="true" /> : null}
+                        {!isSelected ? (
+                          <Plus className="size-3" aria-hidden="true" />
+                        ) : null}
                       </span>
                     </span>
                   </CardContent>
@@ -110,7 +125,9 @@ export function PublicServicePicker({
         {selectedIds.length > 0 ? (
           <Button asChild size="lg" className="w-full">
             <Link href={nextHref}>
-              Continuar · {selectedIds.length} {selectedIds.length === 1 ? "servicio" : "servicios"} · {formatBob(totalMinorUnits)}
+              Continuar · {selectedIds.length}{" "}
+              {selectedIds.length === 1 ? "servicio" : "servicios"} ·{" "}
+              {formatBob(totalMinorUnits)}
             </Link>
           </Button>
         ) : (

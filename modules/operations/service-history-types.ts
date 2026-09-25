@@ -1,27 +1,16 @@
 export type ServiceHistoryBookingStatus =
-  | "reserved_pending_review"
-  | "confirmed"
-  | "completed";
+  "reserved_pending_review" | "confirmed" | "completed";
 
 export type ServiceHistoryExecutionStatus = "not_started" | "completed";
 
 export type ServiceHistoryPaymentStatus =
-  | "pending_review"
-  | "approved"
-  | "paid";
+  "pending_review" | "approved" | "paid";
 
 export type ServiceHistorySource =
-  | "online"
-  | "whatsapp"
-  | "phone"
-  | "in_person"
-  | "walk_in";
+  "online" | "whatsapp" | "phone" | "in_person" | "walk_in";
 
 export type ServiceHistoryPaymentMethod =
-  | "shop_qr"
-  | "cash"
-  | "complimentary"
-  | "other";
+  "shop_qr" | "cash" | "complimentary" | "other";
 
 export type ServiceHistoryItem = {
   id: string;
@@ -65,7 +54,6 @@ export const serviceHistoryFilterValues = [
   "realizados",
 ] as const;
 
-export type ServiceHistoryFilter =
-  (typeof serviceHistoryFilterValues)[number];
+export type ServiceHistoryFilter = (typeof serviceHistoryFilterValues)[number];
 
 export type ServiceHistoryCounts = Record<ServiceHistoryFilter, number>;

@@ -77,14 +77,20 @@ export function PublicShopCatalog({ profile }: PublicShopCatalogProps) {
 
           <div className="mt-5 grid items-end gap-5 md:grid-cols-[minmax(0,1fr)_15rem]">
             <div className="min-w-0">
-              <h1 id="shop-name" className="text-title-lg tracking-tight text-balance sm:text-4xl">
+              <h1
+                id="shop-name"
+                className="text-title-lg tracking-tight text-balance sm:text-4xl"
+              >
                 {shop.name}
               </h1>
               <p className="mt-2 max-w-2xl text-body-sm leading-6 text-muted-foreground sm:text-body">
                 {shop.description}
               </p>
               <p className="mt-3 flex items-start gap-2 text-body-sm">
-                <MapPin className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+                <MapPin
+                  className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+                  aria-hidden="true"
+                />
                 <span>{shop.publicAddress}</span>
               </p>
             </div>
@@ -97,18 +103,25 @@ export function PublicShopCatalog({ profile }: PublicShopCatalogProps) {
         <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
           <section aria-labelledby="services-heading" className="min-w-0">
             <div className="flex items-center justify-between gap-3">
-              <h2 id="services-heading" className="text-title-md tracking-tight">
+              <h2
+                id="services-heading"
+                className="text-title-md tracking-tight"
+              >
                 Servicios
               </h2>
               <span className="text-body-sm text-muted-foreground">
-                {services.length} {services.length === 1 ? "opción" : "opciones"}
+                {services.length}{" "}
+                {services.length === 1 ? "opción" : "opciones"}
               </span>
             </div>
 
             {services.length > 0 ? (
               <ul className="mt-4 grid min-w-0 gap-3">
                 {services.map((service) => {
-                  const eligibleBarbers = getEligibleBarberNames(service, barbers);
+                  const eligibleBarbers = getEligibleBarberNames(
+                    service,
+                    barbers,
+                  );
                   const isAvailable = eligibleBarbers.length > 0;
 
                   return (
@@ -123,10 +136,14 @@ export function PublicShopCatalog({ profile }: PublicShopCatalogProps) {
                             name={service.name}
                             description={service.description}
                             durationMinutes={service.durationMinutes}
-                            priceLabel={formatBobMinorUnits(service.priceMinorUnits)}
-                            depositLabel={service.depositMinorUnits > 0
-                              ? formatBobMinorUnits(service.depositMinorUnits)
-                              : null}
+                            priceLabel={formatBobMinorUnits(
+                              service.priceMinorUnits,
+                            )}
+                            depositLabel={
+                              service.depositMinorUnits > 0
+                                ? formatBobMinorUnits(service.depositMinorUnits)
+                                : null
+                            }
                           />
                         </Link>
                       ) : (
@@ -134,7 +151,9 @@ export function PublicShopCatalog({ profile }: PublicShopCatalogProps) {
                           name={service.name}
                           description={service.description}
                           durationMinutes={service.durationMinutes}
-                          priceLabel={formatBobMinorUnits(service.priceMinorUnits)}
+                          priceLabel={formatBobMinorUnits(
+                            service.priceMinorUnits,
+                          )}
                           depositLabel={null}
                           disabled
                         />
@@ -157,15 +176,28 @@ export function PublicShopCatalog({ profile }: PublicShopCatalogProps) {
           <aside className="grid gap-3" aria-label="Información de la barbería">
             <details className="group rounded-lg border border-border bg-card">
               <summary className="flex min-h-14 cursor-pointer list-none items-center gap-3 px-4 font-semibold marker:content-none">
-                <Clock3 className="size-4 text-muted-foreground" aria-hidden="true" />
+                <Clock3
+                  className="size-4 text-muted-foreground"
+                  aria-hidden="true"
+                />
                 <span className="flex-1">Horarios</span>
-                <ChevronDown className="size-4 text-muted-foreground transition-transform group-open:rotate-180" aria-hidden="true" />
+                <ChevronDown
+                  className="size-4 text-muted-foreground transition-transform group-open:rotate-180"
+                  aria-hidden="true"
+                />
               </summary>
               <dl className="space-y-2 border-t border-border px-4 py-4 text-body-sm">
                 {openingHours.map((day) => (
-                  <div key={day.dayOfWeek} className="flex justify-between gap-4">
+                  <div
+                    key={day.dayOfWeek}
+                    className="flex justify-between gap-4"
+                  >
                     <dt className="text-muted-foreground">{day.label}</dt>
-                    <dd className={day.isClosed ? "text-muted-foreground" : "font-medium"}>
+                    <dd
+                      className={
+                        day.isClosed ? "text-muted-foreground" : "font-medium"
+                      }
+                    >
                       {day.hours}
                     </dd>
                   </div>
@@ -175,18 +207,28 @@ export function PublicShopCatalog({ profile }: PublicShopCatalogProps) {
 
             <details className="group rounded-lg border border-border bg-card">
               <summary className="flex min-h-14 cursor-pointer list-none items-center gap-3 px-4 font-semibold marker:content-none">
-                <ShieldCheck className="size-4 text-muted-foreground" aria-hidden="true" />
+                <ShieldCheck
+                  className="size-4 text-muted-foreground"
+                  aria-hidden="true"
+                />
                 <span className="flex-1">Políticas</span>
-                <ChevronDown className="size-4 text-muted-foreground transition-transform group-open:rotate-180" aria-hidden="true" />
+                <ChevronDown
+                  className="size-4 text-muted-foreground transition-transform group-open:rotate-180"
+                  aria-hidden="true"
+                />
               </summary>
               <div className="space-y-4 border-t border-border px-4 py-4 text-body-sm leading-6">
                 <div>
                   <h3 className="font-semibold">Cambios y cancelaciones</h3>
-                  <p className="mt-1 text-muted-foreground">{shop.publicPolicy.cancellation}</p>
+                  <p className="mt-1 text-muted-foreground">
+                    {shop.publicPolicy.cancellation}
+                  </p>
                 </div>
                 <div>
                   <h3 className="font-semibold">Inasistencias</h3>
-                  <p className="mt-1 text-muted-foreground">{shop.publicPolicy.noShow}</p>
+                  <p className="mt-1 text-muted-foreground">
+                    {shop.publicPolicy.noShow}
+                  </p>
                 </div>
               </div>
             </details>
@@ -221,9 +263,11 @@ function ServiceRow({
   return (
     <Card
       size="sm"
-      className={`min-w-0 ${disabled
-        ? "opacity-60"
-        : "transition-colors hover:border-input hover:bg-muted active:bg-accent"}`}
+      className={`min-w-0 ${
+        disabled
+          ? "opacity-60"
+          : "transition-colors hover:border-input hover:bg-muted active:bg-accent"
+      }`}
     >
       <CardContent className="flex min-h-24 items-center gap-3 p-4">
         <span className="min-w-0 flex-1">
@@ -232,16 +276,21 @@ function ServiceRow({
             {description}
           </span>
           <span className="mt-1 block text-caption text-muted-foreground">
-            {durationMinutes} min{depositLabel ? ` · Anticipo ${depositLabel}` : ""}
+            {durationMinutes} min
+            {depositLabel ? ` · Anticipo ${depositLabel}` : ""}
           </span>
         </span>
         <span className="shrink-0 text-right">
           <span className="block font-semibold">{priceLabel}</span>
-          <span className={`mt-2 inline-flex items-center gap-1 text-caption font-semibold ${
-            disabled ? "text-muted-foreground" : "text-accent-foreground"
-          }`}>
+          <span
+            className={`mt-2 inline-flex items-center gap-1 text-caption font-semibold ${
+              disabled ? "text-muted-foreground" : "text-accent-foreground"
+            }`}
+          >
             {disabled ? "No disponible" : "Elegir"}
-            {!disabled ? <ChevronRight className="size-3" aria-hidden="true" /> : null}
+            {!disabled ? (
+              <ChevronRight className="size-3" aria-hidden="true" />
+            ) : null}
           </span>
         </span>
       </CardContent>

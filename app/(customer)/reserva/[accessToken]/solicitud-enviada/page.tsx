@@ -24,9 +24,8 @@ export default async function BookingSubmissionPage({
 
   if (!booking) notFound();
 
-  const initialStatus = booking.depositMinorUnits > 0
-    ? "reserved_pending_review"
-    : "confirmed";
+  const initialStatus =
+    booking.depositMinorUnits > 0 ? "reserved_pending_review" : "confirmed";
 
   return (
     <BookingSubmissionComplete

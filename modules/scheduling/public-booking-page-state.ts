@@ -1,8 +1,9 @@
 import { demoCatalog } from "../catalog/demo-catalog.ts";
-import {
-  createPublicShopProfileReader,
-} from "../catalog/get-public-shop-profile.ts";
-import type { PublicBarber, PublicShopProfile } from "../catalog/public-shop-profile.ts";
+import { createPublicShopProfileReader } from "../catalog/get-public-shop-profile.ts";
+import type {
+  PublicBarber,
+  PublicShopProfile,
+} from "../catalog/public-shop-profile.ts";
 import type { Catalog, Shop } from "../catalog/types.ts";
 import {
   calculatePublicAvailability,
@@ -96,14 +97,18 @@ export function createPublicBookingPageStateReader(catalog: Catalog) {
         bookingWindow,
         dateError,
         requestedStep,
-        selection: input.service === undefined
-          ? { kind: "missing" }
-          : { kind: "invalid", message: "La selección de servicios no es válida." },
+        selection:
+          input.service === undefined
+            ? { kind: "missing" }
+            : {
+                kind: "invalid",
+                message: "La selección de servicios no es válida.",
+              },
       };
     }
 
     const selectedServices = serviceIds.map((serviceId) =>
-      profile.services.find((service) => service.id === serviceId)
+      profile.services.find((service) => service.id === serviceId),
     );
     if (selectedServices.some((service) => !service)) {
       return {
@@ -123,7 +128,8 @@ export function createPublicBookingPageStateReader(catalog: Catalog) {
     const availableServices = selectedServices.filter(
       (service): service is NonNullable<typeof service> => Boolean(service),
     );
-    const commonEligibleBarberIds = getCommonEligibleBarberIds(availableServices);
+    const commonEligibleBarberIds =
+      getCommonEligibleBarberIds(availableServices);
 
     const barberResult = resolveRequestedBarber(
       input.barber,
@@ -145,18 +151,22 @@ export function createPublicBookingPageStateReader(catalog: Catalog) {
     });
     const advisoryAvailability = {
       ...availability,
-      slots: availability.slots.filter((slot) =>
-        slot.startsAt.getTime() >= now.getTime() + MINIMUM_ONLINE_LEAD_TIME_MINUTES * 60_000
+      slots: availability.slots.filter(
+        (slot) =>
+          slot.startsAt.getTime() >=
+          now.getTime() + MINIMUM_ONLINE_LEAD_TIME_MINUTES * 60_000,
       ),
     };
-    const slotResult = barberResult.preference === null
-      ? {
-          slot: null,
-          error: input.slot === undefined
-            ? null
-            : "Elige un profesional antes de seleccionar un horario.",
-        }
-      : resolveRequestedSlot(input.slot, advisoryAvailability.slots);
+    const slotResult =
+      barberResult.preference === null
+        ? {
+            slot: null,
+            error:
+              input.slot === undefined
+                ? null
+                : "Elige un profesional antes de seleccionar un horario.",
+          }
+        : resolveRequestedSlot(input.slot, advisoryAvailability.slots);
 
     return {
       profile,
@@ -179,7 +189,8 @@ export function createPublicBookingPageStateReader(catalog: Catalog) {
 }
 
 /** Public page operation. Pages do not import the demo catalog directly. */
-export const getPublicBookingPageState = createPublicBookingPageStateReader(demoCatalog);
+export const getPublicBookingPageState =
+  createPublicBookingPageStateReader(demoCatalog);
 
 export function getPublicBookingHref(
   shopSlug: string,
@@ -193,7 +204,8 @@ export function getPublicBookingHref(
   } = {},
 ): string {
   const searchParams = new URLSearchParams();
-  const serviceIds = options.serviceIds ?? (options.serviceId ? [options.serviceId] : []);
+  const serviceIds =
+    options.serviceIds ?? (options.serviceId ? [options.serviceId] : []);
   for (const serviceId of serviceIds) searchParams.append("service", serviceId);
   if (options.barberId) searchParams.set("barber", options.barberId);
   if (options.date) searchParams.set("date", options.date);
@@ -207,7 +219,9 @@ export function getPublicBookingHref(
  * Keeps an advisory slot selection in the URL. The token is always checked
  * against freshly calculated availability before the page exposes it again.
  */
-export function getPublicSlotToken(slot: Pick<AvailableSlot, "barberId" | "startsAt">): string {
+export function getPublicSlotToken(
+  slot: Pick<AvailableSlot, "barberId" | "startsAt">,
+): string {
   return `${slot.barberId}|${slot.startsAt.toISOString()}`;
 }
 
@@ -215,19 +229,23 @@ function getDemoBarberWorkingHours(
   catalog: Catalog,
   shopId: Shop["id"],
 ): BarberWorkingHours[] {
-  const shop = catalog.shops.find((candidate) => candidate.id === shopId && candidate.isActive);
+  const shop = catalog.shops.find(
+    (candidate) => candidate.id === shopId && candidate.isActive,
+  );
   if (!shop) return [];
 
   // The demo's server configuration declares that each published demo barber
   // works throughout the published shop hours. A browser never supplies this.
   return catalog.barbers
     .filter((barber) => barber.shopId === shop.id && barber.isActive)
-    .flatMap((barber) => shop.openingHours.map((hours) => ({
-      barberId: barber.id,
-      dayOfWeek: hours.dayOfWeek,
-      startsAt: hours.opensAt as BarberWorkingHours["startsAt"],
-      endsAt: hours.closesAt as BarberWorkingHours["endsAt"],
-    })));
+    .flatMap((barber) =>
+      shop.openingHours.map((hours) => ({
+        barberId: barber.id,
+        dayOfWeek: hours.dayOfWeek,
+        startsAt: hours.opensAt as BarberWorkingHours["startsAt"],
+        endsAt: hours.closesAt as BarberWorkingHours["endsAt"],
+      })),
+    );
 }
 
 function getSingleQueryValue(value: QueryValue): string | undefined {
@@ -237,7 +255,8 @@ function getSingleQueryValue(value: QueryValue): string | undefined {
 function getQueryValues(value: QueryValue): string[] | undefined {
   if (typeof value === "string") return value.length > 0 ? [value] : undefined;
   if (!Array.isArray(value) || value.length === 0) return undefined;
-  if (value.some((item) => typeof item !== "string" || item.length === 0)) return undefined;
+  if (value.some((item) => typeof item !== "string" || item.length === 0))
+    return undefined;
   return [...new Set(value)];
 }
 
@@ -246,7 +265,7 @@ function getCommonEligibleBarberIds(
 ): PublicBarber["id"][] {
   if (services.length === 0) return [];
   return services[0].eligibleBarberIds.filter((barberId) =>
-    services.every((service) => service.eligibleBarberIds.includes(barberId))
+    services.every((service) => service.eligibleBarberIds.includes(barberId)),
   );
 }
 
@@ -261,19 +280,22 @@ function resolveRequestedBarber(
   if (!barberId) {
     return {
       preference: null,
-      error: "El profesional indicado no es válido. Elige una de las opciones disponibles.",
+      error:
+        "El profesional indicado no es válido. Elige una de las opciones disponibles.",
     };
   }
 
   if (barberId === "any") return { preference: "any", error: null };
 
-  const isEligible = eligibleBarberIds.includes(barberId) &&
+  const isEligible =
+    eligibleBarberIds.includes(barberId) &&
     barbers.some((barber) => barber.id === barberId);
   return isEligible
     ? { preference: barberId, error: null }
     : {
         preference: null,
-        error: "Este profesional no está disponible para el servicio elegido. Elige otra opción.",
+        error:
+          "Este profesional no está disponible para el servicio elegido. Elige otra opción.",
       };
 }
 
@@ -287,12 +309,15 @@ function resolveRequestedSlot(
     return { slot: null, error: "El horario indicado no es válido." };
   }
 
-  const slot = slots.find((candidate) => getPublicSlotToken(candidate) === token);
+  const slot = slots.find(
+    (candidate) => getPublicSlotToken(candidate) === token,
+  );
   return slot
     ? { slot, error: null }
     : {
         slot: null,
-        error: "Ese horario ya no está disponible para esta consulta. Elige uno de los horarios mostrados.",
+        error:
+          "Ese horario ya no está disponible para esta consulta. Elige uno de los horarios mostrados.",
       };
 }
 
@@ -318,17 +343,22 @@ function resolveRequestedDate(
 }
 
 function getLaPazDate(now: Date): LocalDate {
-  if (Number.isNaN(now.getTime())) throw new RangeError("A valid server time is required.");
+  if (Number.isNaN(now.getTime()))
+    throw new RangeError("A valid server time is required.");
   const local = new Date(now.getTime() - 4 * 60 * 60 * 1000);
   return `${local.getUTCFullYear()}-${String(local.getUTCMonth() + 1).padStart(2, "0")}-${String(local.getUTCDate()).padStart(2, "0")}` as LocalDate;
 }
 
-function getDateOptions(today: LocalDate, selectedDate: LocalDate): LocalDate[] {
-  const options = Array.from(
-    { length: DATE_OPTIONS_COUNT },
-    (_, index) => addDays(today, index),
+function getDateOptions(
+  today: LocalDate,
+  selectedDate: LocalDate,
+): LocalDate[] {
+  const options = Array.from({ length: DATE_OPTIONS_COUNT }, (_, index) =>
+    addDays(today, index),
   );
-  return options.includes(selectedDate) ? options : [...options, selectedDate].sort();
+  return options.includes(selectedDate)
+    ? options
+    : [...options, selectedDate].sort();
 }
 
 function resolveRequestedStep(value: QueryValue): "service" | "barber" | null {
@@ -346,5 +376,9 @@ function isLocalDate(value: string): value is LocalDate {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const [year, month, day] = value.split("-").map(Number);
   const parsed = new Date(Date.UTC(year, month - 1, day));
-  return parsed.getUTCFullYear() === year && parsed.getUTCMonth() === month - 1 && parsed.getUTCDate() === day;
+  return (
+    parsed.getUTCFullYear() === year &&
+    parsed.getUTCMonth() === month - 1 &&
+    parsed.getUTCDate() === day
+  );
 }

@@ -48,7 +48,10 @@ test("maps the three requested views to exact domain states and semantic tones",
 
 test("parses known filters and safely falls back to all records", () => {
   assert.equal(parseServiceHistoryFilter("pendientes"), "pendientes");
-  assert.equal(parseServiceHistoryFilter(["realizados", "confirmados"]), "realizados");
+  assert.equal(
+    parseServiceHistoryFilter(["realizados", "confirmados"]),
+    "realizados",
+  );
   assert.equal(parseServiceHistoryFilter("unknown"), "todos");
   assert.equal(parseServiceHistoryFilter(undefined), "todos");
 });
@@ -157,7 +160,9 @@ test("formats money from integer minor units and dates in the La Paz timezone", 
 test("demo records preserve service, money, completion, and execution invariants", () => {
   for (const record of demoServiceHistory) {
     assert.ok(record.items.length > 0);
-    assert.ok(record.items.every((item) => Number.isSafeInteger(item.priceMinorUnits)));
+    assert.ok(
+      record.items.every((item) => Number.isSafeInteger(item.priceMinorUnits)),
+    );
     assert.equal(
       record.items.reduce((total, item) => total + item.priceMinorUnits, 0),
       record.totalMinorUnits,

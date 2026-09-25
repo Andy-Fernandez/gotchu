@@ -15,7 +15,9 @@ export function PanelShell({ children }: { children: ReactNode }) {
         >
           <GotchuWordmark alt="" />
         </Link>
-        <p className="mt-1 text-sm text-muted-foreground">Panel de la barbería</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Panel de la barbería
+        </p>
 
         <PanelNavigation />
       </aside>

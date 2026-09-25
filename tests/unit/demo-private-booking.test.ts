@@ -94,7 +94,10 @@ test("confirmed status is the only state that enables the confirmation mark", ()
 
 test("demo status query accepts only the two explicit visual states", () => {
   assert.equal(resolveDemoBookingStatus("confirmada"), "confirmed");
-  assert.equal(resolveDemoBookingStatus(["pendiente"]), "reserved_pending_review");
+  assert.equal(
+    resolveDemoBookingStatus(["pendiente"]),
+    "reserved_pending_review",
+  );
   assert.equal(
     resolveDemoBookingStatus("desconocido", "confirmed"),
     "confirmed",

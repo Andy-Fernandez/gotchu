@@ -1,5 +1,5 @@
-import type { Metadata } from "next"
-import Link from "next/link"
+import type { Metadata } from "next";
+import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
@@ -8,10 +8,10 @@ import {
   Plus,
   Scissors,
   Trash2,
-} from "lucide-react"
+} from "lucide-react";
 
-import { Badge } from "@/components/ui/badge"
-import { Button, IconButton } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge";
+import { Button, IconButton } from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -20,18 +20,18 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Field } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { NativeSelect } from "@/components/ui/native-select"
-import { Separator } from "@/components/ui/separator"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Textarea } from "@/components/ui/textarea"
+} from "@/components/ui/card";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 
 export const metadata: Metadata = {
   title: "UI Lab · Primitives",
   description: "Laboratorio visual de los primitives de Gotchu.",
-}
+};
 
 const variants = [
   { name: "primary", label: "Confirmar reserva" },
@@ -39,16 +39,16 @@ const variants = [
   { name: "ghost", label: "Cancelar" },
   { name: "destructive", label: "Eliminar reserva" },
   { name: "link", label: "Ver más" },
-] as const
+] as const;
 
 function Section({
   title,
   description,
   children,
 }: {
-  title: string
-  description: string
-  children: React.ReactNode
+  title: string;
+  description: string;
+  children: React.ReactNode;
 }) {
   return (
     <section className="space-y-5 rounded-lg border bg-card p-4 sm:p-6">
@@ -60,7 +60,7 @@ function Section({
       </header>
       {children}
     </section>
-  )
+  );
 }
 
 function PrimitiveGroup({
@@ -70,11 +70,11 @@ function PrimitiveGroup({
   description,
   children,
 }: {
-  id: string
-  eyebrow: string
-  title: string
-  description: string
-  children: React.ReactNode
+  id: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  children: React.ReactNode;
 }) {
   return (
     <section aria-labelledby={id} className="space-y-6">
@@ -91,7 +91,7 @@ function PrimitiveGroup({
       </header>
       {children}
     </section>
-  )
+  );
 }
 
 export default function PrimitivesLabPage() {
@@ -112,8 +112,8 @@ export default function PrimitivesLabPage() {
           <h1 className="text-title-lg">UI Lab</h1>
           <p className="max-w-2xl text-body text-muted-foreground">
             Contratos visuales e interactivos de los primitives de Gotchu.
-            Recorre los controles con Tab para comprobar su foco y compáralos
-            en cada estado antes de usarlos en una feature.
+            Recorre los controles con Tab para comprobar su foco y compáralos en
+            cada estado antes de usarlos en una feature.
           </p>
         </div>
       </header>
@@ -176,7 +176,9 @@ export default function PrimitivesLabPage() {
                           <code>{variant.name}</code>
                         </th>
                         <td className="px-2">
-                          <Button variant={variant.name}>{variant.label}</Button>
+                          <Button variant={variant.name}>
+                            {variant.label}
+                          </Button>
                         </td>
                         <td className="px-2">
                           <Button variant={variant.name} disabled>
@@ -285,7 +287,10 @@ export default function PrimitivesLabPage() {
                   <Input placeholder="Escribe un valor" />
                 </Field>
 
-                <Field label="Disabled" description="No acepta foco ni edición.">
+                <Field
+                  label="Disabled"
+                  description="No acepta foco ni edición."
+                >
                   <Input defaultValue="Valor no disponible" disabled />
                 </Field>
 
@@ -329,7 +334,10 @@ export default function PrimitivesLabPage() {
                   label="Read-only"
                   description="Sigue disponible para lectura y selección."
                 >
-                  <Textarea defaultValue="Nota registrada por recepción." readOnly />
+                  <Textarea
+                    defaultValue="Nota registrada por recepción."
+                    readOnly
+                  />
                 </Field>
               </div>
             </Section>
@@ -339,9 +347,14 @@ export default function PrimitivesLabPage() {
               description="El selector mantiene el control nativo del dispositivo y comparte etiqueta, ayuda, error y estados con los demás campos."
             >
               <div className="grid gap-6 md:grid-cols-2">
-                <Field label="Barbero" description="Elige un profesional disponible.">
+                <Field
+                  label="Barbero"
+                  description="Elige un profesional disponible."
+                >
                   <NativeSelect defaultValue="">
-                    <option value="" disabled>Selecciona un barbero</option>
+                    <option value="" disabled>
+                      Selecciona un barbero
+                    </option>
                     <option value="andres">Andrés</option>
                     <option value="marco">Marco</option>
                   </NativeSelect>
@@ -353,9 +366,14 @@ export default function PrimitivesLabPage() {
                   </NativeSelect>
                 </Field>
 
-                <Field label="Horario" error="Selecciona un horario para continuar.">
+                <Field
+                  label="Horario"
+                  error="Selecciona un horario para continuar."
+                >
                   <NativeSelect defaultValue="">
-                    <option value="" disabled>Selecciona un horario</option>
+                    <option value="" disabled>
+                      Selecciona un horario
+                    </option>
                     <option value="10:00">10:00</option>
                     <option value="11:00">11:00</option>
                   </NativeSelect>
@@ -528,5 +546,5 @@ export default function PrimitivesLabPage() {
         </PrimitiveGroup>
       </div>
     </main>
-  )
+  );
 }

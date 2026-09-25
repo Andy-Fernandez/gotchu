@@ -14,7 +14,10 @@ type BookingPageProps = {
   }>;
 };
 
-export default async function BookingPage({ params, searchParams }: BookingPageProps) {
+export default async function BookingPage({
+  params,
+  searchParams,
+}: BookingPageProps) {
   const [{ shopSlug }, query] = await Promise.all([params, searchParams]);
   const state = await getPublicBookingPageState({
     shopSlug,

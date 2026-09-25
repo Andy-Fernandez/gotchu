@@ -1,22 +1,22 @@
 # Documentation map
 
-This is the working knowledge base for Gotchu. It distills the durable, actionable parts of the 2,271-line *Barbershop Local Operating System — Strategic Lean MVP Guide v0.4* (August 1, 2026).
+This is the working knowledge base for Gotchu. It distills the durable, actionable parts of the 2,271-line _Barbershop Local Operating System — Strategic Lean MVP Guide v0.4_ (August 1, 2026).
 
 The original memo mixed product strategy, operations, implementation ideas, market evidence, and long-range company thinking. These docs keep what helps the current MVP and deliberately defer the rest.
 
 ## Reading paths
 
-| If you are working on… | Read |
-|---|---|
-| Any task | `AGENTS.md`, then this page |
-| Product UX or priority | `product/brief.md`, `product/mvp-scope.md` |
-| Visual design, tokens, responsive behavior, shared UI, or accessibility defaults | `product/design-system.md` |
-| Future marketplace, maps, or expansion readiness | `product/marketplace.md` |
-| Booking, queue, deposit, or staff flows | `product/core-workflows.md`, `domain/domain-model.md` |
-| Detailed policies, permissions, failures, audit, or operational rules | `product/business-rules.md` |
-| Data, APIs, concurrency, security, testing | `engineering/architecture.md`, `domain/domain-model.md` |
-| Pilot operations, analytics, or go-to-market | `business/pilot.md` |
-| A durable technical or product choice | `decisions/README.md` |
+| If you are working on…                                                           | Read                                                    |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Any task                                                                         | `AGENTS.md`, then this page                             |
+| Product UX or priority                                                           | `product/brief.md`, `product/mvp-scope.md`              |
+| Visual design, tokens, responsive behavior, shared UI, or accessibility defaults | `product/design-system.md`                              |
+| Future marketplace, maps, or expansion readiness                                 | `product/marketplace.md`                                |
+| Booking, queue, deposit, or staff flows                                          | `product/core-workflows.md`, `domain/domain-model.md`   |
+| Detailed policies, permissions, failures, audit, or operational rules            | `product/business-rules.md`                             |
+| Data, APIs, concurrency, security, testing                                       | `engineering/architecture.md`, `domain/domain-model.md` |
+| Pilot operations, analytics, or go-to-market                                     | `business/pilot.md`                                     |
+| A durable technical or product choice                                            | `decisions/README.md`                                   |
 
 ## Sources of truth
 
