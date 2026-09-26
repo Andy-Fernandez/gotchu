@@ -72,8 +72,8 @@ export const demoCatalog: Catalog = {
     },
   ],
   barbers: [
-    { id: alexId, shopId, displayName: "Alex (demo)", isActive: true },
-    { id: samId, shopId, displayName: "Sam (demo)", isActive: true },
+    { id: alexId, shopId, displayName: "Tony", isActive: true },
+    { id: samId, shopId, displayName: "Alex", isActive: true },
   ],
   services: [
     {
