@@ -169,6 +169,20 @@ textarea {
   display: none;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .cover-carousel-arrow {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+  }
+
+  .cover-carousel:hover .cover-carousel-arrow,
+  .cover-carousel:focus-within .cover-carousel-arrow {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

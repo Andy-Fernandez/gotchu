@@ -1,6 +1,11 @@
-import type { Barber, Service, Shop } from "./types.ts";
+import type { Barber, Service, Shop, ShopImage } from "./types.ts";
 
 /** Explicit allowlists prevent future private domain fields entering the public contract. */
+export type PublicShopImage = Pick<
+  ShopImage,
+  "src" | "alt" | "width" | "height"
+>;
+
 export type PublicShop = Pick<
   Shop,
   | "id"
@@ -8,12 +13,11 @@ export type PublicShop = Pick<
   | "name"
   | "description"
   | "publicAddress"
-  | "coverImage"
   | "timezone"
   | "currency"
   | "openingHours"
   | "publicPolicy"
->;
+> & { images: readonly PublicShopImage[] };
 
 export type PublicService = Pick<
   Service,

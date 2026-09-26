@@ -3,14 +3,10 @@ import {
   ChevronRight,
   Clock3,
   MapPin,
-  Scissors,
   ShieldCheck,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-
 import { GotchuWordmark } from "@/components/brand/gotchu-wordmark";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import type { PublicShopProfile } from "@/modules/catalog/public-shop-profile";
@@ -20,6 +16,7 @@ import {
   getEligibleBarberNames,
   getOpeningHoursRows,
 } from "./public-catalog-formatters";
+import { BarberShopCoverGallery } from "./barber-shop-cover-gallery";
 
 type PublicShopCatalogProps = {
   profile: PublicShopProfile;
@@ -49,31 +46,7 @@ export function PublicShopCatalog({ profile }: PublicShopCatalogProps) {
 
       <main className="mx-auto w-full max-w-5xl px-4 pt-4 pb-28 sm:px-6 sm:pt-6 sm:pb-12 lg:px-8">
         <section aria-labelledby="shop-name">
-          <div className="relative h-52 overflow-hidden rounded-xl bg-foreground sm:h-72 lg:h-80">
-            {shop.coverImage ? (
-              <Image
-                src={shop.coverImage.src}
-                alt={shop.coverImage.alt}
-                width={shop.coverImage.width}
-                height={shop.coverImage.height}
-                preload
-                sizes="(min-width: 1024px) 896px, (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)"
-                className="h-full w-full object-cover object-center"
-              />
-            ) : (
-              <div className="flex h-full items-center justify-center text-primary-foreground">
-                <Scissors className="size-8" aria-hidden="true" />
-              </div>
-            )}
-            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/55 to-transparent" />
-            <Badge className="absolute top-3 left-3 border border-white/20 bg-black/70 text-white backdrop-blur">
-              Vista demo · sin reservas reales
-            </Badge>
-            <div
-              aria-hidden="true"
-              className="absolute inset-x-0 bottom-0 h-1 [background:var(--brand-sheen)]"
-            />
-          </div>
+          <BarberShopCoverGallery images={shop.images} shopName={shop.name} />
 
           <div className="mt-5 grid items-end gap-5 md:grid-cols-[minmax(0,1fr)_15rem]">
             <div className="min-w-0">

@@ -12,7 +12,7 @@ export type PublicPolicy = {
   noShow: string;
 };
 
-export type ShopCoverImage = {
+export type ShopImage = {
   /** Local public path today; a future storage adapter can provide the same contract. */
   src: string;
   alt: string;
@@ -26,7 +26,8 @@ export type Shop = {
   name: string;
   description: string;
   publicAddress: string;
-  coverImage: ShopCoverImage | null;
+  /** Ordered public photos; the first image is the cover. */
+  images: readonly ShopImage[];
   /** IANA timezone, initially America/La_Paz. */
   timezone: string;
   currency: "BOB";

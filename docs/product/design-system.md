@@ -75,6 +75,8 @@ Use the PNG masters at their intrinsic aspect ratios through `next/image`. The A
 
 Public cover photography should feel real, warm, clean, and locally credible. Keep embedded text, logos, fake QR codes, and heavy color effects out of photographs; provide useful alternative text and intrinsic dimensions so responsive rendering does not shift the layout.
 
+The public shop profile uses an ordered cover gallery. Below 640 px, the preview is a single-image carousel with a persistent current/total count and circular left/right navigation by controls, keyboard, or touch swipe. Its arrows appear on fine-pointer hover or visible keyboard focus and remain usable on touch; “Ver todas las imágenes” is hidden at this width. Tapping the current image opens the full gallery at that image. From 640 px upward, the preview is static: small and medium layouts show the first cover, while expanded layouts show it prominently beside the next two ordered images stacked vertically. “Ver todas las imágenes” overlays the cover or collage and opens the full gallery at the first image; clicking any preview tile opens it at that tile's image. On wider screens the gallery grid repeats one full-row image followed by two paired rows; an unpaired final image spans the row. Complete images keep their natural proportions and order. Each grid image opens an individual viewer with circular left/right navigation by button, keyboard, or touch swipe. Grid tiles have no visible number captions. The close control stays at the upper right, and focus returns to the opener. The [gallery specification](../specs/discovery/barber-shop-profile/cover-gallery.spec.md) defines the interaction and empty-list behavior.
+
 ## Token architecture
 
 Keep raw values and semantic intent separate:

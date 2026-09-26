@@ -14,12 +14,44 @@ export const demoCatalog: Catalog = {
       description:
         "Cortes clásicos, fades y barba en un espacio cómodo. Perfil ficticio de demostración.",
       publicAddress: "Dirección ficticia de demostración, La Paz, Bolivia",
-      coverImage: {
-        src: "/demo/barbershop-cover.png",
-        alt: "Barbero trabajando en una barbería contemporánea de demostración",
-        width: 2048,
-        height: 1280,
-      },
+      images: [
+        {
+          src: "/demo/barbershop-cover.png",
+          alt: "Barbero peinando a un cliente frente a los espejos de la barbería",
+          width: 1586,
+          height: 992,
+        },
+        {
+          src: "/demo/barbershop-cover-2.png",
+          alt: "Tres sillones de barbería frente a lavabos y espejos arqueados",
+          width: 1600,
+          height: 1067,
+        },
+        {
+          src: "/demo/barbershop-cover-3.png",
+          alt: "Dos puestos de corte con espejos de marco naranja",
+          width: 544,
+          height: 305,
+        },
+        {
+          src: "/demo/barbershop-cover-4.png",
+          alt: "Interior de la barbería con sillones, espejos iluminados y zona de espera",
+          width: 1672,
+          height: 941,
+        },
+        {
+          src: "/demo/barbershop-cover-5.png",
+          alt: "Barbero dando forma al cabello de un cliente junto a los puestos de trabajo",
+          width: 1672,
+          height: 941,
+        },
+        {
+          src: "/demo/barbershop-cover-6.png",
+          alt: "Cliente sentado mientras le arreglan el cabello en una barbería con luz cálida",
+          width: 1672,
+          height: 941,
+        },
+      ],
       timezone: "America/La_Paz",
       currency: "BOB",
       openingHours: [

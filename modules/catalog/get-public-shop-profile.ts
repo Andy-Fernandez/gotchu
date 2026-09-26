@@ -46,14 +46,12 @@ export function createPublicShopProfileReader(catalog: Catalog) {
         name: shop.name,
         description: shop.description,
         publicAddress: shop.publicAddress,
-        coverImage: shop.coverImage
-          ? {
-              src: shop.coverImage.src,
-              alt: shop.coverImage.alt,
-              width: shop.coverImage.width,
-              height: shop.coverImage.height,
-            }
-          : null,
+        images: shop.images.map((image) => ({
+          src: image.src,
+          alt: image.alt,
+          width: image.width,
+          height: image.height,
+        })),
         timezone: shop.timezone,
         currency: shop.currency,
         openingHours: shop.openingHours.map((hours) => ({

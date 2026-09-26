@@ -16,8 +16,17 @@ test("demo returns a fictional Bolivian shop with two barbers and three services
   assert.match(profile.shop.description, /fictici/);
   assert.equal(profile.shop.timezone, "America/La_Paz");
   assert.equal(profile.shop.currency, "BOB");
-  assert.equal(profile.shop.coverImage?.src, "/demo/barbershop-cover.png");
-  assert.equal(profile.shop.coverImage?.width, 2048);
+  assert.deepEqual(
+    profile.shop.images.map(({ src, width, height }) => [src, width, height]),
+    [
+      ["/demo/barbershop-cover.png", 1586, 992],
+      ["/demo/barbershop-cover-2.png", 1600, 1067],
+      ["/demo/barbershop-cover-3.png", 544, 305],
+      ["/demo/barbershop-cover-4.png", 1672, 941],
+      ["/demo/barbershop-cover-5.png", 1672, 941],
+      ["/demo/barbershop-cover-6.png", 1672, 941],
+    ],
+  );
   assert.equal(profile.barbers.length, 2);
   assert.equal(profile.services.length, 3);
   assert.ok(profile.shop.openingHours.length > 0);
@@ -129,9 +138,16 @@ test("eligibility includes only explicitly eligible active barbers from the same
 
 test("demo money, durations, and relationships satisfy catalog invariants", () => {
   assert.equal(demoCatalog.shops.length, 1);
-  assert.ok(demoCatalog.shops[0].coverImage?.src.startsWith("/"));
-  assert.ok((demoCatalog.shops[0].coverImage?.width ?? 0) > 0);
-  assert.ok((demoCatalog.shops[0].coverImage?.height ?? 0) > 0);
+  for (const image of demoCatalog.shops[0].images) {
+    assert.ok(image.src.startsWith("/"));
+    assert.ok(image.alt.length > 0);
+    assert.ok(image.width > 0);
+    assert.ok(image.height > 0);
+  }
+  assert.equal(
+    new Set(demoCatalog.shops[0].images.map((image) => image.alt)).size,
+    demoCatalog.shops[0].images.length,
+  );
   assert.equal(
     new Set(demoCatalog.services.map((service) => service.id)).size,
     3,
@@ -187,9 +203,10 @@ test("public responses omit active flags and unexpected private fields, includin
   const shop = catalog.shops[0];
   Object.assign(shop, { privateNote: "internal shop note" });
   Object.assign(shop.publicPolicy, { internalNote: "internal policy note" });
-  Object.assign(shop.coverImage ?? {}, {
+  Object.assign(shop.images[0], {
     privateStorageKey: "private/object/key",
   });
+  Object.assign(shop.images[5], { privateStorageKey: "private/another-key" });
   Object.assign(shop.openingHours[0], { internalNote: "internal hours note" });
   Object.assign(catalog.services[0], { privateNote: "internal service note" });
   Object.assign(catalog.barbers[0], { phone: "private phone" });
@@ -198,7 +215,13 @@ test("public responses omit active flags and unexpected private fields, includin
 
   assert.ok(profile);
   assert.equal("isActive" in profile.shop, false);
-  assert.equal("privateStorageKey" in (profile.shop.coverImage ?? {}), false);
+  assert.ok(
+    profile.shop.images.every(
+      (image) =>
+        !Object.hasOwn(image, "privateStorageKey") &&
+        Object.keys(image).sort().join(",") === "alt,height,src,width",
+    ),
+  );
   assert.ok(profile.services.every((service) => !("isActive" in service)));
   assert.ok(profile.barbers.every((barber) => !("isActive" in barber)));
   assert.deepEqual(profile, await getPublicShopProfile("demo"));
@@ -211,9 +234,10 @@ test("changing a returned profile cannot change source data or subsequent reads"
   const profile = await readProfile("demo");
 
   assert.ok(profile);
+  assert.notStrictEqual(profile.shop.images, catalog.shops[0].images);
   profile.shop.name = "Changed";
   profile.shop.publicPolicy.cancellation = "Changed";
-  if (profile.shop.coverImage) profile.shop.coverImage.alt = "Changed";
+  profile.shop.images[0].alt = "Changed";
   profile.shop.openingHours[0].opensAt = "00:00";
   profile.services[0].priceMinorUnits = 1;
   profile.services[0].eligibleBarberIds = [];
@@ -225,4 +249,37 @@ test("changing a returned profile cannot change source data or subsequent reads"
     await readProfile("demo"),
     await getPublicShopProfile("demo"),
   );
+});
+
+test("public image lists preserve each shop's order and variable length", async () => {
+  for (const length of [0, 1, 2, 8]) {
+    const catalog = structuredClone(demoCatalog);
+    const images = catalog.shops[0].images;
+    catalog.shops[0].images = Array.from({ length }, (_, index) => ({
+      ...(images[index % images.length] ?? images[0]),
+      src: `/shop/photo-${index}.png`,
+    }));
+    const otherShop = {
+      ...catalog.shops[0],
+      id: "shop-other",
+      slug: "other",
+      images: [{ ...images[0], src: "/other/cover.png" }],
+    };
+    catalog.shops = [...catalog.shops, otherShop];
+
+    const readProfile = createPublicShopProfileReader(catalog);
+    const profile = await readProfile("demo");
+    const otherProfile = await readProfile("other");
+
+    assert.ok(profile);
+    assert.ok(otherProfile);
+    assert.deepEqual(
+      profile.shop.images.map((image) => image.src),
+      Array.from({ length }, (_, index) => `/shop/photo-${index}.png`),
+    );
+    assert.deepEqual(
+      otherProfile.shop.images.map((image) => image.src),
+      ["/other/cover.png"],
+    );
+  }
 });
